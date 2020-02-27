@@ -16,7 +16,8 @@ Basic principle: auto-completion and jump should be as lazy as possible,
 because **correcting** one completion mistake would take more keystrokes than
 closing the pair manually.
 
-- Only insert the closing pair if the next character is a space or the closing pair itself
+- Only insert the closing pair if the next character is a space or a non-string
+  closing character.
 ```
 input: | s    (press '(')
 output: (|) s
@@ -26,7 +27,22 @@ output: (|s
 
 input: (|)    (press '(')
 output: ((|))
+
+input: (|)    (press '[')
+output: ([|])
+
+input: '|'    (press '[')
+output: '[|'
 ```
+
+All the string characters can be set as a global variable `g:StringClosingChar`
+or buffer variable `b:StringClosingChar`.
+```vim
+let g:StringClosingChar = \['"', \"'",'\`'\]
+let b:StringClosingChar = \['"', \"'",'\`'\]
+```
+If the next character of the cursor is any of these characters, auto-completion
+will be inhibited.
 
 - Do not search for the closing pair if spaces are in between
 ```

@@ -365,8 +365,8 @@ makes the auto-completion rules more sensible. Currently there are no options
 to turn off the changes since this fork is currently only intended for my
 personal use. I might add some options in the future, maybe.
 
-* Only insert the closing pair if the next character is a space or the closing
-pair itself
+* Only insert the closing pair if the next character is a space or a
+  non-string closing character.
 
     input: | s    (press '(')
     output: (|) s
@@ -376,6 +376,21 @@ pair itself
 
     input: (|)    (press '(')
     output: ((|))
+
+    input: (|)    (press '[')
+    output: ([|])
+
+    input: '|'    (press '[')
+    output: '[|'
+
+All the string characters can be set as a global variable g:StringClosingChar
+or buffer variable b:StringClosingChar.
+
+    let g:StringClosingChar = \['"', \"'",'\`'\]
+    let b:StringClosingChar = \['"', \"'",'\`'\]
+
+If the next character of the cursor is any of these characters, auto-completion
+will be inhibited.
 
 * Do not search for the closing pair if spaces are in between
 

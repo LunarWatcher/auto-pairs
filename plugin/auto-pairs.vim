@@ -16,6 +16,12 @@ if !exists('g:AutoPairs')
   let g:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"', '```':'```', '"""':'"""', "'''":"'''", "`":"`"}
 end
 
+" Krasjet: the closing character for strings, auto completion will be
+" inhibited when the next character is one of these
+if !exists('g:StringClosingChar')
+  let g:StringClosingChar = ['"', "'", '`']
+end
+
 " default pairs base on filetype
 func! AutoPairsDefaultPairs()
   if exists('b:autopairs_defaultpairs')
@@ -217,22 +223,12 @@ func! AutoPairsInsert(key)
       " process the open pair
 
       " Krasjet: only insert the closing pair if the next character is a space
-      " or the closing pair itself
-      " examples:
-      " input: | s    (press '(')
-      " output: (|) s
-      " input: |s    (press '(')
-      " output: (|s
-      " input: (|)    (press '(')
-      " output: ((|))
-      if after[0] =~? '\v\S' && matchstr(afterline, '^'.close) ==? ''
+      " or a non-string closing pair
+      if after[0] =~? '\v\S' && afterline !~# b:closing_pairs
         break
       end
 
       " Krasjet: do not complete the closing pair until pairs are balanced
-      " examples:
-      " input: ((|)))    (press '(')
-      " output: (((|)))
       if count(before.afterline,open) < count(before.afterline,close)
         break
       end
@@ -288,17 +284,9 @@ func! AutoPairsInsert(key)
       " the close pair is in the same line
 
       " Krasjet: do not search for the closing pair if spaces are in between
-      " examples:
-      " input: " | "    (press '"')
-      " output: " "| "
-      " input: " |"    (press '"')
-      " output: " "|
       let m = matchstr(afterline, '^'.close)
       if m != ''
         " Krasjet: only jump across the closing pair if pairs are balanced
-        " examples:
-        " input: (((|))    (press ')')
-        " output: (((|)))
         if count(before.afterline,open) > count(before.afterline,close)
           return a:key
         end
@@ -513,12 +501,17 @@ func! AutoPairsInit()
     let b:AutoPairs = AutoPairsDefaultPairs()
   end
 
+  if !exists('b:StringClosingChar')
+    let b:StringClosingChar = copy(g:StringClosingChar)
+  end
+
   if !exists('b:AutoPairsMoveCharacter')
     let b:AutoPairsMoveCharacter = g:AutoPairsMoveCharacter
   end
 
   let b:autopairs_return_pos = 0
   let b:autopairs_saved_pair = [0, 0]
+  let b:closing_pairs = []
   let b:AutoPairsList = []
 
   " buffer level map pairs keys
@@ -555,11 +548,19 @@ func! AutoPairsInit()
     if o != c && c != '' && opt['mapclose']
       call AutoPairsMap(c)
     end
+
+    " Krasjet: add any non-string closing characters to a list
     let b:AutoPairsList += [[open, close, opt]]
+    if close !=? '' && close !~# '\V\['.escape(join(g:StringClosingChar,''),'\').']'
+      let b:closing_pairs += [close]
+    end
   endfor
 
   " sort pairs by length, longer pair should have higher priority
   let b:AutoPairsList = sort(b:AutoPairsList, "s:sortByLength")
+
+  " Krasjet: construct a regex for matching closing pairs
+  let b:closing_pairs = '^\V\('.join(b:closing_pairs,'\|').'\)'
 
   for item in b:AutoPairsList
     let [open, close, opt] = item
