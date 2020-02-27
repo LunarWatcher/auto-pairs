@@ -284,7 +284,7 @@ func! AutoPairsInsert(key)
       " the close pair is in the same line
 
       " Krasjet: do not search for the closing pair if spaces are in between
-      let m = matchstr(afterline, '^'.close)
+      let m = matchstr(afterline, '^\V'.close)
       if m != ''
         " Krasjet: only jump across the closing pair if pairs are balanced
         if count(before.afterline,open) > count(before.afterline,close)
@@ -297,7 +297,7 @@ func! AutoPairsInsert(key)
           return s:right(m)
         end
       end
-      let m = matchstr(after, '^'.close)
+      let m = matchstr(after, '^\V'.close)
       if m != ''
         if a:key == g:AutoPairsWildClosedPair || opt['multiline']
           if b:autopairs_return_pos == line('.') && getline('.') =~ '\v^\s*$'
