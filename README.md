@@ -37,6 +37,16 @@ input: ((|)))    (press '(')
 output: (((|)))
 ```
 
+## Side note
+
+I am using the plugin with the multi-line close option set to false.
+
+```vim
+let g:AutoPairsMultilineClose = 0
+```
+
+This fork might break it (and the fly mode), but I don't need them anyways.
+
 ## License
 
 ```
