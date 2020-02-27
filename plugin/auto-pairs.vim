@@ -13,7 +13,7 @@ end
 let g:AutoPairsLoaded = 1
 
 if !exists('g:AutoPairs')
-  let g:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"', '```':'```//m', '"""':'"""//m', "'''":"'''", "`":"`"}
+  let g:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"', '```':'```', '"""':'"""', "'''":"'''", "`":"`"}
 end
 
 " Krasjet: the closing character for strings, auto completion will be
