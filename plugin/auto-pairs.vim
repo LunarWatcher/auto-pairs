@@ -229,6 +229,14 @@ func! AutoPairsInsert(key)
         break
       end
 
+        " Krasjet: do not complete the closing tag until pairs are balanced
+        " examples:
+        "         (
+        " ((|))) ---> (((|)))
+        if count(before.afterline,open) < count(before.afterline,close)
+          break
+        end
+
       " remove inserted pair
       " eg: if the pairs include < > and  <!-- -->
       " when <!-- is detected the inserted pair < > should be clean up
@@ -285,7 +293,7 @@ func! AutoPairsInsert(key)
       " " | " ---> " "| "
       let m = matchstr(afterline, '^'.close)
       if m != ''
-        " Krasjet: only jump across closing pair if parentheses are balanced
+        " Krasjet: only jump across closing pair if paires are balanced
         " examples:
         "         )
         " (((|)) ---> (((|)))
