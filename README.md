@@ -29,12 +29,18 @@ output: " "|
 ```
 input: (((|))    (press ')')
 output: (((|)))
+
+input: (((|)))    (press ')')
+output: ((()|))
 ```
 
 - Do not complete the closing pair until pairs are balanced
 ```
 input: ((|)))    (press '(')
 output: (((|)))
+
+input: (((|)))    (press '(')
+output: ((((|))))
 ```
 
 ## Side note
