@@ -1,10 +1,43 @@
-Auto Pairs
-==========
+# Auto Pairs
 
-A fork of the [auto-pairs](https://github.com/jiangmiao/auto-pairs) plugin for vim with more sensible pairing rules. This fork is only intended to be used by myself. If you want to know how to use the plugin, please read the [original readme](https://github.com/jiangmiao/auto-pairs).
+A fork of the [auto-pairs](https://github.com/jiangmiao/auto-pairs) plugin for vim with more sensible auto-completion rules. This fork is currently only intended to be used by myself. If you want to know how to use the plugin, please read the [original readme](https://github.com/jiangmiao/auto-pairs).
 
-License
--------
+## Main changes
+
+- Only insert the closing pair if the next character is a space or the closing pair itself
+```
+input: | s    (press '(')
+output: (|) s
+
+input: |s    (press '(')
+output: (|s
+
+input: (|)    (press '(')
+output: ((|))
+```
+
+- Do not search for the closing pair if spaces are in between
+```
+input: " | "    (press '"')
+output: " "| "
+
+input: " |"    (press '"')
+output: " "|
+```
+
+- Only jump across closing pair if pairs are balanced
+```
+input: (((|))    (press ')')
+output: (((|)))
+```
+
+- Do not complete the closing pair until pairs are balanced
+```
+input: ((|)))    (press '(')
+output: (((|)))
+```
+
+## License
 
 ```
 Copyright (C) 2011-2013 Miao Jiang

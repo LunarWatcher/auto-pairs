@@ -219,20 +219,21 @@ func! AutoPairsInsert(key)
       " Krasjet: only insert the closing pair if the next character is a space
       " or the closing pair itself
       " examples:
-      "     (
-      " |s ---> (|s
-      "
-      "      (
-      " (|) ---> ((|))
+      " input: | s    (press '(')
+      " output: (|) s
+      " input: |s    (press '(')
+      " output: (|s
+      " input: (|)    (press '(')
+      " output: ((|))
       let no_close = matchstr(afterline, '^'.close) ==? ''
       if after[0] =~? '\v\S' && no_close
         break
       end
 
-        " Krasjet: do not complete the closing tag until pairs are balanced
+        " Krasjet: do not complete the closing pair until pairs are balanced
         " examples:
-        "         (
-        " ((|))) ---> (((|)))
+        " input: ((|)))    (press '(')
+        " output: (((|)))
         if count(before.afterline,open) < count(before.afterline,close)
           break
         end
@@ -289,14 +290,16 @@ func! AutoPairsInsert(key)
 
       " Krasjet: do not search for the closing pair if spaces are in between
       " examples:
-      "        "
-      " " | " ---> " "| "
+      " input: " | "    (press '"')
+      " output: " "| "
+      " input: " |"    (press '"')
+      " output: " "|
       let m = matchstr(afterline, '^'.close)
       if m != ''
-        " Krasjet: only jump across closing pair if paires are balanced
+        " Krasjet: only jump across closing pair if pairs are balanced
         " examples:
-        "         )
-        " (((|)) ---> (((|)))
+        " input: (((|))    (press ')')
+        " output: (((|)))
         if count(before.afterline,open) > count(before.afterline,close)
           return a:key
         end
