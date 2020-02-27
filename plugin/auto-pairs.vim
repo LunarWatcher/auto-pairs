@@ -229,13 +229,13 @@ func! AutoPairsInsert(key)
         break
       end
 
-        " Krasjet: do not complete the closing pair until pairs are balanced
-        " examples:
-        " input: ((|)))    (press '(')
-        " output: (((|)))
-        if count(before.afterline,open) < count(before.afterline,close)
-          break
-        end
+      " Krasjet: do not complete the closing pair until pairs are balanced
+      " examples:
+      " input: ((|)))    (press '(')
+      " output: (((|)))
+      if count(before.afterline,open) < count(before.afterline,close)
+        break
+      end
 
       " remove inserted pair
       " eg: if the pairs include < > and  <!-- -->
