@@ -225,8 +225,7 @@ func! AutoPairsInsert(key)
       " output: (|s
       " input: (|)    (press '(')
       " output: ((|))
-      let no_close = matchstr(afterline, '^'.close) ==? ''
-      if after[0] =~? '\v\S' && no_close
+      if after[0] =~? '\v\S' && matchstr(afterline, '^'.close) ==? ''
         break
       end
 
