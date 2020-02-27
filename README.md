@@ -74,19 +74,15 @@ input: (((|)))    (press '(')
 output: ((((|))))
 ```
 
-More to be added when I encounter more problems.
-
-## Side note
-
-I am using the plugin with the multi-line close option set to false, and this
-is now the default setting in this fork.
-
-```vim
-let g:AutoPairsMultilineClose = 0
+- The default value of `g:AutoPairsMultilineClose` has been changed to 0.
+If you want to enable it, set
 ```
+let g:AutoPairsMultilineClose = 1
+```
+but be cautious that this fork might break it (and the fly mode, which is also
+disabled by default), but I haven't tested them, and I don't need them anyways.
 
-This fork might break it (and the fly mode, which is also disabled by default),
-but I don't need them anyways.
+More to be added when I encounter more problems.
 
 ## License
 

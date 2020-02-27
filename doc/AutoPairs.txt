@@ -419,4 +419,9 @@ will be inhibited.
     input: (((|)))    (press '(')
     output: ((((|))))
 
-* The default value of |g:AutoPairsMultilineClose| has been changed to false.
+* The default value of |g:AutoPairsMultilineClose| has been changed to 0.
+If you want to enable it, set
+
+    let g:AutoPairsMultilineClose = 1
+
+but be cautious that this fork might break it (unverified).
