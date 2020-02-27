@@ -1,6 +1,9 @@
 # auto.pairs
 
-A fork of the [auto-pairs](https://github.com/jiangmiao/auto-pairs) plugin for vim with more sensible auto-completion rules. This fork is currently only intended to be used by myself. If you want to know how to use the plugin, please read the [original readme](https://github.com/jiangmiao/auto-pairs).
+A fork of the [auto-pairs](https://github.com/jiangmiao/auto-pairs) plugin for
+vim with more sensible auto-completion rules. This fork is currently only
+intended to be used by myself. If you want to know how to use the plugin,
+please read the [original readme](https://github.com/jiangmiao/auto-pairs).
 
 ## Installation
 
@@ -75,13 +78,15 @@ More to be added when I encounter more problems.
 
 ## Side note
 
-I am using the plugin with the multi-line close option set to false.
+I am using the plugin with the multi-line close option set to false, and this
+is now the default setting in this fork.
 
 ```vim
 let g:AutoPairsMultilineClose = 0
 ```
 
-This fork might break it (and the fly mode, which is disabled by default), but I don't need them anyways.
+This fork might break it (and the fly mode, which is also disabled by default),
+but I don't need them anyways.
 
 ## License
 

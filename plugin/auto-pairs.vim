@@ -93,8 +93,9 @@ endif
 
 " When skipping the closed pair, look at the current and
 " next line as well.
+" Krasjet: default changed to 0
 if !exists('g:AutoPairsMultilineClose')
-  let g:AutoPairsMultilineClose = 1
+  let g:AutoPairsMultilineClose = 0
 endif
 
 " Work with Fly Mode, insert pair where jumped
