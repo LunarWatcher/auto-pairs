@@ -296,7 +296,7 @@ func! AutoPairsInsert(key)
       " output: " "|
       let m = matchstr(afterline, '^'.close)
       if m != ''
-        " Krasjet: only jump across closing pair if pairs are balanced
+        " Krasjet: only jump across the closing pair if pairs are balanced
         " examples:
         " input: (((|))    (press ')')
         " output: (((|)))

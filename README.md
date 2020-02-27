@@ -25,7 +25,7 @@ input: " |"    (press '"')
 output: " "|
 ```
 
-- Only jump across closing pair if pairs are balanced
+- Only jump across the closing pair if pairs are balanced
 ```
 input: (((|))    (press ')')
 output: (((|)))
