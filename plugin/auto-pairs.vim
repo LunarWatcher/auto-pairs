@@ -285,6 +285,13 @@ func! AutoPairsInsert(key)
       " " | " ---> " "| "
       let m = matchstr(afterline, '^'.close)
       if m != ''
+        " Krasjet: only jump across closing pair if parentheses are balanced
+        " examples:
+        "         )
+        " (((|)) ---> (((|)))
+        if count(before.afterline,open) > count(before.afterline,close)
+          return a:key
+        end
         if before =~ '\V'.open.'\v\s*$' && m[0] =~ '\v\s'
           " remove the space we inserted if the text in pairs is blank
           return "\<DEL>".s:right(m[1:])
