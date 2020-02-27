@@ -215,10 +215,23 @@ func! AutoPairsInsert(key)
     let m = matchstr(afterline, '^\v\s*\zs\V'.close)
     if len(ms) > 0
       " process the open pair
-      
+
+      " Krasjet: only insert the closing pair if the next character is a space
+      " or the closing pair itself
+      " examples:
+      "     (
+      " |s ---> (|s
+      "
+      "      (
+      " (|) ---> ((|))
+      let no_close = matchstr(afterline, '^'.close) ==? ''
+      if after[0] =~? '\v\S' && no_close
+        break
+      end
+
       " remove inserted pair
-      " eg: if the pairs include < > and  <!-- --> 
-      " when <!-- is detected the inserted pair < > should be clean up 
+      " eg: if the pairs include < > and  <!-- -->
+      " when <!-- is detected the inserted pair < > should be clean up
       let target = ms[1]
       let openPair = ms[2]
       if len(openPair) == 1 && m == openPair
