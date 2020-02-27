@@ -553,7 +553,7 @@ func! AutoPairsInit()
     " Krasjet: add any non-string closing characters to a list
     let b:AutoPairsList += [[open, close, opt]]
     if close !=? '' && close !~# '\V\['.escape(join(g:StringClosingChar,''),'\').']'
-      let b:closing_pairs += [close]
+      let b:closing_pairs += [escape(close,'\')]
     end
   endfor
 
@@ -561,7 +561,7 @@ func! AutoPairsInit()
   let b:AutoPairsList = sort(b:AutoPairsList, "s:sortByLength")
 
   " Krasjet: construct a regex for matching closing pairs
-  let b:closing_pairs = '^\V\('.escape(join(b:closing_pairs,'\|'),'\').'\)'
+  let b:closing_pairs = '^\V\('.join(b:closing_pairs,'\|').'\)'
 
   for item in b:AutoPairsList
     let [open, close, opt] = item
