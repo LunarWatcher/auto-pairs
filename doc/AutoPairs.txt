@@ -5,7 +5,7 @@ Author:  jiangmiao
 Fork: Krasjet
 License: MIT
 URL: https://github.com/jiangmiao/auto-pairs
-Fork URL: https://github.com/Krasjet/auto-pairs
+Fork URL: https://github.com/Krasjet/auto.pairs
 
 ==============================================================================
 CONTENTS                                                    *autopairs-contents*
@@ -23,7 +23,7 @@ CONTENTS                                                    *autopairs-contents*
 
 With vim-plug
 
-    Plug 'Krasjet/auto-pairs'
+    Plug 'Krasjet/auto.pairs'
 
 ==============================================================================
 2. Features                                                 *autopairs-features*
