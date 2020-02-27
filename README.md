@@ -12,7 +12,7 @@ Plug 'Krasjet/auto.pairs'
 
 ## Main changes
 
-Basic principle: auto-completion should be as lazy as possible.
+Basic principle: auto-completion and jump should be as lazy as possible.
 
 - Only insert the closing pair if the next character is a space or the closing pair itself
 ```
