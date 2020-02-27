@@ -2,6 +2,14 @@
 
 A fork of the [auto-pairs](https://github.com/jiangmiao/auto-pairs) plugin for vim with more sensible auto-completion rules. This fork is currently only intended to be used by myself. If you want to know how to use the plugin, please read the [original readme](https://github.com/jiangmiao/auto-pairs).
 
+## Installation
+
+With `vim-plug`
+
+```vim
+Plug 'Krasjet/auto-pairs'
+```
+
 ## Main changes
 
 - Only insert the closing pair if the next character is a space or the closing pair itself

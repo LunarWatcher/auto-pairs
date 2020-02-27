@@ -19,13 +19,11 @@ CONTENTS                                                    *autopairs-contents*
     7. Main changes .................................  |autopairs-changes|
 
 ==============================================================================
-1. Introduction                                         *autopairs-installation*
+1. Installation                                       *autopairs-installation*
 
-Copy `plugin/auto-pairs.vim` to `~/.vim/plugin`.
+With vim-plug
 
-Or if you are using `pathogen`: >
-
-    git clone git://github.com/Krasjet/auto-pairs.git ~/.vim/bundle/auto-pairs
+    Plug 'Krasjet/auto-pairs'
 
 ==============================================================================
 2. Features                                                 *autopairs-features*
