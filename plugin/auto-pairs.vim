@@ -560,7 +560,7 @@ func! AutoPairsInit()
   let b:AutoPairsList = sort(b:AutoPairsList, "s:sortByLength")
 
   " Krasjet: construct a regex for matching closing pairs
-  let b:closing_pairs = '^\V\('.join(b:closing_pairs,'\|').'\)'
+  let b:closing_pairs = '^\V\('.escape(join(b:closing_pairs,'\|'),'\').'\)'
 
   for item in b:AutoPairsList
     let [open, close, opt] = item
