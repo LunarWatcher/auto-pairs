@@ -6,12 +6,14 @@ intended to be used by myself. If you want to know how to use the plugin,
 please read the [original readme](https://github.com/jiangmiao/auto-pairs).
 
 Since auto-pairing can be extremely subjective, if you are unsatisfied with
-your own auto-pairing configurations, I would suggest you read the survey
+your own auto-pairing configurations, I would suggest you read the
+[survey](https://github.com/Krasjet/auto.pairs#a-survey-on-similar-plugins)
 below. Pick one of the plugins, make a fork and customize it to your liking.
 The issues listed below should be enough to get you started.
 
-Of course, if you want to use [auto-pairs](https://github.com/jiangmiao/auto-pairs),
-the comments in my [auto-pairs.vim](https://github.com/Krasjet/auto.pairs/blob/master/plugin/auto-pairs.vim)
+Of course, if you want to use
+[auto-pairs](https://github.com/jiangmiao/auto-pairs), the comments in my
+[auto-pairs.vim](https://github.com/Krasjet/auto.pairs/blob/master/plugin/auto-pairs.vim)
 might be helpful (search for `Krasjet`).
 
 ## Installation
