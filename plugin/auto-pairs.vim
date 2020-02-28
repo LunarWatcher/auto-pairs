@@ -16,10 +16,10 @@ if !exists('g:AutoPairs')
   let g:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"', '```':'```', '"""':'"""', "'''":"'''", "`":"`"}
 end
 
-" Krasjet: the closing character for strings, auto completion will be
+" Krasjet: the closing character for quotes, auto completion will be
 " inhibited when the next character is one of these
-if !exists('g:StringClosingChar')
-  let g:StringClosingChar = ['"', "'", '`']
+if !exists('g:AutoPairsQuoteClosingChar')
+  let g:AutoPairsQuoteClosingChar = ['"', "'", '`']
 end
 
 " default pairs base on filetype
@@ -230,8 +230,14 @@ func! AutoPairsInsert(key)
       end
 
       " Krasjet: do not complete the closing pair until pairs are balanced
-      if count(before.afterline,open) < count(before.afterline,close)
-        break
+      if open == close
+        if count(before.afterline,open) % 2 != 0
+          break
+        end
+      else
+        if count(before.afterline,open) < count(before.afterline,close)
+          break
+        end
       end
 
       " remove inserted pair
@@ -502,8 +508,8 @@ func! AutoPairsInit()
     let b:AutoPairs = AutoPairsDefaultPairs()
   end
 
-  if !exists('b:StringClosingChar')
-    let b:StringClosingChar = copy(g:StringClosingChar)
+  if !exists('b:AutoPairsQuoteClosingChar')
+    let b:AutoPairsQuoteClosingChar = copy(g:AutoPairsQuoteClosingChar)
   end
 
   if !exists('b:AutoPairsMoveCharacter')
@@ -552,7 +558,7 @@ func! AutoPairsInit()
 
     " Krasjet: add any non-string closing characters to a list
     let b:AutoPairsList += [[open, close, opt]]
-    if close !=? '' && close !~# '\V\['.escape(join(g:StringClosingChar,''),'\').']'
+    if close !=? '' && close !~# '\V\['.escape(join(g:AutoPairsQuoteClosingChar,''),'\').']'
       let b:closing_pairs += [escape(close,'\')]
     end
   endfor

@@ -22,56 +22,59 @@ closing the pair manually.
 - Only insert the closing pair if the next character is a space or a non-string
   closing character.
 ```
-input: | s    (press '(')
+input:  | s    (press '(')
 output: (|) s
 
-input: |s    (press '(')
+input:  |s     (press '(')
 output: (|s
 
-input: (|)    (press '(')
+input:  (|)    (press '(')
 output: ((|))
 
-input: (|)    (press '[')
+input:  (|)    (press '[')
 output: ([|])
 
-input: '|'    (press '[')
+input:  '|'    (press '[')
 output: '[|'
 ```
 
-All the string characters can be set as a global variable `g:StringClosingChar`
-or buffer variable `b:StringClosingChar`.
+All the string characters can be set as a global variable `g:AutoPairsQuoteClosingChar`
+or buffer variable `b:AutoPairsQuoteClosingChar`.
 ```vim
-let g:StringClosingChar = \['"', \"'",'\`'\]
-let b:StringClosingChar = \['"', \"'",'\`'\]
+let g:AutoPairsQuoteClosingChar = \['"', \"'",'\`'\]
+let b:AutoPairsQuoteClosingChar = \['"', \"'",'\`'\]
 ```
 If the next character of the cursor is any of these characters, auto-completion
 will be inhibited.
 
 - Do not search for the closing pair if spaces are in between
 ```
-input: " | "    (press '"')
+input:  " | "    (press '"')
 output: " "| "
 
-input: " |"    (press '"')
+input:  " |"     (press '"')
 output: " "|
 ```
 
 - Only jump across the closing pair if pairs are balanced
 ```
-input: (((|))    (press ')')
+input:  (((|))     (press ')')
 output: (((|)))
 
-input: (((|)))    (press ')')
+input:  (((|)))    (press ')')
 output: ((()|))
 ```
 
 - Do not complete the closing pair until pairs are balanced
 ```
-input: ((|)))    (press '(')
+input: ((|)))      (press '(')
 output: (((|)))
 
-input: (((|)))    (press '(')
+input: (((|)))     (press '(')
 output: ((((|))))
+
+input:  "str|      (press '"')
+output: "str"|
 ```
 
 - The default value of `g:AutoPairsMultilineClose` has been changed to 0.
