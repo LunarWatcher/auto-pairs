@@ -374,7 +374,7 @@ personal use. I might add some options in the future, maybe.
     input: | s    (press '(')
     output: (|) s
 
-    input: |s    (press '(')
+    input: |s     (press '(')
     output: (|s
 
     input: (|)    (press '(')
@@ -402,12 +402,12 @@ will be inhibited.
     input: " | "    (press '"')
     output: " "| "
 
-    input: " |"    (press '"')
+    input: " |"     (press '"')
     output: " "|
 
 * Only jump across the closing pair if pairs are balanced
 
-    input: (((|))    (press ')')
+    input: (((|))     (press ')')
     output: (((|)))
 
     input: (((|)))    (press ')')
@@ -415,11 +415,14 @@ will be inhibited.
 
 * Do not complete the closing pair until pairs are balanced
 
-    input: ((|)))    (press '(')
+    input: ((|)))      (press '(')
     output: (((|)))
 
-    input: (((|)))    (press '(')
+    input: (((|)))     (press '(')
     output: ((((|))))
+
+    input:  "str|      (press '"')
+    output: "str"|
 
 * The default value of |g:AutoPairsMultilineClose| has been changed to 0.
 If you want to enable it, set
