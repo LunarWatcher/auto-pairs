@@ -236,8 +236,8 @@ func! AutoPairsInsert(key)
       end
 
       " Krasjet: do not complete the closing pair until pairs are balanced
-      if open == close
-        if count(before.afterline,open) % 2 != 0
+      if open == close || close ==# "'"
+        if count(before.afterline,close) % 2 != 0
           break
         end
       else
