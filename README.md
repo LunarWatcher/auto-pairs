@@ -211,13 +211,13 @@ in the case of auto-completion, minor annoyances can be exaggerated).
 
 ```
 // inside quote
-input:  '|'    (press '[')
+input:  '|'           (press '[')
 output: '[|]'
 // closing pair balance
-input:  (((|))    (press ')')
+input:  (((|))        (press ')')
 output: ((()|)
 // open pair balance
-input:  ((|)))    (press '(')
+input:  ((|)))        (press '(')
 output: (((|))))
 // multiple character opening (very wierd)
 input:  `|`           (press '`')
@@ -227,7 +227,7 @@ output: ``|           (press '`')
         ```|``````    (press '`')
 // <cr> mapping
 input:
-   """|"""    (press '<cr>')
+   """|"""            (press '<cr>')
 output:
    """
   |"""
@@ -282,7 +282,7 @@ input:  (((|))     (press ')')
 output: ((()|)
 // <cr> mapping
 input:
-   """|"""    (press '<cr>')
+   """|"""         (press '<cr>')
 output:
    """
   |"""
@@ -311,7 +311,7 @@ input:  "str|      (press '"')
 output: "str"|"
 // <cr> mapping
 input:
-   """|"""    (press '<cr>')
+   """|"""         (press '<cr>')
 output:
    """
   |"""
