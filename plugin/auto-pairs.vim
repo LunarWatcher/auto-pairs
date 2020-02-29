@@ -22,6 +22,12 @@ if !exists('g:AutoPairsQuoteClosingChar')
   let g:AutoPairsQuoteClosingChar = ['"', "'", '`']
 end
 
+" Krasjet: if the next character is any of these, auto-completion will still
+" be triggered
+if !exists('g:AutoPairsNextCharWhitelist')
+  let g:AutoPairsNextCharWhitelist = []
+end
+
 " default pairs base on filetype
 func! AutoPairsDefaultPairs()
   if exists('b:autopairs_defaultpairs')
@@ -224,8 +230,8 @@ func! AutoPairsInsert(key)
       " process the open pair
 
       " Krasjet: only insert the closing pair if the next character is a space
-      " or a non-string closing pair
-      if afterline[0] =~? '\v\S' && afterline !~# b:closing_pairs
+      " or a non-quote closing pair, or a whitelisted character (string)
+      if afterline[0] =~? '^\v\S' && afterline !~# b:autopairs_next_char_whitelist
         break
       end
 
@@ -512,13 +518,19 @@ func! AutoPairsInit()
     let b:AutoPairsQuoteClosingChar = copy(g:AutoPairsQuoteClosingChar)
   end
 
+  if !exists('b:AutoPairsNextCharWhitelist')
+    let b:AutoPairsNextCharWhitelist = copy(g:AutoPairsNextCharWhitelist)
+  end
+
   if !exists('b:AutoPairsMoveCharacter')
     let b:AutoPairsMoveCharacter = g:AutoPairsMoveCharacter
   end
 
   let b:autopairs_return_pos = 0
   let b:autopairs_saved_pair = [0, 0]
-  let b:closing_pairs = []
+  " Krasjet: only auto-complete if the next character, or characters, is one of
+  " these
+  let b:autopairs_next_char_whitelist = []
   let b:AutoPairsList = []
 
   " buffer level map pairs keys
@@ -558,16 +570,20 @@ func! AutoPairsInit()
 
     " Krasjet: add any non-string closing characters to a list
     let b:AutoPairsList += [[open, close, opt]]
-    if close !=? '' && close !~# '\V\['.escape(join(g:AutoPairsQuoteClosingChar,''),'\').']'
-      let b:closing_pairs += [escape(close,'\')]
+    if close !=? '' && close !~# '\V\['.escape(join(b:AutoPairsQuoteClosingChar,''),'\').']'
+      let b:autopairs_next_char_whitelist += [escape(close,'\')]
     end
   endfor
 
   " sort pairs by length, longer pair should have higher priority
   let b:AutoPairsList = sort(b:AutoPairsList, "s:sortByLength")
 
-  " Krasjet: construct a regex for matching closing pairs
-  let b:closing_pairs = '^\V\('.join(b:closing_pairs,'\|').'\)'
+  " Krasjet: add whitelisted strings to the list
+  for str in b:AutoPairsNextCharWhitelist
+    let b:autopairs_next_char_whitelist += [escape(str,'\')]
+  endfor
+  " Krasjet: construct a regex for whitelisted strings
+  let b:autopairs_next_char_whitelist = '^\V\('.join(b:autopairs_next_char_whitelist,'\|').'\)'
 
   for item in b:AutoPairsList
     let [open, close, opt] = item
@@ -575,7 +591,6 @@ func! AutoPairsInit()
       let item[0] = '\v(^|\W)\zs'''
     end
   endfor
-
 
   for key in split(b:AutoPairsMoveCharacter, '\s*')
     let escaped_key = substitute(key, "'", "''", 'g')

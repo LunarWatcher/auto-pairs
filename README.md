@@ -30,8 +30,8 @@ Basic principles: auto-completion and jump should be as lazy as possible,
 because **correcting** one completion mistake would take more keystrokes than
 closing the pair manually.
 
-- Only insert the closing pair if the next character is a space or a non-string
-  closing character.
+- Only insert the closing pair if the next character is a space or a non-quote
+  closing pair.
 ```
 input:  | s    (press '(')
 output: (|) s
@@ -49,14 +49,29 @@ input:  '|'    (press '[')
 output: '[|'
 ```
 
-All the string characters can be set as a global variable `g:AutoPairsQuoteClosingChar`
+All the quote characters can be set as a global variable `g:AutoPairsQuoteClosingChar`
 or buffer variable `b:AutoPairsQuoteClosingChar`.
 ```vim
 let g:AutoPairsQuoteClosingChar = ['"', "'",'`']
 let b:AutoPairsQuoteClosingChar = ['"', "'",'`']
 ```
-If the next character of the cursor is any of these characters, auto-completion
-will be inhibited.
+If the next character of the cursor is any of these, auto-completion will be
+inhibited.
+
+There is also variables `g:AutoPairsNextCharWhitelist` and
+`b:AutoPairsNextCharWhitelist` to whitelist certain characters (or strings) such that
+trigger the auto-completion when appeared as the next character.
+```vim
+let g:AutoPairsNextCharWhitelist = []
+let b:AutoPairsQuoteClosingChar = ['.', ',']
+```
+If the next character(s) of the cursor is any of these, auto-completion will be triggered.
+
+In summary, auto-completion will only be triggered if
+
+1. the next character is a space
+2. or the next character is not from the closing pair of a quote
+3. or the next character is in the whitelist
 
 - Do not search for the closing pair if spaces are in between
 ```
