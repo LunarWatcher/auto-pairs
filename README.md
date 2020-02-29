@@ -52,8 +52,8 @@ output: '[|'
 All the string characters can be set as a global variable `g:AutoPairsQuoteClosingChar`
 or buffer variable `b:AutoPairsQuoteClosingChar`.
 ```vim
-let g:AutoPairsQuoteClosingChar = \['"', \"'",'\`'\]
-let b:AutoPairsQuoteClosingChar = \['"', \"'",'\`'\]
+let g:AutoPairsQuoteClosingChar = ['"', "'",'`']
+let b:AutoPairsQuoteClosingChar = ['"', "'",'`']
 ```
 If the next character of the cursor is any of these characters, auto-completion
 will be inhibited.
