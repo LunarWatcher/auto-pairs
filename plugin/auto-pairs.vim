@@ -236,6 +236,8 @@ func! AutoPairsInsert(key)
       end
 
       " Krasjet: do not complete the closing pair until pairs are balanced
+      " TODO actually, I might prefer to not complete single quote, consider
+      " I'm 'b'
       if open == close || close ==# "'"
         if count(before.afterline,close) % 2 != 0
           break
