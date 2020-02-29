@@ -1,9 +1,7 @@
 " Insert or delete brackets, parens, quotes in pairs.
-" Maintainer:	JiangMiao <jiangfriend@gmail.com>
-" Contributor: camthompson, Krasjet
-" Last Change:  2020-02-27
+" Fork Maintainer:	Krasjet
+" Last Change:  2020-02-29
 " Version: 2.0.0
-" Homepage: http://www.vim.org/scripts/script.php?script_id=3599
 " Fork Repository: https://github.com/Krasjet/auto.pairs
 " License: MIT
 
@@ -26,6 +24,12 @@ end
 " be triggered
 if !exists('g:AutoPairsNextCharWhitelist')
   let g:AutoPairsNextCharWhitelist = []
+end
+
+" Krasjet: turn on/off the balance check for single quotes (')
+" suggestions: use ftplugin/autocmd to turn this off for text documents
+if !exists('g:AutoPairsSingleQuoteBalanceCheck')
+  let g:AutoPairsSingleQuoteBalanceCheck = 1
 end
 
 " default pairs base on filetype
@@ -236,9 +240,7 @@ func! AutoPairsInsert(key)
       end
 
       " Krasjet: do not complete the closing pair until pairs are balanced
-      " TODO actually, I might prefer to not complete single quote, consider
-      " I'm 'b'
-      if open == close || close ==# "'"
+      if open == close || (b:AutoPairsSingleQuoteBalanceCheck && close ==# "'")
         if count(before.afterline,close) % 2 != 0
           break
         end
@@ -302,8 +304,14 @@ func! AutoPairsInsert(key)
       let m = matchstr(afterline, '^\V'.close)
       if m != ''
         " Krasjet: only jump across the closing pair if pairs are balanced
-        if count(before.afterline,open) > count(before.afterline,close)
-          return a:key
+        if open == close || (b:AutoPairsSingleQuoteBalanceCheck && close ==# "'")
+          if count(before.afterline,close) % 2 != 0
+            return a:key
+          end
+        else
+          if count(before.afterline,open) > count(before.afterline,close)
+            return a:key
+          end
         end
         if before =~ '\V'.open.'\v\s*$' && m[0] =~ '\v\s'
           " remove the space we inserted if the text in pairs is blank
@@ -522,6 +530,10 @@ func! AutoPairsInit()
 
   if !exists('b:AutoPairsNextCharWhitelist')
     let b:AutoPairsNextCharWhitelist = copy(g:AutoPairsNextCharWhitelist)
+  end
+
+  if !exists('b:AutoPairsSingleQuoteBalanceCheck')
+    let b:AutoPairsSingleQuoteBalanceCheck = g:AutoPairsSingleQuoteBalanceCheck
   end
 
   if !exists('b:AutoPairsMoveCharacter')

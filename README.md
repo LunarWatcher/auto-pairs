@@ -106,6 +106,29 @@ input:  "str|      (press '"')
 output: "str"|
 ```
 
+The balance check for single quote (') can be turned on or off using the variable
+`g:AutoPairsSingleQuoteBalanceCheck` and `b:AutoPairsSingleQuoteBalanceCheck`
+```vim
+let g:AutoPairsSingleQuoteBalanceCheck = 1
+let b:AutoPairsSingleQuoteBalanceCheck = 0
+```
+It is turned on by default, but you might want to use `ftplugin` or `autocmd` to turn it off for text files (LaTeX, markdown, etc.). Consider
+```
+input:  There's a '|      (press "'")
+// single quote balance check on
+output: There's a ''|'
+// single quote balance check off
+output: There's a ''|
+```
+However, for code files,
+```
+input:  ['a', |]          (press "'")
+// single quote balance check on
+output: ['a', '|']
+// single quote balance check off
+output: ['a', '|]
+```
+
 - The default value of `g:AutoPairsMultilineClose` has been changed to 0.
 If you want to enable it, set
 ```
