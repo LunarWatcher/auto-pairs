@@ -6,10 +6,11 @@ intended to be used by myself. If you want to know how to use the plugin,
 please read the [original readme](https://github.com/jiangmiao/auto-pairs).
 
 Since auto-pairing can be extremely subjective, if you are unsatisfied with
-your own auto-pairing configurations, I would suggest you read the
-[survey](https://github.com/Krasjet/auto.pairs#a-survey-on-similar-plugins)
-below. Pick one of the plugins, make a fork and customize it to your liking.
-The issues listed below should be enough to get you started.
+your own auto-pairing configurations, I would suggest you read the survey
+[below](#a-survey-on-similar-plugins) or
+[here](https://krasjet.com/voice/auto.pairs/). Pick one of the plugins, make
+a fork and customize it to your liking. The issues listed below should be
+enough to get you started.
 
 Of course, if you want to use
 [auto-pairs](https://github.com/jiangmiao/auto-pairs), the comments in my
@@ -59,13 +60,15 @@ If the next character of the cursor is any of these, auto-completion will be
 inhibited.
 
 There is also variables `g:AutoPairsNextCharWhitelist` and
-`b:AutoPairsNextCharWhitelist` to whitelist certain characters (or strings) such that
-trigger the auto-completion when appeared as the next character.
+`b:AutoPairsNextCharWhitelist` to whitelist certain characters (or strings)
+such that trigger the auto-completion when appeared as the next character.
 ```vim
 let g:AutoPairsNextCharWhitelist = []
 let b:AutoPairsNextCharWhitelist = ['.', ',']
 ```
-If the next character(s) of the cursor is any of these, auto-completion will be triggered. I usually would add `.` and `,` to the whitelist for LaTeX and markdown files.
+If the next character(s) of the cursor is any of these, auto-completion will be
+triggered. I usually would add `.` and `,` to the whitelist for LaTeX and
+markdown files.
 
 In summary, auto-completion will only be triggered if
 
