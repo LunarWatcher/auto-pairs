@@ -63,7 +63,7 @@ There is also variables `g:AutoPairsNextCharWhitelist` and
 trigger the auto-completion when appeared as the next character.
 ```vim
 let g:AutoPairsNextCharWhitelist = []
-let b:AutoPairsQuoteClosingChar = ['.', ',']
+let b:AutoPairsNextCharWhitelist = ['.', ',']
 ```
 If the next character(s) of the cursor is any of these, auto-completion will be triggered.
 
