@@ -65,7 +65,7 @@ trigger the auto-completion when appeared as the next character.
 let g:AutoPairsNextCharWhitelist = []
 let b:AutoPairsNextCharWhitelist = ['.', ',']
 ```
-If the next character(s) of the cursor is any of these, auto-completion will be triggered.
+If the next character(s) of the cursor is any of these, auto-completion will be triggered. I usually would add `.` and `,` to the whitelist for LaTeX and markdown files.
 
 In summary, auto-completion will only be triggered if
 
