@@ -106,13 +106,14 @@ input:  "str|      (press '"')
 output: "str"|
 ```
 
-The balance check for single quote (') can be turned on or off using the variable
+The balance check for single quote (`'`) can be turned on or off using the variable
 `g:AutoPairsSingleQuoteBalanceCheck` and `b:AutoPairsSingleQuoteBalanceCheck`
 ```vim
 let g:AutoPairsSingleQuoteBalanceCheck = 1
 let b:AutoPairsSingleQuoteBalanceCheck = 0
 ```
-It is turned on by default, but you might want to use `ftplugin` or `autocmd` to turn it off for text files (LaTeX, markdown, etc.). Consider
+It is turned on by default, but you might want to use `ftplugin` or `autocmd`
+to turn it off for text files (LaTeX, markdown, etc.). Consider
 ```
 input:  There's a '|      (press "'")
 // single quote balance check on
