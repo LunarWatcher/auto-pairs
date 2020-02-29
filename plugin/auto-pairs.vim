@@ -225,7 +225,7 @@ func! AutoPairsInsert(key)
 
       " Krasjet: only insert the closing pair if the next character is a space
       " or a non-string closing pair
-      if after[0] =~? '\v\S' && afterline !~# b:closing_pairs
+      if afterline[0] =~? '\v\S' && afterline !~# b:closing_pairs
         break
       end
 
