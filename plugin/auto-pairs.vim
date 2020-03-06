@@ -1,6 +1,6 @@
 " Insert or delete brackets, parens, quotes in pairs.
 " Fork Maintainer:	Krasjet
-" Last Change:  2020-02-29
+" Last Change:  2020-03-06
 " Version: 2.0.0
 " Fork Repository: https://github.com/Krasjet/auto.pairs
 " License: MIT
@@ -24,6 +24,11 @@ end
 " be triggered
 if !exists('g:AutoPairsNextCharWhitelist')
   let g:AutoPairsNextCharWhitelist = []
+end
+
+" Krasjet: don't perform open balance check on these characters
+if !exists('g:AutoPairsOpenBalanceBlacklist')
+  let g:AutoPairsOpenBalanceBlacklist = []
 end
 
 " Krasjet: turn on/off the balance check for single quotes (')
@@ -240,13 +245,15 @@ func! AutoPairsInsert(key)
       end
 
       " Krasjet: do not complete the closing pair until pairs are balanced
-      if open == close || (b:AutoPairsSingleQuoteBalanceCheck && close ==# "'")
-        if count(before.afterline,close) % 2 != 0
-          break
-        end
-      else
-        if count(before.afterline,open) < count(before.afterline,close)
-          break
+      if open !~# b:autopairs_open_blacklist
+        if open == close || (b:AutoPairsSingleQuoteBalanceCheck && close ==# "'")
+          if count(before.afterline,close) % 2 != 0
+            break
+          end
+        else
+          if count(before.afterline,open) < count(before.afterline,close)
+            break
+          end
         end
       end
 
@@ -532,6 +539,10 @@ func! AutoPairsInit()
     let b:AutoPairsNextCharWhitelist = copy(g:AutoPairsNextCharWhitelist)
   end
 
+  if !exists('b:AutoPairsOpenBalanceBlacklist')
+    let b:AutoPairsOpenBalanceBlacklist = copy(g:AutoPairsOpenBalanceBlacklist)
+  end
+
   if !exists('b:AutoPairsSingleQuoteBalanceCheck')
     let b:AutoPairsSingleQuoteBalanceCheck = g:AutoPairsSingleQuoteBalanceCheck
   end
@@ -598,6 +609,13 @@ func! AutoPairsInit()
   endfor
   " Krasjet: construct a regex for whitelisted strings
   let b:autopairs_next_char_whitelist = '^\V\('.join(b:autopairs_next_char_whitelist,'\|').'\)'
+
+  " Krasjet: add blacklisted open strings to the list
+  let b:autopairs_open_blacklist = []
+  for str in b:AutoPairsOpenBalanceBlacklist
+    let b:autopairs_open_blacklist += [escape(str,'\')]
+  endfor
+  let b:autopairs_open_blacklist = '^\V\('.join(b:autopairs_open_blacklist,'\|').'\)'
 
   for item in b:AutoPairsList
     let [open, close, opt] = item

@@ -130,9 +130,23 @@ output: ['a', '|']
 output: ['a', '|]
 ```
 
+The balance check for a opening pair can be turned off using
+`g:AutoPairsOpenBalanceBlacklist` and `b:AutoPairsOpenBalanceBlacklist`
+```vim
+let g:AutoPairsOpenBalanceBlacklist = []
+let b:AutoPairsOpenBalanceBlacklist = ['{']
+```
+This is a temporary workaround for `if-else` clause in C-like languages.
+```
+input:  } else |        (press '{')
+output: } else {|
+```
+Nothing is in the blacklist by default, but you can use `ftplugin` or `autocmd`
+to turn off the open balance check for `{`.
+
 - The default value of `g:AutoPairsMultilineClose` has been changed to 0.
 If you want to enable it, set
-```
+```vim
 let g:AutoPairsMultilineClose = 1
 ```
 but be cautious that this fork might break it (and the fly mode, which is also
