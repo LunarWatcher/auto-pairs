@@ -139,6 +139,9 @@ let b:AutoPairsOpenBalanceBlacklist = ['{']
 This is a temporary workaround for `if-else` clause in C-like languages.
 ```
 input:  } else |        (press '{')
+// with open balance check off
+output: } else {|}
+// with open balance check on
 output: } else {|
 ```
 Nothing is in the blacklist by default, but you can use `ftplugin` or `autocmd`
