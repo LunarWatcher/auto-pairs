@@ -608,14 +608,22 @@ func! AutoPairsInit()
     let b:autopairs_next_char_whitelist += [escape(str,'\')]
   endfor
   " Krasjet: construct a regex for whitelisted strings
-  let b:autopairs_next_char_whitelist = '^\V\('.join(b:autopairs_next_char_whitelist,'\|').'\)'
+  if empty(b:autopairs_next_char_whitelist)
+    let b:autopairs_next_char_whitelist = '^$'
+  else
+    let b:autopairs_next_char_whitelist = '^\V\('.join(b:autopairs_next_char_whitelist,'\|').'\)'
+  endif
 
   " Krasjet: add blacklisted open strings to the list
   let b:autopairs_open_blacklist = []
   for str in b:AutoPairsOpenBalanceBlacklist
     let b:autopairs_open_blacklist += [escape(str,'\')]
   endfor
-  let b:autopairs_open_blacklist = '^\V\('.join(b:autopairs_open_blacklist,'\|').'\)'
+  if empty(b:autopairs_open_blacklist)
+    let b:autopairs_open_blacklist = '^$'
+  else
+    let b:autopairs_open_blacklist = '^\V\('.join(b:autopairs_open_blacklist,'\|').'\)'
+  endif
 
   for item in b:AutoPairsList
     let [open, close, opt] = item
