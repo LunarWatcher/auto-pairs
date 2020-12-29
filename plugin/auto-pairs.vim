@@ -1,10 +1,7 @@
 " Insert or delete brackets, parens, quotes in pairs.
-" Maintainer:	JiangMiao <jiangfriend@gmail.com>
-" Contributor: camthompson
-" Last Change:  2020-29-12
+
 " Version: 2.0.0
-" Homepage: http://www.vim.org/scripts/script.php?script_id=3599
-" Repository: https://github.com/jiangmiao/auto-pairs
+" Fork Repository: https://github.com/Krasjet/auto.pairs
 " License: MIT
 
 if exists('g:AutoPairsLoaded') || &cp
@@ -14,6 +11,29 @@ let g:AutoPairsLoaded = 1
 
 if !exists('g:AutoPairs')
   let g:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"', '```':'```', '"""':'"""', "'''":"'''", "`":"`"}
+end
+
+" Krasjet: the closing character for quotes, auto completion will be
+" inhibited when the next character is one of these
+if !exists('g:AutoPairsQuoteClosingChar')
+  let g:AutoPairsQuoteClosingChar = ['"', "'", '`']
+end
+
+" Krasjet: if the next character is any of these, auto-completion will still
+" be triggered
+if !exists('g:AutoPairsNextCharWhitelist')
+  let g:AutoPairsNextCharWhitelist = []
+end
+
+" Krasjet: don't perform open balance check on these characters
+if !exists('g:AutoPairsOpenBalanceBlacklist')
+  let g:AutoPairsOpenBalanceBlacklist = []
+end
+
+" Krasjet: turn on/off the balance check for single quotes (')
+" suggestions: use ftplugin/autocmd to turn this off for text documents
+if !exists('g:AutoPairsSingleQuoteBalanceCheck')
+  let g:AutoPairsSingleQuoteBalanceCheck = 1
 end
 
 " default pairs base on filetype
@@ -91,8 +111,9 @@ endif
 
 " When skipping the closed pair, look at the current and
 " next line as well.
+" Krasjet: default changed to 0
 if !exists('g:AutoPairsMultilineClose')
-  let g:AutoPairsMultilineClose = 1
+  let g:AutoPairsMultilineClose = 0
 endif
 
 " Work with Fly Mode, insert pair where jumped
@@ -220,6 +241,25 @@ func! AutoPairsInsert(key)
     if len(ms) > 0
       " process the open pair
 
+      " Krasjet: only insert the closing pair if the next character is a space
+      " or a non-quote closing pair, or a whitelisted character (string)
+      if afterline[0] =~? '^\v\S' && afterline !~# b:autopairs_next_char_whitelist
+        break
+      end
+
+      " Krasjet: do not complete the closing pair until pairs are balanced
+      if open !~# b:autopairs_open_blacklist
+        if open == close || (b:AutoPairsSingleQuoteBalanceCheck && close ==# "'")
+          if count(before.afterline,close) % 2 != 0
+            break
+          end
+        else
+          if count(before.afterline,open) < count(before.afterline,close)
+            break
+          end
+        end
+      end
+
       " remove inserted pair
       " eg: if the pairs include < > and  <!-- -->
       " when <!-- is detected the inserted pair < > should be clean up
@@ -269,8 +309,20 @@ func! AutoPairsInsert(key)
     end
     if a:key == g:AutoPairsWildClosedPair || opt['mapclose'] && opt['key'] == a:key
       " the close pair is in the same line
-      let m = matchstr(afterline, '^\v\s*\V'.close)
+
+      " Krasjet: do not search for the closing pair if spaces are in between
+      let m = matchstr(afterline, '^\V'.close)
       if m != ''
+        " Krasjet: only jump across the closing pair if pairs are balanced
+        if open == close || (b:AutoPairsSingleQuoteBalanceCheck && close ==# "'")
+          if count(before.afterline,close) % 2 != 0
+            return a:key
+          end
+        else
+          if count(before.afterline,open) > count(before.afterline,close)
+            return a:key
+          end
+        end
         if before =~ '\V'.open.'\v\s*$' && m[0] =~ '\v\s'
           " remove the space we inserted if the text in pairs is blank
           return "\<DEL>".s:right(m[1:])
@@ -278,7 +330,7 @@ func! AutoPairsInsert(key)
           return s:right(m)
         end
       end
-      let m = matchstr(after, '^\v\s*\zs\V'.close)
+      let m = matchstr(after, '^\V'.close)
       if m != ''
         if a:key == g:AutoPairsWildClosedPair || opt['multiline']
           if b:autopairs_return_pos == line('.') && getline('.') =~ '\v^\s*$'
@@ -482,12 +534,31 @@ func! AutoPairsInit()
     let b:AutoPairs = AutoPairsDefaultPairs()
   end
 
+  if !exists('b:AutoPairsQuoteClosingChar')
+    let b:AutoPairsQuoteClosingChar = copy(g:AutoPairsQuoteClosingChar)
+  end
+
+  if !exists('b:AutoPairsNextCharWhitelist')
+    let b:AutoPairsNextCharWhitelist = copy(g:AutoPairsNextCharWhitelist)
+  end
+
+  if !exists('b:AutoPairsOpenBalanceBlacklist')
+    let b:AutoPairsOpenBalanceBlacklist = copy(g:AutoPairsOpenBalanceBlacklist)
+  end
+
+  if !exists('b:AutoPairsSingleQuoteBalanceCheck')
+    let b:AutoPairsSingleQuoteBalanceCheck = g:AutoPairsSingleQuoteBalanceCheck
+  end
+
   if !exists('b:AutoPairsMoveCharacter')
     let b:AutoPairsMoveCharacter = g:AutoPairsMoveCharacter
   end
 
   let b:autopairs_return_pos = 0
   let b:autopairs_saved_pair = [0, 0]
+  " Krasjet: only auto-complete if the next character, or characters, is one of
+  " these
+  let b:autopairs_next_char_whitelist = []
   let b:AutoPairsList = []
 
   " buffer level map pairs keys
@@ -524,11 +595,38 @@ func! AutoPairsInit()
     if o != c && c != '' && opt['mapclose']
       call AutoPairsMap(c)
     end
+
+    " Krasjet: add any non-string closing characters to a list
     let b:AutoPairsList += [[open, close, opt]]
+    if close !=? '' && close !~# '\V\['.escape(join(b:AutoPairsQuoteClosingChar,''),'\').']'
+      let b:autopairs_next_char_whitelist += [escape(close,'\')]
+    end
   endfor
 
   " sort pairs by length, longer pair should have higher priority
   let b:AutoPairsList = sort(b:AutoPairsList, "s:sortByLength")
+
+  " Krasjet: add whitelisted strings to the list
+  for str in b:AutoPairsNextCharWhitelist
+    let b:autopairs_next_char_whitelist += [escape(str,'\')]
+  endfor
+  " Krasjet: construct a regex for whitelisted strings
+  if empty(b:autopairs_next_char_whitelist)
+    let b:autopairs_next_char_whitelist = '^$'
+  else
+    let b:autopairs_next_char_whitelist = '^\V\('.join(b:autopairs_next_char_whitelist,'\|').'\)'
+  endif
+
+  " Krasjet: add blacklisted open strings to the list
+  let b:autopairs_open_blacklist = []
+  for str in b:AutoPairsOpenBalanceBlacklist
+    let b:autopairs_open_blacklist += [escape(str,'\')]
+  endfor
+  if empty(b:autopairs_open_blacklist)
+    let b:autopairs_open_blacklist = '^$'
+  else
+    let b:autopairs_open_blacklist = '^\V\('.join(b:autopairs_open_blacklist,'\|').'\)'
+  endif
 
   for item in b:AutoPairsList
     let [open, close, opt] = item
@@ -536,7 +634,6 @@ func! AutoPairsInit()
       let item[0] = '\v(^|\W)\zs'''
     end
   endfor
-
 
   for key in split(b:AutoPairsMoveCharacter, '\s*')
     let escaped_key = substitute(key, "'", "''", 'g')

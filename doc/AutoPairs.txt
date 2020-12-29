@@ -1,8 +1,11 @@
-*AutoPairs.txt*  Insert or delete brackets, parens, quotes in pair
+*AutoPairs.txt*  Insert or delete brackets, parens, quotes in pair (a fork by
+    Krasjet)
 
 Author:  jiangmiao
+Fork: Krasjet
 License: MIT
 URL: https://github.com/jiangmiao/auto-pairs
+Fork URL: https://github.com/Krasjet/auto.pairs
 
 ==============================================================================
 CONTENTS                                                    *autopairs-contents*
@@ -13,15 +16,14 @@ CONTENTS                                                    *autopairs-contents*
     4. Shortcuts ................................... |autopairs-shortcuts|
     5. Options ....................................... |autopairs-options|
     6. Troubleshooting ......................  |autopairs-troubleshooting|
+    7. Main changes .................................  |autopairs-changes|
 
 ==============================================================================
-1. Introduction                                         *autopairs-installation*
+1. Installation                                       *autopairs-installation*
 
-Copy `plugin/auto-pairs.vim` to `~/.vim/plugin`.
+With vim-plug
 
-Or if you are using `pathogen`: >
-
-    git clone git://github.com/jiangmiao/auto-pairs.git ~/.vim/bundle/auto-pairs
+    Plug 'LunarWathcher/auto-pairs'
 
 ==============================================================================
 2. Features                                                 *autopairs-features*
@@ -318,7 +320,10 @@ Set it to 1 to enable |autopairs-flymode|.
                                                     *g:AutoPairsMultilineClose*
 |g:AutoPairsMultilineClose|                                                 int
 
-Default: 1
+Default: 0
+
+In this fork, the default has been changed to 0 because I find it very
+annoying.
 
 When you press the key for the closing pair (e.g. `)`) it jumps past it.
 If set to 1, then it'll jump to the next line, if there is only 'whitespace'.
@@ -356,3 +361,138 @@ Scandinavian characters, such as å. To fix the issue, you need remap or
 disable the related shortcut.
 
 vim:ft=help
+
+==============================================================================
+7. Main changes                                            *autopairs-changes*
+
+This fork of auto-pairs fixes some common issues in the original plugin and
+makes the auto-completion rules more sensible. Currently there are no options
+to turn off the changes since this fork is currently only intended for my
+personal use. I might add some options in the future, maybe.
+
+* Only insert the closing pair if the next character is a space or a non-quote
+closing pair.
+
+    input: | s    (press '(')
+    output: (|) s
+
+    input: |s     (press '(')
+    output: (|s
+
+    input: (|)    (press '(')
+    output: ((|))
+
+    input: (|)    (press '[')
+    output: ([|])
+
+    input: '|'    (press '[')
+    output: '[|'
+                                                 *b:AutoPairsQuoteClosingChar*
+                                                 *g:AutoPairsQuoteClosingChar*
+
+All the quote characters can be set as a global variable |g:AutoPairsQuoteClosingChar|
+or buffer variable |b:AutoPairsQuoteClosingChar|.
+
+    let g:AutoPairsQuoteClosingChar = ['"', "'",'`']
+    let b:AutoPairsQuoteClosingChar = ['"', "'",'`']
+
+If the next character of the cursor is any of these, auto-completion will be
+will be inhibited.
+
+                                                *b:AutoPairsNextCharWhitelist*
+                                                *g:AutoPairsNextCharWhitelist*
+
+There is also variables |g:AutoPairsNextCharWhitelist| and
+|b:AutoPairsNextCharWhitelist| to whitelist certain characters (or strings)
+such that they trigger the auto-completion when appeared as the next character.
+
+    let g:AutoPairsNextCharWhitelist = []
+    let b:AutoPairsNextCharWhitelist = ['.', ',']
+
+If the next character(s) of the cursor is any of these, auto-completion will be triggered. I usually would add '.' and ',' to the whitelist for LaTeX and markdown files.
+
+In summary, auto-completion will only be triggered if
+
+1. the next character is a space
+2. or the next character is not from the closing pair of a quote
+3. or the next character is in the whitelist
+
+* Do not search for the closing pair if spaces are in between
+
+    input: " | "    (press '"')
+    output: " "| "
+
+    input: " |"     (press '"')
+    output: " "|
+
+* Only jump across the closing pair if pairs are balanced
+
+    input: (((|))     (press ')')
+    output: (((|)))
+
+    input: (((|)))    (press ')')
+    output: ((()|))
+
+* Do not complete the closing pair until pairs are balanced
+
+    input: ((|)))      (press '(')
+    output: (((|)))
+
+    input: (((|)))     (press '(')
+    output: ((((|))))
+
+    input:  "str|      (press '"')
+    output: "str"|
+
+
+                                          *b:AutoPairsSingleQuoteBalanceCheck*
+                                          *g:AutoPairsSingleQuoteBalanceCheck*
+The balance check for single quote (') can be turned on or off using the
+variable |g:AutoPairsSingleQuoteBalanceCheck| and
+|b:AutoPairsSingleQuoteBalanceCheck|
+
+    let g:AutoPairsSingleQuoteBalanceCheck = 1
+    let b:AutoPairsSingleQuoteBalanceCheck = 0
+
+It is turned on by default, but you might want to use |ftplugin| or |autocmd|
+to turn it off for text files (LaTeX, markdown, etc.). Consider
+
+    input:  There's a '|      (press "'")
+    // single quote balance check on
+    output: There's a ''|'
+    // single quote balance check off
+    output: There's a ''|
+
+However, for code files,
+
+    input:  ['a', |]          (press "'")
+    // single quote balance check on
+    output: ['a', '|']
+    // single quote balance check off
+    output: ['a', '|]
+
+                                             *b:AutoPairsOpenBalanceBlacklist*
+                                             *g:AutoPairsOpenBalanceBlacklist*
+The balance check for a opening pair can be turned off using
+|g:AutoPairsOpenBalanceBlacklist| and |b:AutoPairsOpenBalanceBlacklist|
+
+    let g:AutoPairsOpenBalanceBlacklist = []
+    let b:AutoPairsOpenBalanceBlacklist = ['{']
+
+This is a temporary workaround for `if-else` clause in C-like languages.
+
+    input:  } else |        (press '{')
+    // with open balance check off
+    output: } else {|}
+    // with open balance check on
+    output: } else {|
+
+Nothing is in the blacklist by default, but you can use |ftplugin| or |autocmd|
+to turn off the open balance check for '{'.
+
+* The default value of |g:AutoPairsMultilineClose| has been changed to 0.
+If you want to enable it, set
+
+    let g:AutoPairsMultilineClose = 1
+
+but be cautious that this fork might break it (unverified).
