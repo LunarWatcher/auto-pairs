@@ -12,6 +12,13 @@ Installation
 * [Vundle](https://github.com/VundleVim/Vundle.vim)
   * `Plugin 'LunarWatcher/auto-pairs'`
 
+Differences from jiangmiao
+--------------------------
+
+This version contains a few updates that were never merged into the upstream repo. Additionally, it includes Krasjet's improvements, though with some extra tweaks.
+
+
+
 Features
 --------
 

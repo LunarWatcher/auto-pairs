@@ -1,7 +1,7 @@
 " Insert or delete brackets, parens, quotes in pairs.
-
-" Version: 2.0.0
-" Fork Repository: https://github.com/Krasjet/auto.pairs
+" Fork Maintainer: Olivia
+" Version: 2.1.0
+" Fork Repository: https://github.com/LunarWatcher/auto-pairs
 " License: MIT
 
 if exists('g:AutoPairsLoaded') || &cp
@@ -58,13 +58,15 @@ func! AutoPairsDefaultPairs()
   return r
 endf
 
+" Olivia: set to0 based on my own personal biases
 if !exists('g:AutoPairsMapBS')
-  let g:AutoPairsMapBS = 1
+  let g:AutoPairsMapBS = 0
 end
 
 " Map <C-h> as the same BS
+" Olivia: Default to 0
 if !exists('g:AutoPairsMapCh')
-  let g:AutoPairsMapCh = 1
+  let g:AutoPairsMapCh = 0
 end
 
 if !exists('g:AutoPairsMapCR')
@@ -80,7 +82,7 @@ if !exists('g:AutoPairsCRKey')
 endif
 
 if !exists('g:AutoPairsMapSpace')
-  let g:AutoPairsMapSpace = 1
+  let g:AutoPairsMapSpace = 0
 end
 
 if !exists('g:AutoPairsCenterLine')
@@ -98,6 +100,10 @@ end
 if !exists('g:AutoPairsMoveCharacter')
   let g:AutoPairsMoveCharacter = "()[]{}\"'"
 end
+
+if !exists('g:AutoPairsCompleteOnSpace')
+    let g:AutoPairsCompleteOnSpace = 0
+endif
 
 if !exists('g:AutoPairsShortcutJump')
   let g:AutoPairsShortcutJump = '<M-n>'
@@ -136,9 +142,6 @@ endif
 
 let s:Left = s:Go."\<LEFT>"
 let s:Right = s:Go."\<RIGHT>"
-
-
-
 
 " unicode len
 func! s:ulen(s)
@@ -243,7 +246,8 @@ func! AutoPairsInsert(key)
 
       " Krasjet: only insert the closing pair if the next character is a space
       " or a non-quote closing pair, or a whitelisted character (string)
-      if afterline[0] =~? '^\v\S' && afterline !~# b:autopairs_next_char_whitelist
+      " Olivia: that ^ if and only if it's desired. 
+      if g:AutoPairsCompleteOnSpace == 1 && afterline[0] =~? '^\v\S' && afterline !~# b:autopairs_next_char_whitelist
         break
       end
 
@@ -322,7 +326,7 @@ func! AutoPairsInsert(key)
           if count(before.afterline,open) > count(before.afterline,close)
             return a:key
           end
-        end
+      end
         if before =~ '\V'.open.'\v\s*$' && m[0] =~ '\v\s'
           " remove the space we inserted if the text in pairs is blank
           return "\<DEL>".s:right(m[1:])
@@ -506,7 +510,8 @@ func! AutoPairsMap(key)
   end
   let escaped_key = substitute(key, "'", "''", 'g')
   " use expr will cause search() doesn't work
-  execute 'inoremap <buffer> <silent> '.key." <C-R>=AutoPairsInsert('".escaped_key."')<CR>"
+
+  execute 'inoremap <buffer> <expr> <silent> '.key." AutoPairsInsert('".escaped_key."')"
 endf
 
 func! AutoPairsToggle()
@@ -767,8 +772,8 @@ func! AutoPairsTryInit()
 endf
 
 " Always silent the command
-inoremap <silent> <SID>AutoPairsReturn <C-R>=AutoPairsReturn()<CR>
-imap <script> <Plug>AutoPairsReturn <SID>AutoPairsReturn
+inoremap <expr> <silent> <SID>AutoPairsReturn <C-R>=AutoPairsReturn()<CR>
+imap <expr> <script> <Plug>AutoPairsReturn <SID>AutoPairsReturn
 
 
 au BufEnter * :call AutoPairsTryInit()
