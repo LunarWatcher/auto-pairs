@@ -349,8 +349,10 @@ There are 3 ways:
 
     3. Use DEL or <C-O>x to delete the character insert by plugin.
 
---- Swedish Character Conflict ---
+--- Scandinavian Character Conflict ---
 
 Because AutoPairs uses Meta(Alt) key as a shortcut, it conflicts with some
-Swedish character such as å. To fix the issue, you need remap or disable the
-related shortcut.
+Scandinavian characters, such as å. To fix the issue, you need remap or
+disable the related shortcut.
+
+vim:ft=help

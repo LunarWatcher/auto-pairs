@@ -16,10 +16,6 @@ if !exists('g:AutoPairs')
   let g:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"', '```':'```', '"""':'"""', "'''":"'''", "`":"`"}
 end
 
-if !exists('g:AutoPairsParens')
-  let g:AutoPairsParens = {'(':')', '[':']', '{':'}'}
-end
-
 " default pairs base on filetype
 func! AutoPairsDefaultPairs()
   if exists('b:autopairs_defaultpairs')
@@ -223,10 +219,10 @@ func! AutoPairsInsert(key)
     let m = matchstr(afterline, '^\v\s*\zs\V'.close)
     if len(ms) > 0
       " process the open pair
-      
+
       " remove inserted pair
-      " eg: if the pairs include < > and  <!-- --> 
-      " when <!-- is detected the inserted pair < > should be clean up 
+      " eg: if the pairs include < > and  <!-- -->
+      " when <!-- is detected the inserted pair < > should be clean up
       let target = ms[1]
       let openPair = ms[2]
       if len(openPair) == 1 && m == openPair
@@ -507,7 +503,7 @@ func! AutoPairsInit()
       let opt['multiline'] = 0
     end
     let m = matchlist(close, '\v(.*)//(.*)$')
-    if len(m) > 0 
+    if len(m) > 0
       if m[2] =~ 'n'
         let opt['mapclose'] = 0
       end

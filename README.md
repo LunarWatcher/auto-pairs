@@ -8,9 +8,9 @@ Installation
 * Manual
   * Copy `plugin/auto-pairs.vim` to `~/.vim/plugin`
 * [Pathogen](https://github.com/tpope/vim-pathogen)
-  * `git clone git://github.com/jiangmiao/auto-pairs.git ~/.vim/bundle/auto-pairs`
+  * `git clone git://github.com/LunarWatcher/auto-pairs.git ~/.vim/bundle/auto-pairs`
 * [Vundle](https://github.com/VundleVim/Vundle.vim)
-  * `Plugin 'jiangmiao/auto-pairs'`
+  * `Plugin 'LunarWatcher/auto-pairs'`
 
 Features
 --------
@@ -120,7 +120,7 @@ Features
         See Fly Mode section for details
 
 *  Multibyte Pairs
-        
+
         Support any multibyte pairs such as <!-- -->, <% %>, """ """
         See multibyte pairs section for details
 
