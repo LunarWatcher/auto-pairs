@@ -1,7 +1,7 @@
 " Insert or delete brackets, parens, quotes in pairs.
 " Maintainer:	JiangMiao <jiangfriend@gmail.com>
 " Contributor: camthompson
-" Last Change:  2019-02-02
+" Last Change:  2020-29-12
 " Version: 2.0.0
 " Homepage: http://www.vim.org/scripts/script.php?script_id=3599
 " Repository: https://github.com/jiangmiao/auto-pairs
@@ -14,6 +14,10 @@ let g:AutoPairsLoaded = 1
 
 if !exists('g:AutoPairs')
   let g:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"', '```':'```', '"""':'"""', "'''":"'''", "`":"`"}
+end
+
+if !exists('g:AutoPairsParens')
+  let g:AutoPairsParens = {'(':')', '[':']', '{':'}'}
 end
 
 " default pairs base on filetype
@@ -53,7 +57,11 @@ end
 
 if !exists('g:AutoPairsWildClosedPair')
   let g:AutoPairsWildClosedPair = ''
-end
+endif
+
+if !exists('g:AutoPairsCRKey')
+  let g:AutoPairsCRKey = '<CR>'
+endif
 
 if !exists('g:AutoPairsMapSpace')
   let g:AutoPairsMapSpace = 1
@@ -659,7 +667,7 @@ func! AutoPairsTryInit()
         let old_cr = wrapper_name
       end
       " Always silent mapping
-      execute 'inoremap <script> <buffer> <silent> <CR> '.old_cr.'<SID>AutoPairsReturn'
+      execute 'inoremap <script> <buffer> <silent> ' .g:AutoPairsCRKey. ' ' .old_cr.'<SID>AutoPairsReturn'
     end
   endif
   call AutoPairsInit()
