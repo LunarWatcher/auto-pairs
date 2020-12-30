@@ -82,7 +82,7 @@ if !exists('g:AutoPairsCRKey')
 endif
 
 if !exists('g:AutoPairsMapSpace')
-  let g:AutoPairsMapSpace = 0
+  let g:AutoPairsMapSpace = 1
 end
 
 if !exists('g:AutoPairsCenterLine')
@@ -772,7 +772,7 @@ func! AutoPairsTryInit()
 endf
 
 " Always silent the command
-inoremap <expr> <silent> <SID>AutoPairsReturn <C-R>=AutoPairsReturn()<CR>
+inoremap <expr> <silent> <SID>AutoPairsReturn AutoPairsReturn()
 imap <expr> <script> <Plug>AutoPairsReturn <SID>AutoPairsReturn
 
 

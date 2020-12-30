@@ -17,7 +17,18 @@ Differences from jiangmiao
 
 This version contains a few updates that were never merged into the upstream repo. Additionally, it includes Krasjet's improvements, though with some extra tweaks.
 
+* `g:AutoPairsCompleteOnSpace` determines whether or not a closing pair should be inserted only when there's a space. 1 = space required, 0 = always insert pair
 
+Additionally, there's a few potential plans that may or may not be implemented at some point (AKA depending on whether or not I'm in the mood for vimscript):
+* ["Endwise rules"](https://github.com/cohama/lexima.vim), possibly in combination with an extended ruleset, without changing core functionality
+* More flexibility for file-specific rules: some people might want to autoinsert &lt;&gt;, unless it's in a language like shell, where &lt; and &gt; aren't required to be in pairs.
+* Code cleanup: aside formatting (never been a fan of 2 spaces to indent), try to reduce verbosity by introducing functions.
+
+A couple of these will have to wait until I properly understand the code; I have at least 8 years of development to catch up with, and while there isn't that much code, I'm far from proficient enough in Vimscript to just jump in.
+
+Finally, this fork has an additional goal: bringing the plugin back to life. I've already merged in 3 PRs to jiangmiao/auto-pairs that were never handled. The current plan is to handle a few issues as well. If it's a FR and it's reasonable, do it. If it's a bug and I can repro in the current state of the project, fix it.
+
+Note that docs are going to lag a bit behind: merging in about 50-53 commits so far from four different authors with improvements to auto-pairs, as well as introduction of my own tweaks has changed the relevance of the documentation. Will get back to this at a time that isn't 01:04.
 
 Features
 --------
