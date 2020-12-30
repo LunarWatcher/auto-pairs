@@ -1,11 +1,12 @@
-*AutoPairs.txt*  Insert or delete brackets, parens, quotes in pair (a fork by
-    Krasjet)
+*AutoPairs.txt* *autopairs* *AutoPairs*
+
+Insert or delete brackets, parens, quotes in pair (a fork by LunarWatcher)
 
 Author:  jiangmiao
-Fork: Krasjet
+Fork: LunarWatcher (Olivia)
 License: MIT
 URL: https://github.com/jiangmiao/auto-pairs
-Fork URL: https://github.com/Krasjet/auto.pairs
+Fork URL: https://github.com/LunarWatcher/auto-pairs
 
 ==============================================================================
 CONTENTS                                                    *autopairs-contents*
@@ -14,16 +15,18 @@ CONTENTS                                                    *autopairs-contents*
     2. Features ..................................... |autopairs-features|
     3. Fly Mode ...................................... |autopairs-flymode|
     4. Shortcuts ................................... |autopairs-shortcuts|
+        4.1. Shortcut remapping ........... |autopairs-shortcut-remapping|
     5. Options ....................................... |autopairs-options|
-    6. Troubleshooting ......................  |autopairs-troubleshooting|
-    7. Main changes .................................  |autopairs-changes|
+    6. Troubleshooting ....................... |autopairs-troubleshooting|
+        6.1. Conflicting keybinds .................. |autopairs-conflicts|
+    7. Credits ........................................ |autopair-credits|
 
 ==============================================================================
-1. Installation                                       *autopairs-installation*
+1. Installation                                         *autopairs-installation*
 
 With vim-plug
 
-    Plug 'LunarWathcher/auto-pairs'
+    Plug 'LunarWatcher/auto-pairs'
 
 ==============================================================================
 2. Features                                                 *autopairs-features*
@@ -145,6 +148,8 @@ Fly Mode (|autopairs-flymode|): >
 
         See |Fly Mode| section for details
 
+Only inserting when the next character is a space (*autopairs-tbd*)
+
 ==============================================================================
 3. Fly Mode                                                  *autopairs-flymode*
 
@@ -168,7 +173,7 @@ Default Options: >
     let g:AutoPairsShortcutBackInsert = '<M-b>'
 
 ==============================================================================
-4. Shortcuts                                             *autopairs-shortcuts*
+4. Shortcuts                                               *autopairs-shortcuts*
 
 System Shortcuts:
     <CR> : Insert new indented line after return if cursor in blank brackets
@@ -187,26 +192,36 @@ System Shortcuts:
 
     If the key is empty string '', then the shortcut will be disabled.
 
+------------------------------------------------------------------------------
+4.1. Remapping shortcuts                          *autopairs-shortcut-remapping*
+
+At this time, most keybinds are remappable by using various options (see
+|autopairs-options|). The goal is for all of them to be possible to remap.
+
+Additionally, there's currently one keybind that lets you remap `<cr>`, to
+prevent <cr> conflicts. It requires you to remap it explicitly, though.
+
 ==============================================================================
-5. Options                                                 *autopairs-options*
+5. Options                                                   *autopairs-options*
 
                                                                  *g:AutoPairs*
 |g:AutoPairs|                                                             dict
 
 Default: >
-    {'(':')', '[':']', '{':'}',"'":"'",'"':'"', '`':'`'}
+    {'(':')', '[':']', '{':'}',"'":"'",'"':'"', '```':'```', '"""':'"""', "'''":"'''", "`":"`"}
 
 Specifies which symbols should be automatically paired.
 
-To append new pairs without overwriting defaults, add values in your `.vimrc`.:
-
+To append new pairs without overwriting defaults, add values in your
+`.vimrc`.: >
     let g:AutoPairs['<']='>'
-
+<
 This example will enable matching of `<` with `>`.
 
 
-                                                                  *b:AutoPairs*
-|b:AutoPairs|                                                              dict
+------------------------------------------------------------------------------
+                                                                   *b:AutoPairs*
+|b:AutoPairs|                                                               dict
 
 Default: |g:AutoPairs|
 
@@ -218,19 +233,26 @@ You can set |b:AutoPairs| before |BufEnter|: >
 
 This sets |AutoPairs| to only match for parenthesis for 'FILETYPE'.
 
+------------------------------------------------------------------------------
+                                                    *g:AutoPairsCompleteOnSpace*
+|g:AutoPairsCompleteOnSpace|                                              number
 
+Default: 0
 
-                                                    *g:AutoPairsShortcutToggle*
-|g:AutoPairsShortcutToggle|                                              string
+New in 3.0.0
+
+------------------------------------------------------------------------------
+                                                     *g:AutoPairsShortcutToggle*
+|g:AutoPairsShortcutToggle|                                               string
 
 Default: <M-p>
 
 The shortcut to toggle autopairs.
 
 
-
-                                                  *g:AutoPairsShortcutFastWrap*
-|g:AutoPairsShortcutFastWrap|                                            string
+------------------------------------------------------------------------------
+                                                   *g:AutoPairsShortcutFastWrap*
+|g:AutoPairsShortcutFastWrap|                                             string
 
 Default: <M-e>
 
@@ -240,26 +262,26 @@ Fast wrap the word. All pairs will be considered as a block (including <>).
         (|)<hello> after fast wrap at |, the word will be (<hello>)
 
 
-
-                                                      *g:AutoPairsShortcutJump*
-|g:AutoPairsShortcutJump|                                                string
+------------------------------------------------------------------------------
+                                                       *g:AutoPairsShortcutJump*
+|g:AutoPairsShortcutJump|                                                 string
 
 Default: <M-n>
 
 Jump to the next closed pair.
 
-
-                                                *g:AutoPairsShortcutBackInsert*
-|g:AutoPairsShortcutBackInsert|                                          string
+------------------------------------------------------------------------------
+                                                 *g:AutoPairsShortcutBackInsert*
+|g:AutoPairsShortcutBackInsert|                                           string
 
 Default: <M-b>
 
 Work with |autopairs-flymode|, insert the key at the Fly Mode jumped position.
 
 
-
-                                                             *g:AutoPairsMapBS*
-|g:AutoPairsMapBS|                                                          int
+------------------------------------------------------------------------------
+                                                              *g:AutoPairsMapBS*
+|g:AutoPairsMapBS|                                                           int
 
 Default: 1
 
@@ -267,37 +289,28 @@ Map <BS> to delete brackets and quotes in pair, executes:
 
     inoremap <buffer> <silent> <BS> <C-R>=AutoPairsDelete()<CR>
 
-
-                                                             *g:AutoPairsMapCh*
-|g:AutoPairsMapCh|                                                          int
-
-Default: 1
-
-Map <C-h> to delete brackets and quotes in pair.
-
-
-                                                             *g:AutoPairsMapCR*
-|g:AutoPairsMapCR|                                                          int
+------------------------------------------------------------------------------
+                                                              *g:AutoPairsMapCR*
+|g:AutoPairsMapCR|                                                           int
 
 Default: 1
 
 Map <CR> to insert a new indented line if cursor in (|), {|} [|], '|', "|".
-Executes:
-
-    inoremap <buffer> <silent> <CR> <C-R>=AutoPairsReturn()<CR>
-
-
-                                                        *g:AutoPairsCenterLine*
-|g:AutoPairsCenterLine|                                                     int
+Executes: >
+    inoremap <expr> <buffer> <silent> <CR> AutoPairsReturn()
+<
+------------------------------------------------------------------------------
+                                                         *g:AutoPairsCenterLine*
+|g:AutoPairsCenterLine|                                                      int
 
 Default: 1
 
 When |g:AutoPairsMapCR| is on, center current line after return if the line
 is at the bottom 1/3 of the window.
 
-
-                                                          *g:AutoPairsMapSpace*
-|g:AutoPairsMapSpace|                                                       int
+------------------------------------------------------------------------------
+                                                           *g:AutoPairsMapSpace*
+|g:AutoPairsMapSpace|                                                        int
 
 Default: 1
 
@@ -308,29 +321,28 @@ Executes:
 
     inoremap <buffer> <silent> <CR> <C-R>=AutoPairsSpace()<CR>
 
-
-                                                           *g:AutoPairsFlyMode*
-|g:AutoPairsFlyMode|                                                        int
+------------------------------------------------------------------------------
+                                                            *g:AutoPairsFlyMode*
+|g:AutoPairsFlyMode|                                                         int
 
 Default: 0
 
 Set it to 1 to enable |autopairs-flymode|.
 
-
-                                                    *g:AutoPairsMultilineClose*
-|g:AutoPairsMultilineClose|                                                 int
+------------------------------------------------------------------------------
+                                                     *g:AutoPairsMultilineClose*
+|g:AutoPairsMultilineClose|                                                  int
 
 Default: 0
 
-In this fork, the default has been changed to 0 because I find it very
-annoying.
+Krasjet's fork defined this to be 0 due to personal preference.
 
 When you press the key for the closing pair (e.g. `)`) it jumps past it.
 If set to 1, then it'll jump to the next line, if there is only 'whitespace'.
 If set to 0, then it'll only jump to a closing pair on the same line.
 
 ==============================================================================
-6. Troubleshooting                                 *autopairs-troubleshooting*
+6. Troubleshooting                                   *autopairs-troubleshooting*
 
 This plugin remaps keys `([{'"}]) <BS>`
 
@@ -341,158 +353,63 @@ The correct map should be: >
     <C-R>=AutoPairsInsert("\(")<CR>
 
 Or the plugin conflicts with some other plugins. Use command: >
-
-    :call AutoPairsInit() to remap the keys.
+    :call AutoPairsInit()
+<
+to remap the keys.
 
 --- How to insert parens purely? ---
 
 There are 3 ways:
 
-    1. Use Ctrl-V ) to insert paren without trigger the plugin.
+    1. Use `Ctrl-V )` to insert paren without trigger the plugin.
 
-    2. Use Alt-P to turn off the plugin.
+    2. Use `Alt-P` to turn off the plugin.
 
-    3. Use DEL or <C-O>x to delete the character insert by plugin.
+    3. Use `DEL` or `<C-O>x` to delete the character insert by plugin.
 
---- Scandinavian Character Conflict ---
+------------------------------------------------------------------------------
+6.1. Conflicting keybinds                                 *autopairs-conflicts*
 
-Because AutoPairs uses Meta(Alt) key as a shortcut, it conflicts with some
-Scandinavian characters, such as å. To fix the issue, you need remap or
-disable the related shortcut.
+AutoPairs has a mapping that uses the alt key (meta) in such a way that it
+conflicts with the letter å. This one specifically originates from Alt-E,
+which is consumed by |g:AutoPairsShortcutFastWrap|.
 
-vim:ft=help
+While this is a known conflict, there could always be other. To see if there's
+a conflict with a key on your keyboard, `verbose imap <insert letter>` and see
+what it says. See: https://vi.stackexchange.com/q/20995/21251. You should be
+able to backtrace the keybind from there, and using the options discussed in
+|autopairs-conflicts|, remap it to something else.
+
+From issues on the original autopairs repo, however, it's abundantly clear
+that this isn't specific to scandinavian languages: a few of the meta keybinds
+directly conflict with various letters for other european languages. Normally,
+this wouldn't be a problem, but in insert mode mappings? They, to say the
+least, introduces challenges.
+
+The obvious option would be to remap them to something else. Personally, I
+have no idea what I'd rather have some of these things mapped to. It's
+definitely open for discussion to remap these to something more sane,
+especially since mapping to meta in insert mode is, well, dumb, since
+meta-<letter> has other meanings. I'll revisit this when I get some input on
+the matter. Until then, if there's a conflict,  you'll need to track it down
+(`verbose imap`) and fix it
 
 ==============================================================================
-7. Main changes                                            *autopairs-changes*
+7. Credits                                                   *autopairs-credits*
 
-This fork of auto-pairs fixes some common issues in the original plugin and
-makes the auto-completion rules more sensible. Currently there are no options
-to turn off the changes since this fork is currently only intended for my
-personal use. I might add some options in the future, maybe.
+Being a fork, this plugin does contain work from other people.
 
-* Only insert the closing pair if the next character is a space or a non-quote
-closing pair.
+If it wasn't obvious already, the plugin itself is based on
+jiangmiao/auto-pairs. Jiangmiao's work laid the foundation for this plugin.
 
-    input: | s    (press '(')
-    output: (|) s
+Additionally, it contains quite a bit of work from Krasjet, as their work on a
+fork for personal use has been merged into this plugin.
 
-    input: |s     (press '(')
-    output: (|s
+Additionally, there's a number of contributors to jiangmiao's upstream repo,
+and in the future possibly directly on this fork, who have contributed to the
+plugin. The complete list is available on GitHub:
 
-    input: (|)    (press '(')
-    output: ((|))
-
-    input: (|)    (press '[')
-    output: ([|])
-
-    input: '|'    (press '[')
-    output: '[|'
-                                                 *b:AutoPairsQuoteClosingChar*
-                                                 *g:AutoPairsQuoteClosingChar*
-
-All the quote characters can be set as a global variable |g:AutoPairsQuoteClosingChar|
-or buffer variable |b:AutoPairsQuoteClosingChar|.
-
-    let g:AutoPairsQuoteClosingChar = ['"', "'",'`']
-    let b:AutoPairsQuoteClosingChar = ['"', "'",'`']
-
-If the next character of the cursor is any of these, auto-completion will be
-will be inhibited.
-
-                                                *b:AutoPairsNextCharWhitelist*
-                                                *g:AutoPairsNextCharWhitelist*
-
-There is also variables |g:AutoPairsNextCharWhitelist| and
-|b:AutoPairsNextCharWhitelist| to whitelist certain characters (or strings)
-such that they trigger the auto-completion when appeared as the next character.
-
-    let g:AutoPairsNextCharWhitelist = []
-    let b:AutoPairsNextCharWhitelist = ['.', ',']
-
-If the next character(s) of the cursor is any of these, auto-completion will be triggered. I usually would add '.' and ',' to the whitelist for LaTeX and markdown files.
-
-In summary, auto-completion will only be triggered if
-
-1. the next character is a space
-2. or the next character is not from the closing pair of a quote
-3. or the next character is in the whitelist
-
-* Do not search for the closing pair if spaces are in between
-
-    input: " | "    (press '"')
-    output: " "| "
-
-    input: " |"     (press '"')
-    output: " "|
-
-* Only jump across the closing pair if pairs are balanced
-
-    input: (((|))     (press ')')
-    output: (((|)))
-
-    input: (((|)))    (press ')')
-    output: ((()|))
-
-* Do not complete the closing pair until pairs are balanced
-
-    input: ((|)))      (press '(')
-    output: (((|)))
-
-    input: (((|)))     (press '(')
-    output: ((((|))))
-
-    input:  "str|      (press '"')
-    output: "str"|
+    https://github.com/LunarWatcher/auto-pairs/graphs/contributors
 
 
-                                          *b:AutoPairsSingleQuoteBalanceCheck*
-                                          *g:AutoPairsSingleQuoteBalanceCheck*
-The balance check for single quote (') can be turned on or off using the
-variable |g:AutoPairsSingleQuoteBalanceCheck| and
-|b:AutoPairsSingleQuoteBalanceCheck|
-
-    let g:AutoPairsSingleQuoteBalanceCheck = 1
-    let b:AutoPairsSingleQuoteBalanceCheck = 0
-
-It is turned on by default, but you might want to use |ftplugin| or |autocmd|
-to turn it off for text files (LaTeX, markdown, etc.). Consider
-
-    input:  There's a '|      (press "'")
-    // single quote balance check on
-    output: There's a ''|'
-    // single quote balance check off
-    output: There's a ''|
-
-However, for code files,
-
-    input:  ['a', |]          (press "'")
-    // single quote balance check on
-    output: ['a', '|']
-    // single quote balance check off
-    output: ['a', '|]
-
-                                             *b:AutoPairsOpenBalanceBlacklist*
-                                             *g:AutoPairsOpenBalanceBlacklist*
-The balance check for a opening pair can be turned off using
-|g:AutoPairsOpenBalanceBlacklist| and |b:AutoPairsOpenBalanceBlacklist|
-
-    let g:AutoPairsOpenBalanceBlacklist = []
-    let b:AutoPairsOpenBalanceBlacklist = ['{']
-
-This is a temporary workaround for `if-else` clause in C-like languages.
-
-    input:  } else |        (press '{')
-    // with open balance check off
-    output: } else {|}
-    // with open balance check on
-    output: } else {|
-
-Nothing is in the blacklist by default, but you can use |ftplugin| or |autocmd|
-to turn off the open balance check for '{'.
-
-* The default value of |g:AutoPairsMultilineClose| has been changed to 0.
-If you want to enable it, set
-
-    let g:AutoPairsMultilineClose = 1
-
-but be cautious that this fork might break it (unverified).
+vim:ft=help

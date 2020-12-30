@@ -1,6 +1,6 @@
 " Insert or delete brackets, parens, quotes in pairs.
 " Fork Maintainer: Olivia
-" Version: 2.1.0
+" Version: 3.0.0
 " Fork Repository: https://github.com/LunarWatcher/auto-pairs
 " License: MIT
 
@@ -61,12 +61,6 @@ endf
 " Olivia: set to0 based on my own personal biases
 if !exists('g:AutoPairsMapBS')
   let g:AutoPairsMapBS = 0
-end
-
-" Map <C-h> as the same BS
-" Olivia: Default to 0
-if !exists('g:AutoPairsMapCh')
-  let g:AutoPairsMapCh = 0
 end
 
 if !exists('g:AutoPairsMapCR')
@@ -650,10 +644,6 @@ func! AutoPairsInit()
     " Use <C-R> instead of <expr> for issue #14 sometimes press BS output strange words
     execute 'inoremap <buffer> <silent> <BS> <C-R>=AutoPairsDelete()<CR>'
   end
-
-  if g:AutoPairsMapCh
-    execute 'inoremap <buffer> <silent> <C-h> <C-R>=AutoPairsDelete()<CR>'
-  endif
 
   if g:AutoPairsMapSpace
     " Try to respect abbreviations on a <SPACE>
