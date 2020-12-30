@@ -172,6 +172,10 @@ Default Options: >
     let g:AutoPairsFlyMode = 0
     let g:AutoPairsShortcutBackInsert = '<M-b>'
 
+Note: Flymode is currently considered buggy and unreliable. It should be avoided
+unless you enjoy spending time on flymode doing weird shit while you're
+typing.
+
 ==============================================================================
 4. Shortcuts                                               *autopairs-shortcuts*
 
@@ -204,6 +208,15 @@ prevent <cr> conflicts. It requires you to remap it explicitly, though.
 ==============================================================================
 5. Options                                                   *autopairs-options*
 
+These options exist in a global variant (`g:variableName`), and a local
+variant (`b:variableName`), where `variableName` refers to some defined
+variable. This is with the exception of keybind variables, that only exist in
+one variant.
+
+TL;DR: variables have a buffer variable if and only if it isn't a keybind
+variable.
+
+------------------------------------------------------------------------------
                                                                  *g:AutoPairs*
 |g:AutoPairs|                                                             dict
 
@@ -218,6 +231,18 @@ To append new pairs without overwriting defaults, add values in your
 <
 This example will enable matching of `<` with `>`.
 
+`g:AutoPair` additionally supports several types of multibyte pairs. If you're
+frequently coding in an HTML template language, `"{%": "%}"` can be added to
+the buffer variant of this variable (used in combination with an 
+`autocmd FileType`). The current behavior:
+>
+    Input: {|
+    Output: {|}
+    Input: %
+    Output: {%|%}
+<
+
+There's built-in support for """ and ''', and more can be added if necessary. 
 
 ------------------------------------------------------------------------------
                                                                    *b:AutoPairs*
