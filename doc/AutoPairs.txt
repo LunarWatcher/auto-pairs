@@ -233,7 +233,7 @@ This example will enable matching of `<` with `>`.
 
 `g:AutoPair` additionally supports several types of multibyte pairs. If you're
 frequently coding in an HTML template language, `"{%": "%}"` can be added to
-the buffer variant of this variable (used in combination with an 
+the buffer variant of this variable (used in combination with an
 `autocmd FileType`). The current behavior:
 >
     Input: {|
@@ -242,7 +242,7 @@ the buffer variant of this variable (used in combination with an
     Output: {%|%}
 <
 
-There's built-in support for """ and ''', and more can be added if necessary. 
+There's built-in support for """ and ''', and more can be added if necessary.
 
 ------------------------------------------------------------------------------
                                                                    *b:AutoPairs*
@@ -308,7 +308,7 @@ Work with |autopairs-flymode|, insert the key at the Fly Mode jumped position.
                                                               *g:AutoPairsMapBS*
 |g:AutoPairsMapBS|                                                           int
 
-Default: 1
+Default: 0
 
 Map <BS> to delete brackets and quotes in pair, executes:
 
@@ -365,6 +365,32 @@ Krasjet's fork defined this to be 0 due to personal preference.
 When you press the key for the closing pair (e.g. `)`) it jumps past it.
 If set to 1, then it'll jump to the next line, if there is only 'whitespace'.
 If set to 0, then it'll only jump to a closing pair on the same line.
+
+------------------------------------------------------------------------------
+                                                 *g:AutoPairsDirectoryBlacklist*
+|g:AutoPairsDirectoryBlacklist|                                        path list
+
+Default: []
+
+Defines a set of directories (checked against |getcwd()|) in which the plugin
+is disabled. This is pretty much a utility around `let b:autopairs_enabled = 0`,
+which means the plugin is toggled in the buffer.
+
+It's disabled by default as this means it's possible to load it after the
+fact, where as a complete block wouldn't allow for manually enabling the
+plugin, if desired.
+
+See also |g:AutoPairsShortcutToggle|
+
+------------------------------------------------------------------------------
+                                                           *b:autopairs_enabled*
+
+Type: int
+Default: 1
+
+This is a buffer variable that defines whether or not autopairs is enabled.
+You can use this variable to get more fine-grained control over when the
+plugin is enabled as well, if the built-in options aren't satisfactory.
 
 ==============================================================================
 6. Troubleshooting                                   *autopairs-troubleshooting*

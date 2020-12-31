@@ -36,6 +36,14 @@ if !exists('g:AutoPairsSingleQuoteBalanceCheck')
     let g:AutoPairsSingleQuoteBalanceCheck = 1
 end
 
+" Disables the plugin in some directories.
+" This is not available in a whitelist variant, because I'm lazy.
+" (Pro tip: also a great use for autocmds and default-disable rather than
+" plugin configuration. Project .vimrcs work too)
+if !exists('g:AutoPairsDirectoryBlacklist')
+    let g:AutoPairsDirectoryBlacklist = []
+endif
+
 " default pairs base on filetype
 func! AutoPairsDefaultPairs()
     if exists('b:autopairs_defaultpairs')
@@ -58,7 +66,7 @@ func! AutoPairsDefaultPairs()
     return r
 endf
 
-" Olivia: set to0 based on my own personal biases
+" Olivia: set to 0 based on my own personal biases
 if !exists('g:AutoPairsMapBS')
     let g:AutoPairsMapBS = 0
 end
@@ -716,8 +724,13 @@ endf
 func! AutoPairsTryInit()
     if exists('b:autopairs_loaded')
         return
-    end
+    endif
 
+    if index(g:AutoPairsDirectoryBlacklist, getcwd()) >= 0
+        let b:autopairs_enabled = 0
+    endif
+
+    " TODO: decode this comment
     " for auto-pairs starts with 'a', so the priority is higher than supertab and vim-endwise
     "
     " vim-endwise doesn't support <Plug>AutoPairsReturn
