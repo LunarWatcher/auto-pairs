@@ -9,40 +9,71 @@ if exists('g:AutoPairsLoaded') || &cp
 end
 let g:AutoPairsLoaded = 1
 
-if !exists('g:AutoPairs')
-    let g:AutoPairs = {'(':')', '[':']', '{':'}',"'":"'",'"':'"', '```':'```', '"""':'"""', "'''":"'''", "`":"`"}
-end
+fun! s:define(name, default)
+    if !exists(a:name)
+        let {a:name} = a:default
+    endif
+endfun
+
+call s:define("g:AutoPairs", {'(':')', '[':']', '{':'}',"'":"'",'"':'"', '```':'```', '"""':'"""', "'''":"'''", "`":"`"})
+
 
 " Krasjet: the closing character for quotes, auto completion will be
 " inhibited when the next character is one of these
-if !exists('g:AutoPairsQuoteClosingChar')
-    let g:AutoPairsQuoteClosingChar = ['"', "'", '`']
-end
+call s:define('g:AutoPairsQuoteClosingChar', ['"', "'", '`'])
 
 " Krasjet: if the next character is any of these, auto-completion will still
 " be triggered
-if !exists('g:AutoPairsNextCharWhitelist')
-    let g:AutoPairsNextCharWhitelist = []
-end
+call s:define('g:AutoPairsNextCharWhitelist', [])
 
 " Krasjet: don't perform open balance check on these characters
-if !exists('g:AutoPairsOpenBalanceBlacklist')
-    let g:AutoPairsOpenBalanceBlacklist = []
-end
+call s:define('g:AutoPairsOpenBalanceBlacklist', [])
 
 " Krasjet: turn on/off the balance check for single quotes (')
 " suggestions: use ftplugin/autocmd to turn this off for text documents
-if !exists('g:AutoPairsSingleQuoteBalanceCheck')
-    let g:AutoPairsSingleQuoteBalanceCheck = 1
-end
+call s:define('g:AutoPairsSingleQuoteBalanceCheck', 1)
 
 " Disables the plugin in some directories.
 " This is not available in a whitelist variant, because I'm lazy.
 " (Pro tip: also a great use for autocmds and default-disable rather than
 " plugin configuration. Project .vimrcs work too)
-if !exists('g:AutoPairsDirectoryBlacklist')
-    let g:AutoPairsDirectoryBlacklist = []
-endif
+call s:define('g:AutoPairsDirectoryBlacklist', [])
+
+" Olivia: set to 0 based on my own personal biases
+call s:define('g:AutoPairsMapBS', 0)
+
+call s:define('g:AutoPairsMapCR', 1)
+
+call s:define('g:AutoPairsWildClosedPair', '')
+
+call s:define('g:AutoPairsCRKey', '<CR>')
+
+call s:define('g:AutoPairsMapSpace', 1)
+
+call s:define('g:AutoPairsCenterLine', 1)
+
+call s:define('g:AutoPairsShortcutToggle', '<M-p>')
+
+call s:define('g:AutoPairsShortcutFastWrap', '<M-e>')
+
+call s:define('g:AutoPairsMoveCharacter', "()[]{}\"'")
+
+call s:define('g:AutoPairsCompleteOnSpace', 0)
+
+call s:define('g:AutoPairsShortcutJump', '<M-n>')
+
+" Fly mode will for closed pair to jump to closed pair instead of insert.
+" also support AutoPairsBackInsert to insert pairs where jumped.
+call s:define('g:AutoPairsFlyMode', 0)
+
+" When skipping the closed pair, look at the current and
+" next line as well.
+" Krasjet: default changed to 0
+call s:define('g:AutoPairsMultilineClose', 0)
+
+" Work with Fly Mode, insert pair where jumped
+call s:define('g:AutoPairsShortcutBackInsert', '<M-b>')
+
 
 " default pairs base on filetype
 func! AutoPairsDefaultPairs()
@@ -65,73 +96,6 @@ func! AutoPairsDefaultPairs()
     let b:autopairs_defaultpairs = r
     return r
 endf
-
-" Olivia: set to 0 based on my own personal biases
-if !exists('g:AutoPairsMapBS')
-    let g:AutoPairsMapBS = 0
-end
-
-if !exists('g:AutoPairsMapCR')
-    let g:AutoPairsMapCR = 1
-end
-
-if !exists('g:AutoPairsWildClosedPair')
-    let g:AutoPairsWildClosedPair = ''
-endif
-
-if !exists('g:AutoPairsCRKey')
-    let g:AutoPairsCRKey = '<CR>'
-endif
-
-if !exists('g:AutoPairsMapSpace')
-    let g:AutoPairsMapSpace = 1
-end
-
-if !exists('g:AutoPairsCenterLine')
-    let g:AutoPairsCenterLine = 1
-end
-
-if !exists('g:AutoPairsShortcutToggle')
-    let g:AutoPairsShortcutToggle = '<M-p>'
-end
-
-if !exists('g:AutoPairsShortcutFastWrap')
-    let g:AutoPairsShortcutFastWrap = '<M-e>'
-end
-
-if !exists('g:AutoPairsMoveCharacter')
-    let g:AutoPairsMoveCharacter = "()[]{}\"'"
-end
-
-if !exists('g:AutoPairsCompleteOnSpace')
-    let g:AutoPairsCompleteOnSpace = 0
-endif
-
-if !exists('g:AutoPairsShortcutJump')
-    let g:AutoPairsShortcutJump = '<M-n>'
-endif
-
-" Fly mode will for closed pair to jump to closed pair instead of insert.
-" also support AutoPairsBackInsert to insert pairs where jumped.
-if !exists('g:AutoPairsFlyMode')
-    let g:AutoPairsFlyMode = 0
-endif
-
-" When skipping the closed pair, look at the current and
-" next line as well.
-" Krasjet: default changed to 0
-if !exists('g:AutoPairsMultilineClose')
-    let g:AutoPairsMultilineClose = 0
-endif
-
-" Work with Fly Mode, insert pair where jumped
-if !exists('g:AutoPairsShortcutBackInsert')
-    let g:AutoPairsShortcutBackInsert = '<M-b>'
-endif
-
-if !exists('g:AutoPairsSmartQuotes')
-    let g:AutoPairsSmartQuotes = 1
-endif
 
 " 7.4.849 support <C-G>U to avoid breaking '.'
 " Issue talk: https://github.com/jiangmiao/auto-pairs/issues/3
