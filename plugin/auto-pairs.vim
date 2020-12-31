@@ -240,7 +240,7 @@ func! AutoPairsInsert(key)
 
             " Krasjet: only insert the closing pair if the next character is a space
             " or a non-quote closing pair, or a whitelisted character (string)
-            " Olivia: that ^ if and only if it's desired. 
+            " Olivia: that ^ if and only if it's desired.
             if b:AutoPairsCompleteOnSpace == 1 && afterline[0] =~? '^\v\S' && afterline !~# b:autopairs_next_char_whitelist
                 break
             end
@@ -448,7 +448,10 @@ func! AutoPairsReturn()
             continue
         end
 
-        if before =~ '\V'.open.'\v\s*$' && afterline =~ '^\s*\V'.close
+        " \V<open>\v is basically escaping. Makes sure ( isn't considered the
+        " start of a group, which would yield incorrect results.
+        " Used to prevent fuckups
+        if before =~ '\V'.open.'\v.*$' && afterline =~ '^\s*\V'.close
             let b:autopairs_return_pos = line('.')
             if g:AutoPairsCenterLine && winline() * 3 >= winheight(0) * 2
                 " Recenter before adding new line to avoid replacing line content
@@ -460,6 +463,16 @@ func! AutoPairsReturn()
             if &equalprg != ''
                 return "\<ESC>".cmd."O"
             endif
+
+            " TODO: This is where the  line corrections happen.
+            " Including the if above, which checks for some thingy that isn't
+            " set by autoindent and smartindent for whatever reason, there's
+            " this bit. It returns a keybind that does some magic with the
+            " line, but I got no clue how to use it for fixing indentation.
+            " I could use a keybind to go to the start of the line, store the
+            " position, then restore the last position, do the rest, and
+            " somehow shift the bracket, but I have no idea how to do about
+            " that yet.
 
             " conflict with javascript and coffee
             " javascript   need   indent new line
@@ -771,3 +784,5 @@ imap <expr> <script> <Plug>AutoPairsReturn <SID>AutoPairsReturn
 
 
 au BufEnter * :call AutoPairsTryInit()
+
+" vim:sw=4
