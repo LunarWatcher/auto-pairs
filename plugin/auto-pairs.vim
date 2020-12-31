@@ -542,6 +542,9 @@ func! AutoPairsInit()
         let b:AutoPairsCompleteOnSpace = g:AutoPairsCompleteOnSpace
     endif
 
+    if !exists('b:AutoPairsFlyMode')
+        let b:AutoPairsFlyMode = g:AutoPairsFlyMode
+    endif
     let b:autopairs_return_pos = 0
     let b:autopairs_saved_pair = [0, 0]
     " Krasjet: only auto-complete if the next character, or characters, is one of
@@ -647,7 +650,7 @@ func! AutoPairsInit()
         execute 'inoremap <buffer> <silent> '.g:AutoPairsShortcutFastWrap.' <C-R>=AutoPairsFastWrap()<CR>'
     end
 
-    if g:AutoPairsShortcutBackInsert != ''
+    if b:AutoPairsFlyMode && g:AutoPairsShortcutBackInsert != ''
         execute 'inoremap <buffer> <silent> '.g:AutoPairsShortcutBackInsert.' <C-R>=AutoPairsBackInsert()<CR>'
     end
 

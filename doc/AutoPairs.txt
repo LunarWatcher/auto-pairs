@@ -19,7 +19,7 @@ CONTENTS                                                    *autopairs-contents*
     5. Options ....................................... |autopairs-options|
     6. Troubleshooting ....................... |autopairs-troubleshooting|
         6.1. Conflicting keybinds .................. |autopairs-conflicts|
-    7. Credits ........................................ |autopair-credits|
+    7. Credits/contributors .......................... |autopairs-credits|
 
 ==============================================================================
 1. Installation                                         *autopairs-installation*
