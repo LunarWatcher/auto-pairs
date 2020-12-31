@@ -490,7 +490,7 @@ func! AutoPairsMap(key)
     let escaped_key = substitute(key, "'", "''", 'g')
     " use expr will cause search() doesn't work
 
-    execute 'inoremap <buffer> <expr> <silent> '.key." AutoPairsInsert('".escaped_key."')"
+    execute 'inoremap <buffer> <silent> '.key." <C-R>=AutoPairsInsert('".escaped_key."')<cr>"
 endf
 
 func! AutoPairsToggle()
@@ -681,7 +681,7 @@ func! AutoPairsInit()
 
 endf
 
-func! s:ExpandMap(map)
+func! ExpandMap(map)
     let map = a:map
     let map = substitute(map, '\(<Plug>\w\+\)', '\=maparg(submatch(1), "i")', 'g')
     let map = substitute(map, '\(<Plug>([^)]*)\)', '\=maparg(submatch(1), "i")', 'g')
@@ -721,7 +721,7 @@ func! AutoPairsTryInit()
                 let is_expr = 0
             else
                 let old_cr = info['rhs']
-                let old_cr = s:ExpandMap(old_cr)
+                let old_cr = ExpandMap(old_cr)
                 let old_cr = substitute(old_cr, '<SID>', '<SNR>' . info['sid'] . '_', 'g')
                 let is_expr = info['expr']
                 let wrapper_name = '<SID>AutoPairsOldCRWrapper73'
@@ -735,7 +735,7 @@ func! AutoPairsTryInit()
                 let old_cr = '<CR>'
                 let is_expr = 0
             else
-                let old_cr = s:ExpandMap(old_cr)
+                let old_cr = ExpandMap(old_cr)
                 " old_cr contain (, I guess the old cr is in expr mode
                 let is_expr = old_cr =~ '\V(' && toupper(old_cr) !~ '\V<C-R>'
 

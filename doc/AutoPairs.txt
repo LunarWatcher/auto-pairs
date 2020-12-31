@@ -19,7 +19,8 @@ CONTENTS                                                    *autopairs-contents*
     5. Options ....................................... |autopairs-options|
     6. Troubleshooting ....................... |autopairs-troubleshooting|
         6.1. Conflicting keybinds .................. |autopairs-conflicts|
-    7. Credits/contributors .......................... |autopairs-credits|
+    7. Functions (API) ............................. |autopairs-functions|
+    8. Credits/contributors .......................... |autopairs-credits|
 
 ==============================================================================
 1. Installation                                         *autopairs-installation*
@@ -227,9 +228,33 @@ Specifies which symbols should be automatically paired.
 
 To append new pairs without overwriting defaults, add values in your
 `.vimrc`.: >
-    let g:AutoPairs['<']='>'
+    autocmd VimEnter * let g:AutoPairs = AutoPairsDefine({'<': '>'})
 <
-This example will enable matching of `<` with `>`.
+This example will enable matching of `<` with `>`. An autocmd has to be uesd
+due to the way Vim loads plugins. AutoPairsDefine isn't loaded until your
+.vimrc is entirely sourced, which for obvious reasons is too late when you're
+executing code in your .vimrc. You can also use: >
+    let g:AutoPairs = { '(': ')', ...}
+<
+
+... where the `...` represents additional mappings, but note that this overrides
+all the defaults. If you only do the first mapping in the above example, for
+an instance, the ONLY key bracket/quote/other auto-pairs knows of is ().
+
+Similarly, you can use a the FileType event to 
+`let b:AutoPairs = AutoPairsDefine({'<': '>'})`, and only have <> for some
+filetypes. Again, dropping AutoPairsDefine and just using the object will
+result in _only_ <> being matched.
+
+Not using |AutoPairsDefine()| will result in the standards being lost. If you
+don't want to use the standards, go ahead and omit this function.
+Additionally, if you want to add new types after loading the file
+(specifically, when BufEnter has been triggered for auto-pairs), you need to
+use |AutoPairsMap()| to register the new keybind. Using this function isn't
+necessary for standard |FileType| autocmds, however.
+
+Previous versions of this document supported a type of assignment that doesn't
+work due to plugin sourcing systems. 
 
 `g:AutoPair` additionally supports several types of multibyte pairs. If you're
 frequently coding in an HTML template language, `"{%": "%}"` can be added to
@@ -243,6 +268,9 @@ the buffer variant of this variable (used in combination with an
 <
 
 There's built-in support for """ and ''', and more can be added if necessary.
+There shouldn't be a limit the length (though, for obvious reasons, things
+might go wrong if you decide to input an obnoxiously long mapping), so you
+should be able to map all pairs used by your favorite language or framework.
 
 ------------------------------------------------------------------------------
                                                                    *b:AutoPairs*
@@ -256,7 +284,8 @@ You can set |b:AutoPairs| before |BufEnter|: >
 
     au Filetype FILETYPE let b:AutoPairs = {"(": ")"}
 
-This sets |AutoPairs| to only match for parenthesis for 'FILETYPE'.
+This sets |AutoPairs| to only match for parenthesis for 'FILETYPE'. See also
+|g:AutoPairs| for more details on extending the default options.
 
 ------------------------------------------------------------------------------
                                                     *g:AutoPairsCompleteOnSpace*
@@ -421,6 +450,7 @@ There are 3 ways:
 ------------------------------------------------------------------------------
 6.1. Conflicting keybinds                                 *autopairs-conflicts*
 
+European letters~
 AutoPairs has a mapping that uses the alt key (meta) in such a way that it
 conflicts with the letter å. This one specifically originates from Alt-E,
 which is consumed by |g:AutoPairsShortcutFastWrap|.
@@ -445,10 +475,72 @@ meta-<letter> has other meanings. I'll revisit this when I get some input on
 the matter. Until then, if there's a conflict,  you'll need to track it down
 (`verbose imap`) and fix it
 
-==============================================================================
-7. Credits                                                   *autopairs-credits*
+Other plugins~
+There's relatively little to do about conflicts with other plugins.
 
-Being a fork, this plugin does contain work from other people.
+This plugin tries its best to make sure it doesn't override other mappings, by
+"importing" other maps, but these may still occur. Auto-pairs' mappings are
+done on a per-buffer basis, so it _should_ be compatible with other plugins,
+but edge cases may still occur.
+
+If you find yourself in a situation where you're unable to make sure enter does 
+what you want, you can always write a function and map <cr> to that. However,
+thanks to plugins being weird, you may have to disable bits that remap <cr> for
+this to work at all.
+
+Pull requests/issues~
+If you read any of this and you can tell me I'm wrong, and offer a solution or
+a start, either as a pull request or as an issue, please do let me know. I'm
+more than willing to hear alternative solutions to this problem that cause
+less inconvenience for the users.
+==============================================================================
+7. Functions                                               *autopairs-functions*
+
+Autopairs defines a lot of functions that you're probably never going to use.
+There are, however, a couple that may have to be used in scripting contexts,
+or remapping contexts.
+Not using |AutoPairsDefine()| will result in the standards being lost. If you
+don't want to use the standards, go ahead and omit this function.
+Additionally, if you want to add new types after loading, you need to use 
+|AutoPairsMap()|
+------------------------------------------------------------------------------
+AutoPairsDefine()                    *AutoPairsDefine()* *autopairs-copy-defaults*
+Arguments: (pairs)
+
+    pairs                   Type: Map of key-value pairs
+                            Defines what additional keys to include in the
+                            map.
+
+This function is used for defining additional keys. Example use: >
+    autocmd VimEnter * let g:AutoPairs = AutoPairsDefine({'<': '>'})
+    autocmd FileType liquid let b:AutoPairs = AutoPairsDefine({'{%': '%}'})
+<
+
+------------------------------------------------------------------------------
+AutoPairsMap()                               *AutoPairsMap()* *auto-pairs-map-key*
+Arguments: (key)
+
+    key                     Type: keybind
+                            Defines a key to `inoremap` to auto-complete
+                            pairs.
+
+This function might end up being useless for you, but it's documented in case
+it ends up being useful for someone.
+
+The function maps a key to autocomplete another. The input argument is the
+key to detect; if the pair is '(', ')', the key passed to the function should
+be '('.
+
+You don't need to call this manually, unless you're doing something that adds
+additional pairs after the plugin is loaded. This shouldn't normally be a
+problem, at least if you stick to |FileType|, but if you have some fancy code
+relying on this ability, you'll have to use this function.
+
+==============================================================================
+8. Credits                                                   *autopairs-credits*
+
+Being a fork (and open-source), this plugin does contain work from other
+people.
 
 If it wasn't obvious already, the plugin itself is based on
 jiangmiao/auto-pairs. Jiangmiao's work laid the foundation for this plugin.
