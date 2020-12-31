@@ -13,6 +13,7 @@ CONTENTS                                                    *autopairs-contents*
 
     1. Installation ............................. |autopairs-installation|
     2. Features ..................................... |autopairs-features|
+        2.1. Multibyte pairs ....................... |autopairs-multibyte|
     3. Fly Mode ...................................... |autopairs-flymode|
     4. Shortcuts ................................... |autopairs-shortcuts|
         4.1. Shortcut remapping ........... |autopairs-shortcut-remapping|
@@ -150,6 +151,21 @@ Fly Mode (|autopairs-flymode|): >
         See |Fly Mode| section for details
 
 Only inserting when the next character is a space (*autopairs-tbd*)
+------------------------------------------------------------------------------
+2.1. Multibyte pairs                                       *autopairs-multibyte*
+
+Support for multibyte pairs was added in an earlier version of the plugin
+(prior to the forking). They're exactly what you'd think: they're pairs that
+contain multiple bytes. One example of this is `'"""': '"""'`, and
+`'{%', '%}'.`These act in a compose-like manner, so you can both have {} and
+{%%} pairs without breaking one or the other.
+
+These pairs are added in the exact same way as other pairs.
+
+This can theoretically be used for HTML tags as well, but the number of rules
+for that would end up being rather ridiculous. There's currently a plan to add
+more flexible rules, including stuff applicable to HTML tags and if-else in
+some languages, but it's not implemented at this time.
 
 ==============================================================================
 3. Fly Mode                                                  *autopairs-flymode*
