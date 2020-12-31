@@ -508,43 +508,29 @@ func! s:sortByLength(i1, i2)
     return len(a:i2[0])-len(a:i1[0])
 endf
 
+" Idea by https:77github.com/fenuks: https://github.com/jiangmiao/auto-pairs/issues/251#issuecomment-573901691
+fun! s:GetFirstUnicodeChar(string) abort
+  return nr2char(strgetchar(a:string, 0))
+endfun
+
+fun! s:GetLastUnicodeChar(string) abort
+  let l:chars = strchars(a:string)
+  return nr2char(strgetchar(a:string, l:chars-1))
+endfun
+
 func! AutoPairsInit()
     let b:autopairs_loaded  = 1
-    if !exists('b:autopairs_enabled')
-        let b:autopairs_enabled = 1
-    end
 
-    if !exists('b:AutoPairs')
-        let b:AutoPairs = AutoPairsDefaultPairs()
-    end
+    call s:define('b:autopairs_enabled', 1)
+    call s:define('b:AutoPairs', AutoPairsDefaultPairs())
+    call s:define('b:AutoPairsQuoteClosingChar', copy(g:AutoPairsQuoteClosingChar))
+    call s:define('b:AutoPairsNextCharWhitelist', copy(g:AutoPairsNextCharWhitelist))
+    call s:define('b:AutoPairsOpenBalanceBlacklist', copy(g:AutoPairsOpenBalanceBlacklist))
+    call s:define('b:AutoPairsSingleQuoteBalanceCheck', g:AutoPairsSingleQuoteBalanceCheck)
+    call s:define('b:AutoPairsMoveCharacter', g:AutoPairsMoveCharacter)
+    call s:define('b:AutoPairsCompleteOnSpace', g:AutoPairsCompleteOnSpace)
+    call s:define('b:AutoPairsFlyMode', g:AutoPairsFlyMode)
 
-    if !exists('b:AutoPairsQuoteClosingChar')
-        let b:AutoPairsQuoteClosingChar = copy(g:AutoPairsQuoteClosingChar)
-    end
-
-    if !exists('b:AutoPairsNextCharWhitelist')
-        let b:AutoPairsNextCharWhitelist = copy(g:AutoPairsNextCharWhitelist)
-    end
-
-    if !exists('b:AutoPairsOpenBalanceBlacklist')
-        let b:AutoPairsOpenBalanceBlacklist = copy(g:AutoPairsOpenBalanceBlacklist)
-    end
-
-    if !exists('b:AutoPairsSingleQuoteBalanceCheck')
-        let b:AutoPairsSingleQuoteBalanceCheck = g:AutoPairsSingleQuoteBalanceCheck
-    end
-
-    if !exists('b:AutoPairsMoveCharacter')
-        let b:AutoPairsMoveCharacter = g:AutoPairsMoveCharacter
-    end
-
-    if !exists('b:AutoPairsCompleteOnSpace')
-        let b:AutoPairsCompleteOnSpace = g:AutoPairsCompleteOnSpace
-    endif
-
-    if !exists('b:AutoPairsFlyMode')
-        let b:AutoPairsFlyMode = g:AutoPairsFlyMode
-    endif
     let b:autopairs_return_pos = 0
     let b:autopairs_saved_pair = [0, 0]
     " Krasjet: only auto-complete if the next character, or characters, is one of
@@ -557,8 +543,8 @@ func! AutoPairsInit()
     " m - close key jumps through multi line
     " s - close key jumps only in the same line
     for [open, close] in items(b:AutoPairs)
-        let o = open[-1:-1]
-        let c = close[0]
+        let o = s:GetLastUnicodeChar(open)
+        let c = s:GetFirstUnicodeChar(close)
         let opt = {'mapclose': 1, 'multiline':1}
         let opt['key'] = c
         if o == c
