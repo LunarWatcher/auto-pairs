@@ -202,10 +202,12 @@ endfun
 "   au FileType html let b:AutoPairs = AutoPairsDefine({'<!--' : '-->'}, ['{'])
 "   add <!-- --> pair and remove '{' for html file
 func! autopairs#AutoPairsDefine(pairs, ...)
-    let r = AutoPairsDefaultPairs()
+    let r = autopairs#AutoPairsDefaultPairs()
     if a:0 > 0
         for open in a:1
-            unlet r[open]
+            if has_key(r, open)
+                unlet r[open]
+            endif
         endfor
     end
     for [open, close] in items(a:pairs)
