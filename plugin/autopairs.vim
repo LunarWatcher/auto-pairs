@@ -387,7 +387,11 @@ endf
 
 
 " Fast wrap the word in brackets
-func! autopairs#AutoPairsFastWrap()
+" Note to self: default arguments aren't supported until
+" 8.1 patch 1310, and doesn't support neovim. Implementing it here at this
+" time would break the plugin for a lot of people.
+" This being a fork, that isn't desired.
+func! autopairs#AutoPairsFastWrap(movement)
     let c = @"
     normal! x
     let [before, after, ig] = s:getline()
@@ -407,7 +411,7 @@ func! autopairs#AutoPairsFastWrap()
             end
         endfor
         if after[1:1] =~ '\v\w'
-            normal! e
+            exec "normal! " . a:movement
             normal! p
         else
             normal! p
@@ -647,7 +651,7 @@ func! autopairs#AutoPairsInit()
     end
 
     if g:AutoPairsShortcutFastWrap != ''
-        execute 'inoremap <buffer> <silent> '.g:AutoPairsShortcutFastWrap.' <C-R>=autopairs#AutoPairsFastWrap()<CR>'
+        execute 'inoremap <buffer> <silent> '.g:AutoPairsShortcutFastWrap.' <C-R>=autopairs#AutoPairsFastWrap("e")<CR>'
     end
 
     if b:AutoPairsFlyMode && g:AutoPairsShortcutBackInsert != ''
