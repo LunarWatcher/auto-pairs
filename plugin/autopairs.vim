@@ -58,6 +58,8 @@ call s:define('g:AutoPairsShortcutFastWrap', '<M-e>')
 
 call s:define('g:AutoPairsMoveCharacter', "()[]{}\"'")
 
+" Variable controlling whether or not to require a space or EOL to complete
+" bracket pairs. Extension off Krasjet.
 call s:define('g:AutoPairsCompleteOnSpace', 0)
 
 call s:define('g:AutoPairsShortcutJump', '<M-n>')
@@ -74,9 +76,10 @@ call s:define('g:AutoPairsMultilineClose', 0)
 " Work with Fly Mode, insert pair where jumped
 call s:define('g:AutoPairsShortcutBackInsert', '<M-b>')
 
+call s:define('g:AutoPairsNoJump', 0)
 
 " default pairs base on filetype
-func! AutoPairsDefaultPairs()
+func! autopairs#AutoPairsDefaultPairs()
     if exists('b:autopairs_defaultpairs')
         return b:autopairs_defaultpairs
     end
@@ -109,6 +112,7 @@ endif
 let s:Left = s:Go."\<LEFT>"
 let s:Right = s:Go."\<RIGHT>"
 
+" Local utility functions (private API) {{{
 " unicode len
 func! s:ulen(s)
     return len(split(a:s, '\zs'))
@@ -170,13 +174,29 @@ func! s:matchbegin(text, close)
     return [a:text, m, strpart(a:text, len(m), len(a:text)-len(m))]
 endf
 
+func! s:sortByLength(i1, i2)
+    return len(a:i2[0])-len(a:i1[0])
+endf
+
+" Idea by https://github.com/fenuks: https://github.com/jiangmiao/auto-pairs/issues/251#issuecomment-573901691
+fun! s:GetFirstUnicodeChar(string)
+  return nr2char(strgetchar(a:string, 0))
+endfun
+
+fun! s:GetLastUnicodeChar(string)
+  return nr2char(strgetchar(a:string, strchars(a:string) - 1))
+endfun
+
+" }}}
+
+
 " add or delete pairs base on g:AutoPairs
 " AutoPairsDefine(addPairs:dict[, removeOpenPairList:list])
 "
 " eg:
 "   au FileType html let b:AutoPairs = AutoPairsDefine({'<!--' : '-->'}, ['{'])
 "   add <!-- --> pair and remove '{' for html file
-func! AutoPairsDefine(pairs, ...)
+func! autopairs#AutoPairsDefine(pairs, ...)
     let r = AutoPairsDefaultPairs()
     if a:0 > 0
         for open in a:1
@@ -189,7 +209,7 @@ func! AutoPairsDefine(pairs, ...)
     return r
 endf
 
-func! AutoPairsInsert(key)
+func! autopairs#AutoPairsInsert(key)
     if !b:autopairs_enabled
         return a:key
     end
@@ -284,7 +304,8 @@ func! AutoPairsInsert(key)
             let m = matchstr(afterline, '^\V'.close)
             if m != ''
                 " Krasjet: only jump across the closing pair if pairs are balanced
-                if open == close || (b:AutoPairsSingleQuoteBalanceCheck && close ==# "'")
+                " Olivia: only jump across brackets if it hasn't been disabled
+                if b:AutoPairsNoJump == 1 || open == close || (b:AutoPairsSingleQuoteBalanceCheck && close ==# "'")
                     if count(before.afterline,close) % 2 != 0
                         return a:key
                     end
@@ -326,7 +347,7 @@ func! AutoPairsInsert(key)
     return a:key
 endf
 
-func! AutoPairsDelete()
+func! autopairs#AutoPairsDelete()
     if !b:autopairs_enabled
         return "\<BS>"
     end
@@ -360,7 +381,7 @@ endf
 
 
 " Fast wrap the word in brackets
-func! AutoPairsFastWrap()
+func! autopairs#AutoPairsFastWrap()
     let c = @"
     normal! x
     let [before, after, ig] = s:getline()
@@ -390,24 +411,24 @@ func! AutoPairsFastWrap()
     return ""
 endf
 
-func! AutoPairsJump()
+func! autopairs#AutoPairsJump()
     call search('["\]'')}]','W')
 endf
 
-func! AutoPairsMoveCharacter(key)
+func! autopairs#AutoPairsMoveCharacter(key)
     let c = getline(".")[col(".")-1]
     let escaped_key = substitute(a:key, "'", "''", 'g')
     return "\<DEL>\<ESC>:call search("."'".escaped_key."'".")\<CR>a".c."\<LEFT>"
 endf
 
-func! AutoPairsBackInsert()
+func! autopairs#AutoPairsBackInsert()
     let pair = b:autopairs_saved_pair[0]
     let pos  = b:autopairs_saved_pair[1]
     call setpos('.', pos)
     return pair
 endf
 
-func! AutoPairsReturn()
+func! autopairs#AutoPairsReturn()
     if b:autopairs_enabled == 0
         return ''
     end
@@ -459,7 +480,7 @@ func! AutoPairsReturn()
     return ''
 endf
 
-func! AutoPairsSpace()
+func! autopairs#AutoPairsSpace()
     if !b:autopairs_enabled
         return "\<SPACE>"
     end
@@ -481,7 +502,7 @@ func! AutoPairsSpace()
     return "\<SPACE>"
 endf
 
-func! AutoPairsMap(key)
+func! autopairs#AutoPairsMap(key)
     " | is special key which separate map command from text
     let key = a:key
     if key == '|'
@@ -490,10 +511,10 @@ func! AutoPairsMap(key)
     let escaped_key = substitute(key, "'", "''", 'g')
     " use expr will cause search() doesn't work
 
-    execute 'inoremap <buffer> <silent> '.key." <C-R>=AutoPairsInsert('".escaped_key."')<cr>"
+    execute 'inoremap <buffer> <silent> '.key." <C-R>=autopairs#AutoPairsInsert('".escaped_key."')<cr>"
 endf
 
-func! AutoPairsToggle()
+func! autopairs#AutoPairsToggle()
     if b:autopairs_enabled
         let b:autopairs_enabled = 0
         echo 'AutoPairs Disabled.'
@@ -504,25 +525,11 @@ func! AutoPairsToggle()
     return ''
 endf
 
-func! s:sortByLength(i1, i2)
-    return len(a:i2[0])-len(a:i1[0])
-endf
-
-" Idea by https:77github.com/fenuks: https://github.com/jiangmiao/auto-pairs/issues/251#issuecomment-573901691
-fun! s:GetFirstUnicodeChar(string) abort
-  return nr2char(strgetchar(a:string, 0))
-endfun
-
-fun! s:GetLastUnicodeChar(string) abort
-  let l:chars = strchars(a:string)
-  return nr2char(strgetchar(a:string, l:chars-1))
-endfun
-
-func! AutoPairsInit()
-    let b:autopairs_loaded  = 1
+func! autopairs#AutoPairsInit()
+    let b:autopairs_loaded = 1
 
     call s:define('b:autopairs_enabled', 1)
-    call s:define('b:AutoPairs', AutoPairsDefaultPairs())
+    call s:define('b:AutoPairs', autopairs#AutoPairsDefaultPairs())
     call s:define('b:AutoPairsQuoteClosingChar', copy(g:AutoPairsQuoteClosingChar))
     call s:define('b:AutoPairsNextCharWhitelist', copy(g:AutoPairsNextCharWhitelist))
     call s:define('b:AutoPairsOpenBalanceBlacklist', copy(g:AutoPairsOpenBalanceBlacklist))
@@ -530,6 +537,7 @@ func! AutoPairsInit()
     call s:define('b:AutoPairsMoveCharacter', g:AutoPairsMoveCharacter)
     call s:define('b:AutoPairsCompleteOnSpace', g:AutoPairsCompleteOnSpace)
     call s:define('b:AutoPairsFlyMode', g:AutoPairsFlyMode)
+    call s:define('b:AutoPairsNoJump', g:AutoPairsNoJump)
 
     let b:autopairs_return_pos = 0
     let b:autopairs_saved_pair = [0, 0]
@@ -568,9 +576,9 @@ func! AutoPairsInit()
             end
             let close = m[1]
         end
-        call AutoPairsMap(o)
+        call autopairs#AutoPairsMap(o)
         if o != c && c != '' && opt['mapclose']
-            call AutoPairsMap(c)
+            call autopairs#AutoPairsMap(c)
         end
 
         " Krasjet: add any non-string closing characters to a list
@@ -614,13 +622,13 @@ func! AutoPairsInit()
 
     for key in split(b:AutoPairsMoveCharacter, '\s*')
         let escaped_key = substitute(key, "'", "''", 'g')
-        execute 'inoremap <silent> <buffer> <M-'.key."> <C-R>=AutoPairsMoveCharacter('".escaped_key."')<CR>"
+        execute 'inoremap <silent> <buffer> <M-'.key."> <C-R>=autopairs#AutoPairsMoveCharacter('".escaped_key."')<CR>"
     endfor
 
     " Still use <buffer> level mapping for <BS> <SPACE>
     if g:AutoPairsMapBS
         " Use <C-R> instead of <expr> for issue #14 sometimes press BS output strange words
-        execute 'inoremap <buffer> <silent> <BS> <C-R>=AutoPairsDelete()<CR>'
+        execute 'inoremap <buffer> <silent> <BS> <C-R>=autopairs#AutoPairsDelete()<CR>'
     end
 
     if g:AutoPairsMapSpace
@@ -629,26 +637,26 @@ func! AutoPairsInit()
         if v:version == 703 && has("patch489") || v:version > 703
             let do_abbrev = "<C-]>"
         endif
-        execute 'inoremap <buffer> <silent> <SPACE> '.do_abbrev.'<C-R>=AutoPairsSpace()<CR>'
+        execute 'inoremap <buffer> <silent> <SPACE> '.do_abbrev.'<C-R>=autopairs#AutoPairsSpace()<CR>'
     end
 
     if g:AutoPairsShortcutFastWrap != ''
-        execute 'inoremap <buffer> <silent> '.g:AutoPairsShortcutFastWrap.' <C-R>=AutoPairsFastWrap()<CR>'
+        execute 'inoremap <buffer> <silent> '.g:AutoPairsShortcutFastWrap.' <C-R>=autopairs#AutoPairsFastWrap()<CR>'
     end
 
     if b:AutoPairsFlyMode && g:AutoPairsShortcutBackInsert != ''
-        execute 'inoremap <buffer> <silent> '.g:AutoPairsShortcutBackInsert.' <C-R>=AutoPairsBackInsert()<CR>'
+        execute 'inoremap <buffer> <silent> '.g:AutoPairsShortcutBackInsert.' <C-R>=autopairs#AutoPairsBackInsert()<CR>'
     end
 
     if g:AutoPairsShortcutToggle != ''
         " use <expr> to ensure showing the status when toggle
-        execute 'inoremap <buffer> <silent> <expr> '.g:AutoPairsShortcutToggle.' AutoPairsToggle()'
-        execute 'noremap <buffer> <silent> '.g:AutoPairsShortcutToggle.' :call AutoPairsToggle()<CR>'
+        execute 'inoremap <buffer> <silent> <expr> '.g:AutoPairsShortcutToggle.' autopairs#AutoPairsToggle()'
+        execute 'noremap <buffer> <silent> '.g:AutoPairsShortcutToggle.' :call autopairs#AutoPairsToggle()<CR>'
     end
 
     if g:AutoPairsShortcutJump != ''
-        execute 'inoremap <buffer> <silent> ' . g:AutoPairsShortcutJump. ' <ESC>:call AutoPairsJump()<CR>a'
-        execute 'noremap <buffer> <silent> ' . g:AutoPairsShortcutJump. ' :call AutoPairsJump()<CR>'
+        execute 'inoremap <buffer> <silent> ' . g:AutoPairsShortcutJump. ' <ESC>:call autopairs#AutoPairsJump()<CR>a'
+        execute 'noremap <buffer> <silent> ' . g:AutoPairsShortcutJump. ' :call autopairs#AutoPairsJump()<CR>'
     end
 
     if &keymap != ''
@@ -667,14 +675,14 @@ func! AutoPairsInit()
 
 endf
 
-func! ExpandMap(map)
+func! autopairs#ExpandMap(map)
     let map = a:map
     let map = substitute(map, '\(<Plug>\w\+\)', '\=maparg(submatch(1), "i")', 'g')
     let map = substitute(map, '\(<Plug>([^)]*)\)', '\=maparg(submatch(1), "i")', 'g')
     return map
 endf
 
-func! AutoPairsTryInit()
+func! autopairs#AutoPairsTryInit()
     if exists('b:autopairs_loaded')
         return
     endif
@@ -741,14 +749,14 @@ func! AutoPairsTryInit()
             execute 'inoremap <script> <buffer> <silent> ' .g:AutoPairsCRKey. ' ' .old_cr.'<SID>AutoPairsReturn'
         end
     endif
-    call AutoPairsInit()
+    call autopairs#AutoPairsInit()
 endf
 
 " Always silent the command
-inoremap <expr> <silent> <SID>AutoPairsReturn AutoPairsReturn()
-imap <expr> <script> <Plug>AutoPairsReturn <SID>AutoPairsReturn
+inoremap <expr> <silent> <SID>autopairs#AutoPairsReturn autopairs#AutoPairsReturn()
+imap <expr> <script> <Plug>autopairs#AutoPairsReturn <SID>autopairs#AutoPairsReturn
 
 
-au BufEnter * :call AutoPairsTryInit()
+au BufEnter * :call autopairs#AutoPairsTryInit()
 
 " vim:sw=4

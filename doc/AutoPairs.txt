@@ -244,7 +244,7 @@ Specifies which symbols should be automatically paired.
 
 To append new pairs without overwriting defaults, add values in your
 `.vimrc`.: >
-    autocmd VimEnter * let g:AutoPairs = AutoPairsDefine({'<': '>'})
+    autocmd VimEnter * let g:AutoPairs = autopairs#AutoPairsDefine({'<': '>'})
 <
 This example will enable matching of `<` with `>`. An autocmd has to be uesd
 due to the way Vim loads plugins. AutoPairsDefine isn't loaded until your
@@ -257,20 +257,20 @@ executing code in your .vimrc. You can also use: >
 all the defaults. If you only do the first mapping in the above example, for
 an instance, the ONLY key bracket/quote/other auto-pairs knows of is ().
 
-Similarly, you can use a the FileType event to 
-`let b:AutoPairs = AutoPairsDefine({'<': '>'})`, and only have <> for some
+Similarly, you can use a the FileType event to
+`let b:AutoPairs = autopairs#AutoPairsDefine({'<': '>'})`, and only have <> for some
 filetypes. Again, dropping AutoPairsDefine and just using the object will
 result in _only_ <> being matched.
 
-Not using |AutoPairsDefine()| will result in the standards being lost. If you
+Not using |autopairs#AutoPairsDefine()| will result in the standards being lost. If you
 don't want to use the standards, go ahead and omit this function.
 Additionally, if you want to add new types after loading the file
 (specifically, when BufEnter has been triggered for auto-pairs), you need to
-use |AutoPairsMap()| to register the new keybind. Using this function isn't
+use |autopairs#AutoPairsMap()| to register the new keybind. Using this function isn't
 necessary for standard |FileType| autocmds, however.
 
 Previous versions of this document supported a type of assignment that doesn't
-work due to plugin sourcing systems. 
+work due to plugin sourcing systems.
 
 `g:AutoPair` additionally supports several types of multibyte pairs. If you're
 frequently coding in an HTML template language, `"{%": "%}"` can be added to
@@ -499,7 +499,7 @@ This plugin tries its best to make sure it doesn't override other mappings, by
 done on a per-buffer basis, so it _should_ be compatible with other plugins,
 but edge cases may still occur.
 
-If you find yourself in a situation where you're unable to make sure enter does 
+If you find yourself in a situation where you're unable to make sure enter does
 what you want, you can always write a function and map <cr> to that. However,
 thanks to plugins being weird, you may have to disable bits that remap <cr> for
 this to work at all.
@@ -509,18 +509,39 @@ If you read any of this and you can tell me I'm wrong, and offer a solution or
 a start, either as a pull request or as an issue, please do let me know. I'm
 more than willing to hear alternative solutions to this problem that cause
 less inconvenience for the users.
+
+------------------------------------------------------------------------------
+                                                             *g:AutoPairsNoJump*
+|g:AutoPairsNoJump|                                                          int
+Default: 0
+
+Sets whether or not jump behavior should be invoked. If this variable is set
+to 1, no automatic jumps will be performed. Basically:
+
+value = 0:
+>
+    Before: (|)     (input: ')', without the quotes)
+    After : ()|
+<
+value = 1:
+>
+    Before: (|)     (input: ')', without the quotes)
+    After : ()|)
+<
+
 ==============================================================================
 7. Functions                                               *autopairs-functions*
 
 Autopairs defines a lot of functions that you're probably never going to use.
 There are, however, a couple that may have to be used in scripting contexts,
 or remapping contexts.
-Not using |AutoPairsDefine()| will result in the standards being lost. If you
+Not using |autopairs#AutoPairsDefine()| will result in the standards being lost. If you
 don't want to use the standards, go ahead and omit this function.
-Additionally, if you want to add new types after loading, you need to use 
-|AutoPairsMap()|
+Additionally, if you want to add new types after loading, you need to use
+|autopairs#AutoPairsMap()|
+
 ------------------------------------------------------------------------------
-AutoPairsDefine()                    *AutoPairsDefine()* *autopairs-copy-defaults*
+AutoPairsDefine()          *autopairs#AutoPairsDefine()* *autopairs-copy-defaults*
 Arguments: (pairs)
 
     pairs                   Type: Map of key-value pairs
@@ -528,12 +549,12 @@ Arguments: (pairs)
                             map.
 
 This function is used for defining additional keys. Example use: >
-    autocmd VimEnter * let g:AutoPairs = AutoPairsDefine({'<': '>'})
-    autocmd FileType liquid let b:AutoPairs = AutoPairsDefine({'{%': '%}'})
+    autocmd VimEnter * let g:AutoPairs = autopairs#AutoPairsDefine({'<': '>'})
+    autocmd FileType liquid let b:AutoPairs = autopairs#AutoPairsDefine({'{%': '%}'})
 <
 
 ------------------------------------------------------------------------------
-AutoPairsMap()                               *AutoPairsMap()* *auto-pairs-map-key*
+AutoPairsMap()                     *autopairs#AutoPairsMap()* *auto-pairs-map-key*
 Arguments: (key)
 
     key                     Type: keybind
