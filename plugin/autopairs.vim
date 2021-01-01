@@ -87,7 +87,6 @@ func! autopairs#AutoPairsDefaultPairs()
     end
     " Added a more complex regex to capture in-line VimL comments
 
-    let com_inl = ''
     let r = copy(g:AutoPairs)
     let allPairs = {
                 \ 'vim': {'\v(^\s*\zs"|^((Plugi?n?|echoe?r?r?)\s*)@!("(\\\"|[^"])*"*|[^"])* \zs"\ze(\\\"|[^"])*$)': ''},
