@@ -90,7 +90,7 @@ func! autopairs#AutoPairsDefaultPairs()
     let com_inl = ''
     let r = copy(g:AutoPairs)
     let allPairs = {
-                \ 'vim': {'\v(^\s*\zs"|^((Plugi?n?\s*)@!|(Plugi?n?\s* ".*"))("(\\\"|[^"])*"*|[^"])* \zs"\ze(\\\"|[^"])*$)': ''},
+                \ 'vim': {'\v(^\s*\zs"|^((Plugi?n?|echoe?r?r?)\s*)@!("(\\\"|[^"])*"*|[^"])* \zs"\ze(\\\"|[^"])*$)': ''},
                 \ 'rust': {'\w\zs<': '>', '&\zs''': ''},
                 \ 'php': {'<?': '?>//k]', '<?php': '?>//k]'}
                 \ }
