@@ -1,3 +1,14 @@
+# 3.0.0-alpha4
+
+## Added
+* `g:AutoPairsSearchCloseAfterSpace`
+
+## Fixed
+* `g:AutoPairsNoJump` didn't work as intended; this has now been fixed. An if-statement in the wrong place prevented it from doing what it was meant to do; avoid jumping.
+
+## Changes
+* Corrected documentation of AutoPairsDefine to include the optional second argument.
+
 # 3.0.0-alpha3
 
 ## Changes

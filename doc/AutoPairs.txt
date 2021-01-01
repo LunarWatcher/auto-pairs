@@ -563,6 +563,27 @@ value = 1:
     After : ()|)
 <
 
+------------------------------------------------------------------------------
+                                              *g:AutoPairsSearchCloseAfterSpace*
+|g:AutoPairsSearchCloseAfterSpace|                                           int
+Default: 1
+
+Sets whether or not to search for close brackets after a space. This is
+default behavior in jiangmiao/auto-pairs, and disabled in krasjet/auto.pairs.
+Neither of the two have an option to toggle this, however.
+
+value = 0:
+>
+    Before: [ | ]   (input: ']', without the quotes)
+    After : [ ]| ]
+<
+
+value = 1:
+>
+    Before: [ | ]   (input: ']', without the quotes)
+    After : [ ]|
+<
+
 ==============================================================================
 7. Functions                                               *autopairs-functions*
 
@@ -576,11 +597,15 @@ Additionally, if you want to add new types after loading, you need to use
 
 ------------------------------------------------------------------------------
 AutoPairsDefine()          *autopairs#AutoPairsDefine()* *autopairs-copy-defaults*
-Arguments: (pairs)
+Arguments: (pairs[, pairs_to_remove])
 
     pairs                   Type: Map of key-value pairs
                             Defines what additional keys to include in the
                             map.
+
+    pairs_to_remove         Type: list of keys
+                            Lists keys to remove from the default
+                            configuration. Optional; defaults to []                       
 
 This function is used for defining additional keys. Example use: >
     autocmd VimEnter * let g:AutoPairs = autopairs#AutoPairsDefine({'<': '>'})

@@ -80,6 +80,8 @@ call s:define('g:AutoPairsNoJump', 0)
 
 call s:define('g:AutoPairsInitHook', 0)
 
+call s:define('g:AutoPairsSearchCloseAfterSpace', 1)
+
 " default pairs base on filetype
 func! autopairs#AutoPairsDefaultPairs()
     if exists('b:autopairs_defaultpairs')
@@ -303,29 +305,45 @@ func! autopairs#AutoPairsInsert(key)
         if close == ''
             continue
         end
+        " Contains jump logic, apparently.
         if a:key == g:AutoPairsWildClosedPair || opt['mapclose'] && opt['key'] == a:key
+            " Olivia: return the key if we aren't jumping.
+            if b:AutoPairsNoJump == 1
+                return a:key
+            endif
             " the close pair is in the same line
+            let searchRegex = b:AutoPairsSearchCloseAfterSpace == 1 ?  '^\v\s*\V' : '^\V'
 
             " Krasjet: do not search for the closing pair if spaces are in between
-            let m = matchstr(afterline, '^\V'.close)
+            " Olivia: Add override for people who want this (like me)
+            let m = matchstr(afterline, searchRegex . close)
             if m != ''
                 " Krasjet: only jump across the closing pair if pairs are balanced
-                " Olivia: only jump across brackets if it hasn't been disabled
-                if b:AutoPairsNoJump == 1 || open == close || (b:AutoPairsSingleQuoteBalanceCheck && close ==# "'")
+                " Olivia: that ^ but make it an option instead of forcing it
+
+
+                " Olivia (Note): Not sure if this needs to be wrapped in an if
+                " statement to work properly, or if this ends up being a waste
+                " somehow. Not gonna lie, I'm not entirely sure what this
+                " does. It clearly isn't called when
+                " b:AutoPairsSearchCloseAfterSpace == 0, but I don't
+                " understand why. It's failing hte second condition, but I'm
+                " not sure why.
+                if open == close || (b:AutoPairsSingleQuoteBalanceCheck && close ==# "'")
                     if count(before.afterline,close) % 2 != 0
                         return a:key
-                    end
+                    endif
                 else
                     if count(before.afterline,open) > count(before.afterline,close)
                         return a:key
-                    end
-                end
+                    endif
+                endif
                 if before =~ '\V'.open.'\v\s*$' && m[0] =~ '\v\s'
                     " remove the space we inserted if the text in pairs is blank
                     return "\<DEL>".s:right(m[1:])
                 else
                     return s:right(m)
-                end
+                endif
             end
             let m = matchstr(after, '^\V'.close)
             if m != ''
@@ -549,6 +567,7 @@ func! autopairs#AutoPairsInit()
     call s:define('b:AutoPairsCompleteOnSpace', g:AutoPairsCompleteOnSpace)
     call s:define('b:AutoPairsFlyMode', g:AutoPairsFlyMode)
     call s:define('b:AutoPairsNoJump', g:AutoPairsNoJump)
+    call s:define('b:AutoPairsSearchCloseAfterSpace', g:AutoPairsSearchCloseAfterSpace)
 
     let b:autopairs_return_pos = 0
     let b:autopairs_saved_pair = [0, 0]
