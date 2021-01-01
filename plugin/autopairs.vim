@@ -85,9 +85,12 @@ func! autopairs#AutoPairsDefaultPairs()
     if exists('b:autopairs_defaultpairs')
         return b:autopairs_defaultpairs
     end
+    " Added a more complex regex to capture in-line VimL comments
+
+    let com_inl = ''
     let r = copy(g:AutoPairs)
     let allPairs = {
-                \ 'vim': {'\v^\s*\zs"': ''},
+                \ 'vim': {'\v(^\s*\zs"|^((Plugi?n?\s*)@!|(Plugi?n?\s* ".*"))("(\\\"|[^"])*"*|[^"])* \zs"\ze(\\\"|[^"])*$)': ''},
                 \ 'rust': {'\w\zs<': '>', '&\zs''': ''},
                 \ 'php': {'<?': '?>//k]', '<?php': '?>//k]'}
                 \ }
@@ -257,7 +260,7 @@ func! autopairs#AutoPairsInsert(key)
             " when <!-- is detected the inserted pair < > should be clean up
             let target = ms[1]
             let openPair = ms[2]
-            if len(openPair) == 1 && m == openPair
+            if (len(openPair) == 1 && m == openPair) || (close == '')
                 break
             end
             let bs = ''
@@ -356,8 +359,9 @@ func! autopairs#AutoPairsDelete()
 
     let [before, after, ig] = s:getline()
     for [open, close, opt] in b:AutoPairsList
+        let rest_of_line = opt['multiline'] = after : ig
         let b = matchstr(before, '\V'.open.'\v\s?$')
-        let a = matchstr(after, '^\v\s*\V'.close)
+        let a = matchstr(rest_of_line, '^\v\s*\V'.close)
         if b != '' && a != ''
             if b[-1:-1] == ' '
                 if a[0] == ' '
@@ -557,7 +561,7 @@ func! autopairs#AutoPairsInit()
         let c = s:GetFirstUnicodeChar(close)
         let opt = {'mapclose': 1, 'multiline':1}
         let opt['key'] = c
-        if o == c
+        if o == c || len(c) == 0
             let opt['multiline'] = 0
         end
         let m = matchlist(close, '\v(.*)//(.*)$')
