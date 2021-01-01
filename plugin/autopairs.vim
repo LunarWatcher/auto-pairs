@@ -15,8 +15,8 @@ fun! s:define(name, default)
     endif
 endfun
 
+" Default autopairs
 call s:define("g:AutoPairs", {'(':')', '[':']', '{':'}',"'":"'",'"':'"', '```':'```', '"""':'"""', "'''":"'''", "`":"`"})
-
 
 " Krasjet: the closing character for quotes, auto completion will be
 " inhibited when the next character is one of these
@@ -746,7 +746,7 @@ func! autopairs#AutoPairsTryInit()
                 let old_cr = wrapper_name
             end
             " Always silent mapping
-            execute 'inoremap <script> <buffer> <silent> ' .g:AutoPairsCRKey. ' ' .old_cr.'<SID>AutoPairsReturn'
+            execute 'inoremap <script> <buffer> <silent> ' .g:AutoPairsCRKey. ' ' .old_cr.'<SID>autopairs#AutoPairsReturn'
         end
     endif
     call autopairs#AutoPairsInit()
