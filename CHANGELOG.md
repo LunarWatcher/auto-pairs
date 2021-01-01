@@ -5,6 +5,7 @@
 * `g:AutoPairsNoJump`
 * `g:AutoPairsDirectoryBlacklist`
 * `g:AutoPairsCompleteOnSpace`
+* `g:AutoPairsInitHook`
 
 ## Fixes
 * [Breaking] Moved all autopair functions to have an `autopairs#` prefix

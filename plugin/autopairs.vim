@@ -78,6 +78,8 @@ call s:define('g:AutoPairsShortcutBackInsert', '<M-b>')
 
 call s:define('g:AutoPairsNoJump', 0)
 
+call s:define('g:AutoPairsInitHook', 0)
+
 " default pairs base on filetype
 func! autopairs#AutoPairsDefaultPairs()
     if exists('b:autopairs_defaultpairs')
@@ -687,6 +689,9 @@ func! autopairs#AutoPairsTryInit()
         return
     endif
 
+    if type(g:AutoPairsInitHook) == 2
+        call g:AutoPairsInitHook()
+    endif
     if index(g:AutoPairsDirectoryBlacklist, getcwd()) >= 0
         let b:autopairs_enabled = 0
     endif
@@ -736,8 +741,8 @@ func! autopairs#AutoPairsTryInit()
                 " The old_cr start with " it must be in expr mode
                 let is_expr = is_expr || old_cr =~ '\v^"'
                 let wrapper_name = '<SID>AutoPairsOldCRWrapper'
-            end
-        end
+            endif
+        endif
 
         if old_cr !~ 'AutoPairsReturn'
             if is_expr
@@ -747,7 +752,7 @@ func! autopairs#AutoPairsTryInit()
             end
             " Always silent mapping
             execute 'inoremap <script> <buffer> <silent> ' .g:AutoPairsCRKey. ' ' .old_cr.'<SID>autopairs#AutoPairsReturn'
-        end
+        endif
     endif
     call autopairs#AutoPairsInit()
 endf
@@ -755,7 +760,6 @@ endf
 " Always silent the command
 inoremap <expr> <silent> <SID>autopairs#AutoPairsReturn autopairs#AutoPairsReturn()
 imap <expr> <script> <Plug>autopairs#AutoPairsReturn <SID>autopairs#AutoPairsReturn
-
 
 au BufEnter * :call autopairs#AutoPairsTryInit()
 

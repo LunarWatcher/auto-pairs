@@ -437,6 +437,40 @@ This is a buffer variable that defines whether or not autopairs is enabled.
 You can use this variable to get more fine-grained control over when the
 plugin is enabled as well, if the built-in options aren't satisfactory.
 
+------------------------------------------------------------------------------
+                                                           *g:AutoPairsInitHook*
+
+Type: |function()| (generally, a funcref)
+Default: 0 (intended as null)
+
+This variable lets you do stuff before the initialization of auto-pairs. The
+indent behind this variable is to reduce the need for |autopairs-functions| as
+much as possible, as the use of these may cause more problems than good. Their
+use also requires understanding how they work and when they're supposed to be
+called, which may be a bit much to ask for if the intent is a bit of
+customization.
+
+It's not required; its primary purpose is for cases where you cannot get away
+with using an autocmd, or the execution order of autocmds prevents the
+functionality you intend. The function, if present, is triggered as a part of
+AutoPairsTryInit, which essentially contains the start of initialization. The
+function is, to be specific, called before any other logic to enable variable
+initialization.
+
+Example use~
+>
+    fun! s:myFunc()
+        echo "This is my autopairs hook"
+    endfun
+    let g:AutoPairsInitHook = function('s:myFunc')
+<
+
+Note~
+
+While the example uses function(), and the type listed is function(), its
+underlaying |type()| is a funcref. There's many ways to Rome on this one, so
+you don't _have_ to use a |function()| to get the funcref.
+
 ==============================================================================
 6. Troubleshooting                                   *autopairs-troubleshooting*
 
