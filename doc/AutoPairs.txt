@@ -700,12 +700,12 @@ short, this is outside the plugin's hands. At the end of the day, Vim does the
 actual formatting, and does so independently of the plugin. You might see where
 this is going.
 
-|cino| is essentially your friend here. Dealing with the problem listed above
+cino is essentially your friend here. Dealing with the problem listed above
 can be done with `set cino+=m1`
 
-There's no real solution to this aside reading the |cino| documentation. Vim
-determines how to handle indentation. Any weird intentation is, with very few
-exceptions, gonna be Vim's fault.
+There's no real solution to this aside reading the cino documentation.
+(|indent|) Vim determines how to handle indentation. Any weird intentation 
+is, with very few exceptions, gonna be Vim's fault.
 
 That being said, feel free to look around
 [GitHub Discussions](https://github.com/LunarWatcher/auto-pairs/discussions)
@@ -714,6 +714,19 @@ you can't find anything, feel free to open a discussion to ask for help -
 while it may not be the plugin's fault, that doesn't mean we're gonna leave
 all the debugging and testing to you, especially when the cino documentation
 is as huge as it is.
+
+Note also that there's a whole lot of other ways to indent. Aside cino, some
+languages have their own, additional variables for indentation. Some
+languages, notably Python, also have plugins that add indent settings.
+|indent| covers the vast majority of the built-in ones, and for the rest,
+there's probably plugins
+
+As far as I can tell though, cino applies to all the different files, though
+some languages have additional configuration types. All I have left to say now
+is to repeat: look at |indent|. If you can't find a cino setting to cover it,
+or cino doesn't work for your language, look for language-specific options, or
+possibly plugins to better handle indentation. If you're stuck, you can ask on
+GitHub Discussions.
 
 ==============================================================================
 8. Functions                                               *autopairs-functions*
