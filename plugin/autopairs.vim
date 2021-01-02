@@ -82,6 +82,10 @@ call s:define('g:AutoPairsInitHook', 0)
 
 call s:define('g:AutoPairsSearchCloseAfterSpace', 1)
 
+call s:define('g:AutoPairsSingleQuoteMode', 2)
+
+call s:define('g:AutoPairsSingleQuoteExpandFor', 'fbr')
+
 " default pairs base on filetype
 func! autopairs#AutoPairsDefaultPairs()
     if exists('b:autopairs_defaultpairs')
@@ -568,6 +572,8 @@ func! autopairs#AutoPairsInit()
     call s:define('b:AutoPairsFlyMode', g:AutoPairsFlyMode)
     call s:define('b:AutoPairsNoJump', g:AutoPairsNoJump)
     call s:define('b:AutoPairsSearchCloseAfterSpace', g:AutoPairsSearchCloseAfterSpace)
+    call s:define('b:AutoPairsSingleQuoteMode', g:AutoPairsSingleQuoteMode)
+    call s:define('b:AutoPairsSingleQuoteExpandFor', g:AutoPairsSingleQuoteExpandFor)
 
     let b:autopairs_return_pos = 0
     let b:autopairs_saved_pair = [0, 0]
@@ -645,8 +651,24 @@ func! autopairs#AutoPairsInit()
 
     for item in b:AutoPairsList
         let [open, close, opt] = item
+        " Note to self: this is the bit that's responsible for checking
+        " whether a single-quote is in a word or not.
+        " Olivia: altered to allow three different modes, to prevent issues
+        "         with things like string types in some languages (Python)
+        "         where the programmers either can't use anything but single
+        "         quotes, or (ew) decide to use single-quotes when
+        "         double-quotes are possible 
         if open == "'" && open == close
-            let item[0] = '\v(^|\W)\zs'''
+            if b:AutoPairsSingleQuoteMode == 0
+                let item[0] = '\v(^|\W)\zs'''
+            elseif b:AutoPairsSingleQuoteMode == 1
+                let item[0] = '\v(^|\W)\w?\zs'''
+            elseif b:AutoPairsSingleQuoteMode == 2
+                let item[0] = '\v(^|\W)[' . b:AutoPairsSingleQuoteExpandFor . ']?\zs''' 
+            else
+                echoerr 'Invalid b:AutoPairsSingleQuoteMode: ' . b:AutoPairsSingleQuoteMode 
+                    \ . ". Only 0, 1, or 2 are allowed."
+            endif
         end
     endfor
 

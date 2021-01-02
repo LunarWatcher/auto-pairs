@@ -2,6 +2,8 @@
 
 ## Added
 * `g:AutoPairsSearchCloseAfterSpace`
+* `g:AutoPairsSingleQuoteMode`
+* `g:AutoPairsSingleQuoteExpandFor`
 
 ## Fixed
 * `g:AutoPairsNoJump` didn't work as intended; this has now been fixed. An if-statement in the wrong place prevented it from doing what it was meant to do; avoid jumping.

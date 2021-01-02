@@ -584,6 +584,53 @@ value = 1:
     After : [ ]|
 <
 
+------------------------------------------------------------------------------
+                                                    *g:AutoPairsSingleQuoteMode*
+|g:AutoPairsSingleQuoteMode|                                                 int
+
+Default: 2
+Allowed values: [0, 1, 2]
+
+Defines how to handle single-quotes.
+
+If 0: "Standard" behavior, never expand <letter>' to <letter>''
+If 1: Allow one character in front of the quote to expand. Will trigger on
+      I'm.
+If 2: Allow specific characters in front of the quote to expand. Should not
+      yield false positives. Looks in |g:AutoPairsSingleQuoteExpandFor|.
+      Will not trigger on cases like I'm unless I (case sensitive) is present
+      in |g:AutoPairsSingleQuoteExpandFor|. See the second note.
+
+You can also use an 
+`autocmd FileType <text files> let b:AutoPairsSingleQuoteMode = 0` if you
+wanna use some other behavior on code files, but be strict in text files.
+
+Note that without parsing comments on a per-language basis (AKA literally
+hell, because no one seems to agree to just settle on one comment style),
+there's not gonna be a lot of solutions that don't yield some false positives.
+mode 2 is the one guaranteed to yield no false positives, but does trigger a
+whole bunch of true negatives. Mixing 0 and 2 depending on the filetype is
+probably your best bet.
+
+Note: 2, from an English perspective, yields very few or no false positives.
+f', g', and r' either don't exist as prefix to words, or are so rare only a
+few niche words count. Might not hold if you're writing a D&D story, but
+that's why option 0 exists.
+
+You're free to chose whatever mode you want in whatever files you want in
+whatever combination you want based on what works for you.
+
+------------------------------------------------------------------------------
+                                               *g:AutoPairsSingleQuoteExpandFor*
+|g:AutoPairsSingleQuoteExpandFor|         (case-sensitive) regex character group
+
+Default: 'fbr'
+Type clarification: the string is parsed in as a part of a regex character
+group. It's only meant to contain pure characters, though it can obviously be
+used to inject stuff into the regex that isn't meant to be there.
+
+Used with |g:AutoPairsSingleQuoteMode| = 2 
+
 ==============================================================================
 7. Functions                                               *autopairs-functions*
 
