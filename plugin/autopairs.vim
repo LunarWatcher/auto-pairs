@@ -417,7 +417,7 @@ func! autopairs#AutoPairsFastWrap(movement)
     let c = @"
     normal! x
     let [before, after, ig] = s:getline()
-    if after[0] =~ '\v[\{\[\(\<]'
+    if after[0] =~ '\v[{[(<]'
         normal! %
         normal! p
     else
@@ -656,16 +656,16 @@ func! autopairs#AutoPairsInit()
         "         with things like string types in some languages (Python)
         "         where the programmers either can't use anything but single
         "         quotes, or (ew) decide to use single-quotes when
-        "         double-quotes are possible 
+        "         double-quotes are possible
         if open == "'" && open == close
             if b:AutoPairsSingleQuoteMode == 0
                 let item[0] = '\v(^|\W)\zs'''
             elseif b:AutoPairsSingleQuoteMode == 1
                 let item[0] = '\v(^|\W)\w?\zs'''
             elseif b:AutoPairsSingleQuoteMode == 2
-                let item[0] = '\v(^|\W)[' . b:AutoPairsSingleQuoteExpandFor . ']?\zs''' 
+                let item[0] = '\v(^|\W)[' . b:AutoPairsSingleQuoteExpandFor . ']?\zs'''
             else
-                echoerr 'Invalid b:AutoPairsSingleQuoteMode: ' . b:AutoPairsSingleQuoteMode 
+                echoerr 'Invalid b:AutoPairsSingleQuoteMode: ' . b:AutoPairsSingleQuoteMode
                     \ . ". Only 0, 1, or 2 are allowed."
             endif
         end
