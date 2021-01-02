@@ -7,6 +7,8 @@
 
 ## Fixed
 * `g:AutoPairsNoJump` didn't work as intended; this has now been fixed. An if-statement in the wrong place prevented it from doing what it was meant to do; avoid jumping.
+* Typo in AutoPairsDelete causing backspace errors
+* Bad backslash use in character group ([#10](https://github.com/LunarWatcher/auto-pairs/pull/10))
 
 ## Changes
 * Corrected documentation of AutoPairsDefine to include the optional second argument.

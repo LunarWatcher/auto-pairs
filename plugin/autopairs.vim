@@ -381,7 +381,7 @@ func! autopairs#AutoPairsDelete()
 
     let [before, after, ig] = s:getline()
     for [open, close, opt] in b:AutoPairsList
-        let rest_of_line = opt['multiline'] = after : ig
+        let rest_of_line = opt['multiline'] ? after : ig
         let b = matchstr(before, '\V'.open.'\v\s?$')
         let a = matchstr(rest_of_line, '^\v\s*\V'.close)
         if b != '' && a != ''
