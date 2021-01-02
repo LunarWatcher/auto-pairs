@@ -589,11 +589,16 @@ value = 1:
 |g:AutoPairsSingleQuoteMode|                                                 int
 
 Default: 2
+Default for upstream: 0
 Allowed values: [0, 1, 2]
 
-Defines how to handle single-quotes.
+Defines how to handle single-quotes. This is new in the fork and alters
+existing behavior. "Default for upstream" is meant to refer to what upstream
+does, although it doesn't have this option. If you prefer the standard
+behavior of jiangmiao/auto-pairs, `let g.AutoPairsSingleQuoteMode = 0`
 
-If 0: "Standard" behavior, never expand <letter>' to <letter>''
+If 0: "Standard" behavior, never expand <letter>' to <letter>''. No
+      exceptions.
 If 1: Allow one character in front of the quote to expand. Will trigger on
       I'm.
 If 2: Allow specific characters in front of the quote to expand. Should not
