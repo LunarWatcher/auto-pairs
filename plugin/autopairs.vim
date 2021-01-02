@@ -443,8 +443,14 @@ func! autopairs#AutoPairsFastWrap(movement)
     return ""
 endf
 
+" TODO: determine whether this should be linked against g:AutoPairs or not
+" This function calls a manual jump. It jumps to the next character, which may
+" or may not be next to the cursor.
+" This is an explicit jump, so it makes sense here to link g:AutoPairs, but
+" iDunno how it deals with multipair jumps.
+" Gonna backlog this for now and rather deal with it later
 func! autopairs#AutoPairsJump()
-    call search('["\]'')}]','W')
+    call search('["\]'')}`]','W')
 endf
 
 func! autopairs#AutoPairsMoveCharacter(key)
