@@ -1,3 +1,13 @@
+# 3.0.0-alpha5
+
+## Added
+* `autopairs#AutoPairsScriptInit` (dummy function for autoload; see the docs)
+* `g:AutoPairsLanguagePairs` (exposed previously private API)
+
+## Fixed
+* Load autopairs functions properly (switch primary script to autoload)
+* Jump keybind and backticks ([#299](https://github.com/jiangmiao/auto-pairs/issues/299))
+
 # 3.0.0-alpha4
 
 ## Added

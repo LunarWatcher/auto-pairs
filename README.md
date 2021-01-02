@@ -2,7 +2,7 @@
 
 Insert or delete brackets, parens, quotes in pair.
 
-NOTE: This plugin is currently under the process of catching up with [a few years of unreviewed issues and pull requests](https://github.com/LunarWatcher/auto-pairs/issues/5). Effective now, it's highly recommended 
+NOTE: This plugin is currently under the process of catching up with [a few years of unreviewed issues and pull requests](https://github.com/LunarWatcher/auto-pairs/issues/5). Effective now, it's highly recommended to stick to tags rather than HEAD versions.
 
 ## Installation
 
@@ -18,7 +18,7 @@ If you're fine with risking breaking changes and the plugin being literally unus
 ```vim
 Plug 'LunarWatcher/auto-pairs'
 ```
-... but know that if it breaks, you were warned. Some bugs may still leak into the tags, but there will be significantly fewer.
+... but know that if it breaks, you were warned. Some bugs may still leak into the tags, but there will be significantly fewer. Tags can also be selectively reverted to; if v3.0.0-alpha3 is bad, roll back to v3.0.0-alpha2 until alpha4 is released.
 
 ## Differences from jiangmiao
 
@@ -30,13 +30,23 @@ The following tweaks have been made (relative to both Krasjet and jiangmiao):
 * `g:AutoPairsMapCh` has been deleted. If you need to map a key that isn't backspace for bracket pair deletion, map one yourself.
 
 Additionally, there's a few potential plans that may or may not be implemented at some point (AKA depending on whether or not I'm in the mood for vimscript):
-* ["Endwise rules"](https://github.com/cohama/lexima.vim), possibly in combination with an extended ruleset, without changing core functionality
 * More flexibility for file-specific rules: some people might want to autoinsert &lt;&gt;, unless it's in a language like shell, where &lt; and &gt; aren't required to be in pairs.
 * Code cleanup: aside formatting (never been a fan of 2 spaces to indent), try to reduce verbosity by introducing functions.
 
 A couple of these will have to wait until I properly understand the code; I have at least 9 years of development to catch up with, and while there isn't that much code, I'm far from proficient enough in Vimscript to just jump in. I've also naturally missed out on several issues explaining why some bit sof the plugin are  the way they are.
 
 Finally, this fork has an additional goal: bringing the plugin back to life. I've already merged in 3 PRs to jiangmiao/auto-pairs that were never handled. The current plan is to handle a few issues as well. If it's a FR and it's reasonable, do it. If it's a bug and I can repro in the current state of the project, fix it.
+
+### Goals
+* Improving on jiangmiao's original code
+* Updating the plugin with long-requested features
+* ... and with new ones.
+* Increased customizability
+
+### Non-goals
+* Being a drop-in snippet replacement -- use UltiSnips or lexima.vim instead.
+* Supporting very old versions of Vim
+* HTML support: hardcoding HTML tags works, but writing a tag autoinserter requires substantial rewrites to the core engine. Instead, may I introduce you to [Tim Pope](https://github.com/tpope/vim-ragtag)?
 
 ## Features
 

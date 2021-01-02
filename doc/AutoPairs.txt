@@ -606,7 +606,7 @@ If 2: Allow specific characters in front of the quote to expand. Should not
       Will not trigger on cases like I'm unless I (case sensitive) is present
       in |g:AutoPairsSingleQuoteExpandFor|. See the second note.
 
-You can also use an 
+You can also use an
 `autocmd FileType <text files> let b:AutoPairsSingleQuoteMode = 0` if you
 wanna use some other behavior on code files, but be strict in text files.
 
@@ -634,7 +634,43 @@ Type clarification: the string is parsed in as a part of a regex character
 group. It's only meant to contain pure characters, though it can obviously be
 used to inject stuff into the regex that isn't meant to be there.
 
-Used with |g:AutoPairsSingleQuoteMode| = 2 
+Used with |g:AutoPairsSingleQuoteMode| = 2
+
+------------------------------------------------------------------------------
+                                                      *g:AutoPairsLanguagePairs*
+|g:AutoPairsLanguagePairs|                                                   map
+
+Default: >
+    call s:define("g:AutoPairsLanguagePairs", {
+        \ "erlang": {'<<': '>>'},
+        \ "tex": {'``': "''" },
+        \ "html": {'<': '>'},
+        \ 'vim': {'\v(^\s*\zs"|^((Plugi?n?|echoe?r?r?)\s*)@!("(\\\"|[^"])*"*|[^"])* \zs"\ze(\\\"|[^"])*$)': ''},
+        \ 'rust': {'\w\zs<': '>', '&\zs''': ''},
+        \ 'php': {'<?': '?>//k]', '<?php': '?>//k]'}
+        \ })
+<
+
+Contains an map of maps containing language-specific expansions. This is
+essentially the fancy way of using autocmds.
+
+Language pairs come with a bunch of predefined stuff. This is largely for
+dealing with custom pairs or exceptions to pairs (such as in the case of Vim,
+where "" both is and isn't quotes. Vimscript is weird, okay?). The pairs have
+been |\V|'d prior to usage, which means it's perfectly possible to use |\v| in
+the open bracket to get fancy with the script. Note, however, to make sure
+that the last character of your regex is the same as the last character typed
+in your construct. If you end your regex with a *, but the last character
+typed is ), it won't complete because * (the last character) is the key that
+gets mapped.
+
+Note, however, that due to the way the plugin is built, the replace group does
+NOT support regex capture groups. This is also part of why HTML/XML tag
+completion isn't on the list of things to do: while it could easily be done
+with `'<[a-zA-Z0-9_-]>': '</\1>'`, not having the ability to use \1 easily for
+insertion (caused by the design of the plugin, and it's not easy to fix),
+means attempts to deal with HTML-like tags using regex simply aren't feasible.
+
 
 ==============================================================================
 7. Functions                                               *autopairs-functions*
@@ -657,12 +693,24 @@ Arguments: (pairs[, pairs_to_remove])
 
     pairs_to_remove         Type: list of keys
                             Lists keys to remove from the default
-                            configuration. Optional; defaults to []                       
+                            configuration. Optional; defaults to []
 
 This function is used for defining additional keys. Example use: >
     autocmd VimEnter * let g:AutoPairs = autopairs#AutoPairsDefine({'<': '>'})
     autocmd FileType liquid let b:AutoPairs = autopairs#AutoPairsDefine({'{%': '%}'})
 <
+
+Note that in newer versions of the plugin, the autocmd is redundant, as core
+parts of the plugin has been moved to an autoload file. As outlined in
+[this](https://vi.stackexchange.com/a/14010/21251) answer on vi.SE, autoload
+files are loaded when `autopair#` functions are called. This means using, for
+an instance, `autopairs#AutoPairsDefine` loads the file and makes the function
+valid.
+                                               *autopairs#AutoPairsScriptInit()*
+If you want to access something that doesn't have an associated function (such
+as index-assigning autopairs), you can call `autopairs#AutoPairsScriptInit`,
+which does absolutely nothing (the function is, as can be verified by the
+reader, empty), aside forcing autopairs to load.
 
 ------------------------------------------------------------------------------
 AutoPairsMap()                     *autopairs#AutoPairsMap()* *auto-pairs-map-key*
