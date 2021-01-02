@@ -514,7 +514,7 @@ func! autopairs#AutoPairsReturn()
             " position, then restore the last position, do the rest, and
             " somehow shift the bracket, but I have no idea how to do about
             " that yet.
-
+            
             " conflict with javascript and coffee
             " javascript   need   indent new line
             " coffeescript forbid indent new line
