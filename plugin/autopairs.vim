@@ -91,7 +91,6 @@ func! autopairs#AutoPairsDefaultPairs()
     if exists('b:autopairs_defaultpairs')
         return b:autopairs_defaultpairs
     end
-    " Added a more complex regex to capture in-line VimL comments
 
     let r = copy(g:AutoPairs)
     let allPairs = {
