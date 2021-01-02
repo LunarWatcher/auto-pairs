@@ -728,6 +728,12 @@ or cino doesn't work for your language, look for language-specific options, or
 possibly plugins to better handle indentation. If you're stuck, you can ask on
 GitHub Discussions.
 
+Alternatively, some languages can have plugins that deal with indentation
+based on some language standard, or just adding it in general (depending on
+how niche the language is). Here's a short and incomplete list of such
+plugins:
+* https://github.com/Vimjas/vim-python-pep8-indent
+
 ==============================================================================
 8. Functions                                               *autopairs-functions*
 
