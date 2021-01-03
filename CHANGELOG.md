@@ -8,6 +8,7 @@
 ## Fixed
 * Load autopairs functions properly (switch primary script to autoload)
 * Jump keybind and backticks ([#299](https://github.com/jiangmiao/auto-pairs/issues/299))
+* Moved variables from the wrong section of the help document to the right section. Whoops!
 
 ## Changed
 * Merged `b:AutoPairs` help into `g:AutoPairs`
