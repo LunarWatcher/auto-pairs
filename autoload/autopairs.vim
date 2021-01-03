@@ -186,6 +186,8 @@ call s:define('g:AutoPairsSingleQuoteMode', 2)
 
 call s:define('g:AutoPairsSingleQuoteExpandFor', 'fbr')
 
+call s:define('g:AutoPairsAutoLineBreak', [])
+
 fun! autopairs#AutoPairsScriptInit()
     " This currently does nothing; see :h autopairs#AutoPairsInit()
 endfun
@@ -309,7 +311,12 @@ func! autopairs#AutoPairsInsert(key)
                     end
                 end
             endwhile
+
             return bs.del.openPair.close.s:left(close)
+                        \ . (index(b:AutoPairsAutoLineBreak, open) != -1 ? 
+                        \     "\<cr>".autopairs#AutoPairsDetermineCRMovement()
+                        \     : '')
+
         end
     endfor
 
@@ -476,14 +483,48 @@ func! autopairs#AutoPairsBackInsert()
     return pair
 endf
 
+fun! autopairs#AutoPairsDetermineCRMovement()
+
+    let cmd = ''
+    if g:AutoPairsCenterLine && winline() * 3 >= winheight(0) * 2
+        " Recenter before adding new line to avoid replacing line content
+        let cmd = "zz"
+    end
+
+    " If equalprg has been set, then avoid call =
+    " https://github.com/jiangmiao/auto-pairs/issues/24
+    if &equalprg != ''
+        return "\<ESC>".cmd."O"
+    endif
+
+    " TODO: This is where the  line corrections happen.
+    " Including the if above, which checks for some thingy that isn't
+    " set by autoindent and smartindent for whatever reason, there's
+    " this bit. It returns a keybind that does some magic with the
+    " line, but I got no clue how to use it for fixing indentation.
+    " I could use a keybind to go to the start of the line, store the
+    " position, then restore the last position, do the rest, and
+    " somehow shift the bracket, but I have no idea how to do about
+    " that yet.
+
+    " conflict with javascript and coffee
+    " javascript   need   indent new line
+    " coffeescript forbid indent new line
+    if &filetype == 'coffeescript' || &filetype == 'coffee'
+        return "\<ESC>".cmd."k==o"
+    else
+        return "\<ESC>".cmd."=ko"
+    endif
+endfun
+
 func! autopairs#AutoPairsReturn()
     if b:autopairs_enabled == 0
         return ''
     end
+
     let b:autopairs_return_pos = 0
     let before = getline(line('.')-1)
     let [ig, ig, afterline] = s:getline()
-    let cmd = ''
     for [open, close, opt] in b:AutoPairsList
         if close == ''
             continue
@@ -494,35 +535,9 @@ func! autopairs#AutoPairsReturn()
         " Used to prevent fuckups
         if before =~ '\V'.open.'\v.*$' && afterline =~ '^\s*\V'.close
             let b:autopairs_return_pos = line('.')
-            if g:AutoPairsCenterLine && winline() * 3 >= winheight(0) * 2
-                " Recenter before adding new line to avoid replacing line content
-                let cmd = "zz"
-            end
-
-            " If equalprg has been set, then avoid call =
-            " https://github.com/jiangmiao/auto-pairs/issues/24
-            if &equalprg != ''
-                return "\<ESC>".cmd."O"
-            endif
-
-            " TODO: This is where the  line corrections happen.
-            " Including the if above, which checks for some thingy that isn't
-            " set by autoindent and smartindent for whatever reason, there's
-            " this bit. It returns a keybind that does some magic with the
-            " line, but I got no clue how to use it for fixing indentation.
-            " I could use a keybind to go to the start of the line, store the
-            " position, then restore the last position, do the rest, and
-            " somehow shift the bracket, but I have no idea how to do about
-            " that yet.
-            
-            " conflict with javascript and coffee
-            " javascript   need   indent new line
-            " coffeescript forbid indent new line
-            if &filetype == 'coffeescript' || &filetype == 'coffee'
-                return "\<ESC>".cmd."k==o"
-            else
-                return "\<ESC>".cmd."=ko"
-            endif
+            " Determining the exact movement has been moved to a separate
+            " function when autobreak was added as an option.
+            return autopairs#AutoPairsDetermineCRMovement()
         end
     endfor
     return ''
@@ -589,6 +604,7 @@ func! autopairs#AutoPairsInit()
     call s:define('b:AutoPairsSearchCloseAfterSpace', g:AutoPairsSearchCloseAfterSpace)
     call s:define('b:AutoPairsSingleQuoteMode', g:AutoPairsSingleQuoteMode)
     call s:define('b:AutoPairsSingleQuoteExpandFor', g:AutoPairsSingleQuoteExpandFor)
+    call s:define('b:AutoPairsAutoLineBreak', g:AutoPairsAutoLineBreak)
 
     let b:autopairs_return_pos = 0
     let b:autopairs_saved_pair = [0, 0]

@@ -3,10 +3,16 @@
 ## Added
 * `autopairs#AutoPairsScriptInit` (dummy function for autoload; see the docs)
 * `g:AutoPairsLanguagePairs` (exposed previously private API)
+* `g:AutoPairsAutoLineBreak`
 
 ## Fixed
 * Load autopairs functions properly (switch primary script to autoload)
 * Jump keybind and backticks ([#299](https://github.com/jiangmiao/auto-pairs/issues/299))
+
+## Changed
+* Merged `b:AutoPairs` help into `g:AutoPairs`
+* Added notice of the existence of a buffer variable for (hopefully) all the variables that have a buffer variant.
+* Moved the movement logic in `autopairs#AutoPairReturn()` to a separate function to enable `g:AutoPairsAutoLineBreak`
 
 # 3.0.0-alpha4
 
@@ -20,7 +26,7 @@
 * Typo in AutoPairsDelete causing backspace errors
 * Bad backslash use in character group ([#10](https://github.com/LunarWatcher/auto-pairs/pull/10))
 
-## Changes
+## Changed
 * Corrected documentation of AutoPairsDefine to include the optional second argument.
 
 # 3.0.0-alpha3
