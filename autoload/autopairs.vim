@@ -188,6 +188,11 @@ call s:define('g:AutoPairsSingleQuoteExpandFor', 'fbr')
 
 call s:define('g:AutoPairsAutoLineBreak', [])
 
+" Whether or not to run AutoPairsReturn if a string is detected, but there's
+" no syngroup present.
+call s:define('g:AutoPairsCarefulStringExpansion', 1)
+call s:define('g:AutoPairsQuotes', ["'", '"'])
+
 fun! autopairs#AutoPairsScriptInit()
     " This currently does nothing; see :h autopairs#AutoPairsInit()
 endfun
@@ -525,6 +530,7 @@ func! autopairs#AutoPairsReturn()
     let b:autopairs_return_pos = 0
     let before = getline(line('.')-1)
     let [ig, ig, afterline] = s:getline()
+
     for [open, close, opt] in b:AutoPairsList
         if close == ''
             continue
@@ -534,6 +540,11 @@ func! autopairs#AutoPairsReturn()
         " start of a group, which would yield incorrect results.
         " Used to prevent fuckups
         if before =~ '\V'.open.'\v.*$' && afterline =~ '^\s*\V'.close
+
+            if b:AutoPairsCarefulStringExpansion && index(b:AutoPairsQuotes, open) && count(before, open) % 2 == 0 
+                return ""
+            endif
+
             let b:autopairs_return_pos = line('.')
             " Determining the exact movement has been moved to a separate
             " function when autobreak was added as an option.
@@ -605,6 +616,8 @@ func! autopairs#AutoPairsInit()
     call s:define('b:AutoPairsSingleQuoteMode', g:AutoPairsSingleQuoteMode)
     call s:define('b:AutoPairsSingleQuoteExpandFor', g:AutoPairsSingleQuoteExpandFor)
     call s:define('b:AutoPairsAutoLineBreak', g:AutoPairsAutoLineBreak)
+    call s:define('b:AutoPairsCarefulStringExpansion', g:AutoPairsCarefulStringExpansion)
+    call s:define('b:AutoPairsQuotes', g:AutoPairsQuotes)
 
     let b:autopairs_return_pos = 0
     let b:autopairs_saved_pair = [0, 0]

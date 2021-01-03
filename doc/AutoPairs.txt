@@ -624,6 +624,48 @@ Example, assuming '{' is in the list: >
 
 Note that the exact cursor and bracket positions may vary. See
 |autopairs-indent-problems| and |indent|.
+------------------------------------------------------------------------------
+                                             *g:AutoPairsCarefulStringExpansion*
+|g:AutoPairsCarefulStringExpansion|                                          int
+
+Default: 0
+This variable also exists in a buffer variant.~
+
+Defines whether or not to do "careful" string expansion on <CR>. Careful in
+this case essentially means, count whether or not the amount of quotes in the
+previous line is divisible by 2. If it is, assume whatever we're doing is the
+start of a new string and therefore don't do the normal <CR> string expansion.
+Otherwise, run it.
+
+See: https://github.com/jiangmiao/auto-pairs/issues/277
+
+This is the dumbest variant of string checks I can think of. It's not in any
+way safe for use with various weird edge cases in your favorite language:tm:,
+and will probably misbehave. The best option I could come up with (that also
+failed because I couldn't find a good way to implement it) is checking for the
+existence of syn string groups. Unfortunately, by the time AutoPairsReturn is
+executed, the linebreak has already taken place. As a result, I can't actually
+test in the former spot. Moreover, if I measure the previous spot and it's a
+quote, the string syngroup is present.
+
+This variable will be replaced in the future if I'm able to find a way to use
+syngroups instead of this idiotic check.
+
+This check being dumb consequentially means it can lead to other unwanted
+behavior, or just give incorrect results. Therefore, it's disabled by default.
+I don't want to push something that's likely to cause problems and requires
+config with some languages into the general public.
+
+------------------------------------------------------------------------------
+                                                             *g:AutoPairsQuotes*
+|g:AutoPairsQuotes|                                                          int
+
+Default: ["'", '"']
+This variable also exists in a buffer variant.~
+
+Controls what openers trigger |g:AutoPairsCarefulStringExpansion|. Note that
+for implementation reasons, this only works when the openers and closers are
+the same.
 
 ==============================================================================
 6. Troubleshooting                                   *autopairs-troubleshooting*

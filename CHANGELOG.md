@@ -4,6 +4,7 @@
 * `autopairs#AutoPairsScriptInit` (dummy function for autoload; see the docs)
 * `g:AutoPairsLanguagePairs` (exposed previously private API)
 * `g:AutoPairsAutoLineBreak`
+* `g:AutoPairsCarefulStringExpansion`, `g:AutoPairsQuotes`
 
 ## Fixed
 * Load autopairs functions properly (switch primary script to autoload)
