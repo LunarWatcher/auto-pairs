@@ -17,7 +17,6 @@ You can also use the latest commit, though tags are recommended:
 Plug 'LunarWatcher/auto-pairs'
 ```
 
-
 ## Differences from jiangmiao
 
 At this point, there's far too many differences to list all of them. Aside removing some variables (such as remapping `<C-h>`), and tweaking defaults, many additional variables have been added. Including changes by Krasjet, here's a short list of some of the things this fork does that upstream doesn't:
@@ -171,7 +170,7 @@ See [Contributors](https://github.com/lunarwatcher/auto-pairs/graphs/contributor
 ```
 Copyright (C) 2011-2013 Miao Jiang
 Copyright (C) 2020 Krasjet
-Copyright (C) 2020 Olivia Zoe
+Copyright (C) 2021 Olivia Zoe
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
