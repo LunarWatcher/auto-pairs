@@ -1,4 +1,4 @@
-# 3.0.0-alpha5
+# 3.0.0-beta1
 
 ## Added
 * `autopairs#AutoPairsScriptInit` (dummy function for autoload; see the docs)
