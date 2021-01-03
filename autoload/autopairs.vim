@@ -127,7 +127,7 @@ call s:define('g:AutoPairsQuoteClosingChar', ['"', "'", '`'])
 call s:define('g:AutoPairsNextCharWhitelist', [])
 
 " Krasjet: don't perform open balance check on these characters
-call s:define('g:AutoPairsOpenBalanceBlacklist', [])
+call s:define('g:AutoPairsOpenBalanceBlacklist', ["'", '"'])
 
 " Krasjet: turn on/off the balance check for single quotes (')
 " suggestions: use ftplugin/autocmd to turn this off for text documents
@@ -160,7 +160,7 @@ call s:define('g:AutoPairsMoveCharacter', "()[]{}\"'")
 
 " Variable controlling whether or not to require a space or EOL to complete
 " bracket pairs. Extension off Krasjet.
-call s:define('g:AutoPairsCompleteOnSpace', 0)
+call s:define('g:AutoPairsCompleteOnlyOnSpace', 0)
 
 call s:define('g:AutoPairsShortcutJump', '<M-n>')
 
@@ -261,7 +261,7 @@ func! autopairs#AutoPairsInsert(key)
             " Krasjet: only insert the closing pair if the next character is a space
             " or a non-quote closing pair, or a whitelisted character (string)
             " Olivia: that ^ if and only if it's desired.
-            if b:AutoPairsCompleteOnSpace == 1 && afterline[0] =~? '^\v\S' && afterline !~# b:autopairs_next_char_whitelist
+            if b:AutoPairsCompleteOnlyOnSpace == 1 && afterline[0] =~? '^\v(\S|\n)' && afterline !~# b:autopairs_next_char_whitelist
                 break
             end
 
@@ -609,7 +609,7 @@ func! autopairs#AutoPairsInit()
     call s:define('b:AutoPairsOpenBalanceBlacklist', copy(g:AutoPairsOpenBalanceBlacklist))
     call s:define('b:AutoPairsSingleQuoteBalanceCheck', g:AutoPairsSingleQuoteBalanceCheck)
     call s:define('b:AutoPairsMoveCharacter', g:AutoPairsMoveCharacter)
-    call s:define('b:AutoPairsCompleteOnSpace', g:AutoPairsCompleteOnSpace)
+    call s:define('b:AutoPairsCompleteOnlyOnSpace', g:AutoPairsCompleteOnlyOnSpace)
     call s:define('b:AutoPairsFlyMode', g:AutoPairsFlyMode)
     call s:define('b:AutoPairsNoJump', g:AutoPairsNoJump)
     call s:define('b:AutoPairsSearchCloseAfterSpace', g:AutoPairsSearchCloseAfterSpace)
@@ -690,7 +690,7 @@ func! autopairs#AutoPairsInit()
     if empty(b:autopairs_open_blacklist)
         let b:autopairs_open_blacklist = '^$'
     else
-        let b:autopairs_open_blacklist = '^\V\('.join(b:autopairs_open_blacklist,'\|').'\)'
+        let b:autopairs_open_blacklist = '\V\('.join(b:autopairs_open_blacklist,'\|').'\)'
     endif
 
     for item in b:AutoPairsList

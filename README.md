@@ -1,8 +1,6 @@
 # Auto Pairs
 
-Insert or delete brackets, parens, quotes in pair.
-
-NOTE: This plugin is currently under the process of catching up with [a few years of unreviewed issues and pull requests](https://github.com/LunarWatcher/auto-pairs/issues/5). Effective now, it's highly recommended to stick to tags rather than HEAD versions.
+Insert or delete brackets, parens, and quotes in pair.
 
 ## Installation
 
@@ -13,40 +11,44 @@ Plug 'LunarWatcher/auto-pairs', { 'tag': '*' }
 ```
 (... = from Lunarwatcher/auto-pairs, pull the latest tag matching '*' -- a wildcard, which means the latest tag)
 
-If you're fine with risking breaking changes and the plugin being literally unusable, use the master branch instead:
+You can also use the latest commit, though tags are recommended:
 
 ```vim
 Plug 'LunarWatcher/auto-pairs'
 ```
-... but know that if it breaks, you were warned. Some bugs may still leak into the tags, but there will be significantly fewer. Tags can also be selectively reverted to; if v3.0.0-alpha3 is bad, roll back to v3.0.0-alpha2 until alpha4 is released.
+
 
 ## Differences from jiangmiao
 
-This version contains a few updates that were never merged into the upstream repo. Additionally, it includes Krasjet's improvements, though with some extra tweaks.
+At this point, there's far too many differences to list all of them. Aside removing some variables (such as remapping `<C-h>`), and tweaking defaults, many additional variables have been added. Including changes by Krasjet, here's a short list of some of the things this fork does that upstream doesn't:
 
-The following tweaks have been made (relative to both Krasjet and jiangmiao):
+* Option for inserting pairs only if there's whitespace
+* Option for automatic linebreaks for some openers
+* Built-in support for language-specific pairs
+* Option for searching for closers after space (jiangmiao always did this, Krasjet never did this)
+* Option for entirely disabling jump
+* Option for a pre-init hook
+* Option for disabling in some directories
+* ... Lots of bugfixes and general improvements
 
-* `g:AutoPairsCompleteOnSpace` determines whether or not a closing pair should be inserted only when there's a space. 1 = space required, 0 = always insert pair
-* `g:AutoPairsMapCh` has been deleted. If you need to map a key that isn't backspace for bracket pair deletion, map one yourself.
+The entire list is too long to place in its entirety here -- the documentation should cover all the variables, so reading it should give you a complete idea of the changes.
 
-Additionally, there's a few potential plans that may or may not be implemented at some point (AKA depending on whether or not I'm in the mood for vimscript):
-* More flexibility for file-specific rules: some people might want to autoinsert &lt;&gt;, unless it's in a language like shell, where &lt; and &gt; aren't required to be in pairs.
-* Code cleanup: aside formatting (never been a fan of 2 spaces to indent), try to reduce verbosity by introducing functions.
+### Compatibility
 
-A couple of these will have to wait until I properly understand the code; I have at least 9 years of development to catch up with, and while there isn't that much code, I'm far from proficient enough in Vimscript to just jump in. I've also naturally missed out on several issues explaining why some bit sof the plugin are  the way they are.
+Quite a lot of code compatibility was thrown out the window with a massive change that moved the plugin to be partially autoloaded. This mainly leads to improvements in terms of making it easier to customize (i.e. `autopairs#AutoPairsDefine` is available without an autocmd now). Additionally, it makes sure to reduce the chance of a conflict between functions.
 
-Finally, this fork has an additional goal: bringing the plugin back to life. I've already merged in 3 PRs to jiangmiao/auto-pairs that were never handled. The current plan is to handle a few issues as well. If it's a FR and it's reasonable, do it. If it's a bug and I can repro in the current state of the project, fix it.
+Functionally, however, it's meant to resemble upstream as much as possible, partly to make migration less annoying for people with lots of customization.
 
-### Goals
+## Goals
 * Improving on jiangmiao's original code
 * Updating the plugin with long-requested features
 * ... and with new ones.
 * Increased customizability
 
-### Non-goals
+## Non-goals
 * Being a drop-in snippet replacement -- use UltiSnips or lexima.vim instead.
 * Supporting very old versions of Vim
-* HTML support: hardcoding HTML tags works, but writing a tag autoinserter requires substantial rewrites to the core engine. Instead, may I introduce you to [Tim Pope](https://github.com/tpope/vim-ragtag)?
+* HTML support: hardcoding HTML tags works, but writing a tag autoinserter requires substantial rewrites to the core engine. Instead, may I introduce you to [Tim Pope](https://github.com/tpope/vim-ragtag)? Or alternatively [alvan](https://github.com/alvan/vim-closetag)?
 
 ## Features
 

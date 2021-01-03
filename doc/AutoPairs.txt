@@ -1,6 +1,6 @@
 *AutoPairs.txt* *autopairs* *AutoPairs*
 
-Insert or delete brackets, parens, quotes in pair (a fork by LunarWatcher)
+Insert or delete brackets, parens, and quotes in pair (a fork by LunarWatcher)
 
 Author:  jiangmiao
 Fork: LunarWatcher (Olivia)
@@ -301,13 +301,17 @@ This sets |AutoPairs| to only match for parenthesis for 'FILETYPE'. See also
 |g:AutoPairsLanguagePairs|.
 
 ------------------------------------------------------------------------------
-                                                    *g:AutoPairsCompleteOnSpace*
-|g:AutoPairsCompleteOnSpace|                                              number
+                                                *g:AutoPairsCompleteOnlyOnSpace*
+|g:AutoPairsCompleteOnlyOnSpace|                                          number
 This variable also exists in a buffer variant.~
 
 Default: 0
 
-New in 3.0.0
+Defines whether or not to require a space or EOL to complete. If this is 1 and
+you try: `{|word`, you'll get `{|word`, rather than `{|}word` if this is 0.
+
+3.0.0-alpha5:~
+    renamed from *g:AutoPairsCompleteOnSpace* to |g:AutoPairsCompleteOnlyOnSpace|
 
 ------------------------------------------------------------------------------
                                                      *g:AutoPairsShortcutToggle*
@@ -316,7 +320,6 @@ New in 3.0.0
 Default: <M-p>
 
 The shortcut to toggle autopairs.
-
 
 ------------------------------------------------------------------------------
                                                    *g:AutoPairsShortcutFastWrap*
@@ -666,6 +669,19 @@ This variable also exists in a buffer variant.~
 Controls what openers trigger |g:AutoPairsCarefulStringExpansion|. Note that
 for implementation reasons, this only works when the openers and closers are
 the same.
+
+------------------------------------------------------------------------------
+                                               *g:AutoPairsOpenBalanceBlacklist*
+|g:AutoPairsOpenBalanceBlacklist|                                          array
+This variable also exists in a buffer variant.~
+
+Default: ["'", '"', '`']
+Default rationale: quotes don't nest, and therefore have special balance
+                   requirements
+
+Blacklist for checking for balance before inserting. By default, this includes
+three types of quotes, as they don't (normally) nest like parentheses or
+brackets do.
 
 ==============================================================================
 6. Troubleshooting                                   *autopairs-troubleshooting*
