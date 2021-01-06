@@ -6,6 +6,9 @@
 
 scriptencoding utf-8
 
+" Major, minor, patch, beta, alpha
+let g:AutoPairsVersion = 30020
+
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
@@ -192,6 +195,8 @@ call s:define('g:AutoPairsAutoLineBreak', [])
 " no syngroup present.
 call s:define('g:AutoPairsCarefulStringExpansion', 1)
 call s:define('g:AutoPairsQuotes', ["'", '"'])
+
+call s:define('g:AutoPairsMultilineFastWrap', 0)
 
 fun! autopairs#AutoPairsScriptInit()
     " This currently does nothing; see :h autopairs#AutoPairsInit()
@@ -435,10 +440,12 @@ endf
 " 8.1 patch 1310, and doesn't support neovim. Implementing it here at this
 " time would break the plugin for a lot of people.
 " This being a fork, that isn't desired.
-func! autopairs#AutoPairsFastWrap(movement)
+func! autopairs#AutoPairsFastWrap(...)
+    let movement = get(a:, 1, 'e')
     let c = @"
     normal! x
     let [before, after, ig] = s:getline()
+
     if after[0] =~ '\v[{[(<]'
         normal! %
         normal! p
@@ -448,14 +455,27 @@ func! autopairs#AutoPairsFastWrap(movement)
                 continue
             end
             if after =~ '^\s*\V'.open
+                if open == close && count(before, open) % 2 != 0 
+                            \ && before =~ '\V' . open . '\v.*$' && after =~ '^\V' . close
+                    break
+                endif
+
                 call search(close, 'We')
+                " Search goes for the first one rather than the logical option
+                " -- the last one. This is only a problem when open == close,
+                "  which means in the case of quotes.
+                if open == close
+                    call search(close, 'We')
+                endif
                 normal! p
                 let @" = c
                 return ""
-            end
+
+            endif
         endfor
-        if after[1:1] =~ '\v\w'
-            exec "normal! " . a:movement
+        let g:AutoPairsDebug = after
+        if after[1:1] =~ '\v' . (g:AutoPairsMultilineFastWrap ? '(\w|$)' : '\w')
+            exec "normal! " . movement
             normal! p
         else
             normal! p
@@ -737,7 +757,7 @@ func! autopairs#AutoPairsInit()
     end
 
     if g:AutoPairsShortcutFastWrap != ''
-        execute 'inoremap <buffer> <silent> '.g:AutoPairsShortcutFastWrap.' <C-R>=autopairs#AutoPairsFastWrap("e")<CR>'
+        execute 'inoremap <buffer> <silent> '.g:AutoPairsShortcutFastWrap.' <C-R>=autopairs#AutoPairsFastWrap()<CR>'
     end
 
     if b:AutoPairsFlyMode && g:AutoPairsShortcutBackInsert != ''

@@ -1,3 +1,18 @@
+# 3.0.0-beta2
+
+## Added
+* Added `g:AutoPairsVersion`
+* Added `g:AutoPairsBackwardsCompat`
+* Backwards compat documentation
+* Added `g:AutoPairsMultilineFastWrap`; also means minor, optional changes to the fast wrap system
+
+## Fixed
+* Incompatible with vim-visual-multi
+* Fixed weird fast wrap behavior when the closer is identical to the opener ([#296](https://github.com/jiangmiao/auto-pairs/issues/296))
+
+## Changed
+* `autopairs#AutoPairsFastWrap` argument movement changed from a required argument to a vararg to make it optional; defaults to `e` when not supplied
+
 # 3.0.0-beta1
 
 ## Added

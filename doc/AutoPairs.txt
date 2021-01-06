@@ -683,6 +683,48 @@ Blacklist for checking for balance before inserting. By default, this includes
 three types of quotes, as they don't (normally) nest like parentheses or
 brackets do.
 
+------------------------------------------------------------------------------
+                                                  *g:AutoPairsMultilineFastWrap*
+|g:AutoPairsMultilineFastWrap|                                               int
+
+Default: 0
+
+Whether or not to enable multiline fast wrap.
+
+The only real differenec is that it enables $ in the fallback condition.
+When $ isn't present, pressing the fast wrap key at a position that doesn't
+match \w for the next character results in nothing changing. If $ is present,
+it moves to the next line if said line exists.
+
+Note that this does NOT affect multilines triggered by brackets. It'll still
+fast-wrap across lines if a pair is detected independently of this setting.
+
+Disabled by default because this introduced breaking behavior in comparison.
+------------------------------------------------------------------------------
+                                                    *g:AutoPairsBackwardsCompat*
+|g:AutoPairsBackwardsCompat|                                                 int
+
+Default: 1 if mg979/vim-visual-multi is detected, 0 otherwise
+
+Whether or not to expose the backwards compat API. This MUST be set before
+plugin/ is sourced. It cannot be toggled at runtime.
+
+This should not be used unless absolutely necessary. DO NOT build your
+keybinds or anything else around the legacy API. Please see
+|autopairs-backwards-compat| for the full discussion.
+
+------------------------------------------------------------------------------
+                                                            *g:AutoPairsVersion*
+|g:AutoPairsVersion|                                                         int
+
+Defines the current version. There's 5 numbers, indicating:
+Major, minor, patch, beta, alpha, in that order.
+
+This is purely meant for script use, as well as cosmetic use if desired. This
+also exists, in combination with * in |exists()|, to prevent major backwards
+compat fuckups, such as the one caused by moving functions into the
+`autopairs#` prefix.
+
 ==============================================================================
 6. Troubleshooting                                   *autopairs-troubleshooting*
 
@@ -876,6 +918,19 @@ You don't need to call this manually, unless you're doing something that adds
 additional pairs after the plugin is loaded. This shouldn't normally be a
 problem, at least if you stick to |FileType|, but if you have some fancy code
 relying on this ability, you'll have to use this function.
+------------------------------------------------------------------------------
+AutoPairsFastWrap()                              *autopairs#AutoPairsFastWrap()*
+Arguments: ([movement])
+
+Invoked when attempting a fast wrap. `movement` defines the fallback movement
+(NOTE: behavior may be changed to general movement in the future), as in what
+key is pressed to do a movement. By default, it's |e|.
+
+Note that the existence of |g:AutoPairsShortcutFastWrap| means you won't need
+to map a key to this function unless:
+    1. You want a different movement
+    2. You want a second mapping
+    3. You're doing scripting involving the function
 
 ==============================================================================
 9. Credits                                                   *autopairs-credits*
@@ -895,5 +950,45 @@ plugin. The complete list is available on GitHub:
 
     https://github.com/LunarWatcher/auto-pairs/graphs/contributors
 
+==============================================================================
+10. Backwards compatibility                         *autopairs-backwards-compat*
+
+Backwards compat is apparently tricker than initially expected. Following the
+resolution of [issue 12](https://github.com/LunarWatcher/auto-pairs/issues/12)
+in a semi-ugly way, it became apparent that backwards compatibility not being
+maintained has consequences.
+
+If you look at the changelog, you'll pretty quickly notice that the
+3.0.0-alpha* releases come with a few major overhauls, including moving the
+plugin to an autoload file. This also includes renaming all the functions to
+autopairs#<old function name>, as well as renaming the main script file.
+
+As for consequences, at least one plugin has been identified that relies on
+autopairs function access. At this time, updating the remote plugins aren't
+really an option, because use of this fork isn't wide-spread. Asking for
+changes for a fork like that is likely to be rejected, and as such, this
+plugin will temporarily introduce a backwards compat API. This literally means
+adding functions with the old names (on an as needed basis) and exposing them
+when |g:AutoPairsBackwardsCompat| is 1.
+
+The legacy API is minimal and togglable because it SHOULD NOT be used; it only
+exists to prevent other plugins from breaking in an either temporary or
+permanent transition period. This plugin shouldn't break other plugins, which
+is why the backwards compatible API exists. Keybinds are not considered
+protected; if you rely on keybinds accessing autopairs API features, please
+migrate them by adding `autopairs#` to the function name.
+
+The migration should involve very little work; only the prefix (or whatever
+it's called) has changed, and as such, the call only has to be changed. Again,
+the backwards compatible API only exists to prevent breaking plugins for
+people jumping from jiangmiao/auto-pairs to this fork, and should not be used
+to add new keybinds, or build new plugins around it. Plugins built with this
+one in mind should not use the backwards compat API intentionally; use the
+new one.
+
+To aid with backwards compat in the future, |g:AutoPairsVersion| has been
+added to identify versions to give an easy way to detect API changes for
+plugin compatibility. Unfortunately, it's introduced so late it's not really
+useful for a few years.
 
 vim:ft=help
