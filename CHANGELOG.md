@@ -9,6 +9,7 @@
 ## Fixed
 * Incompatible with vim-visual-multi
 * Fixed weird fast wrap behavior when the closer is identical to the opener ([#296](https://github.com/jiangmiao/auto-pairs/issues/296))
+* Try to fix issue where brackets are imbalanced on the line, but that isn't indicative of bad balancing. Primarily an issue in multiline if-else blocks, or try-catch blocks in languages like C, C++, and Java.
 
 ## Changed
 * `autopairs#AutoPairsFastWrap` argument movement changed from a required argument to a vararg to make it optional; defaults to `e` when not supplied

@@ -277,8 +277,14 @@ func! autopairs#AutoPairsInsert(key)
                         break
                     end
                 else
-                    if count(before.afterline,open) < count(before.afterline,close)
-                        break
+                    if count(before.afterline, open) < count(before.afterline, close)
+                        " Olivia: disregard imbalance if the close is ahead of
+                        " the cursor.
+                        " Not entirely sure if this is good, but it works on
+                        " the try-catch case, or multiline if-else block
+                        if col('.') < strridx(before.afterline, close)
+                            break
+                        endif
                     end
                 end
             end
@@ -316,14 +322,14 @@ func! autopairs#AutoPairsInsert(key)
                     " delete charactor
                     let ms = s:matchend(before, '\v.')
                     if len(ms)
-                        let before = ms[1]
+                        let before = ms[1]|
                         let bs = bs.s:backspace(ms[2])
                     end
                 end
             endwhile
 
             return bs.del.openPair.close.s:left(close)
-                        \ . (index(b:AutoPairsAutoLineBreak, open) != -1 ? 
+                        \ . (index(b:AutoPairsAutoLineBreak, open) != -1 ?
                         \     "\<cr>".autopairs#AutoPairsDetermineCRMovement()
                         \     : '')
 
@@ -357,14 +363,14 @@ func! autopairs#AutoPairsInsert(key)
                 " somehow. Not gonna lie, I'm not entirely sure what this
                 " does. It clearly isn't called when
                 " b:AutoPairsSearchCloseAfterSpace == 0, but I don't
-                " understand why. It's failing hte second condition, but I'm
+                " understand why. It's failing the second condition, but I'm
                 " not sure why.
                 if open == close || (b:AutoPairsSingleQuoteBalanceCheck && close ==# "'")
                     if count(before.afterline,close) % 2 != 0
                         return a:key
                     endif
                 else
-                    if count(before.afterline,open) > count(before.afterline,close)
+                    if count(before.afterline, open) > count(before.afterline, close)
                         return a:key
                     endif
                 endif
@@ -455,7 +461,7 @@ func! autopairs#AutoPairsFastWrap(...)
                 continue
             end
             if after =~ '^\s*\V'.open
-                if open == close && count(before, open) % 2 != 0 
+                if open == close && count(before, open) % 2 != 0
                             \ && before =~ '\V' . open . '\v.*$' && after =~ '^\V' . close
                     break
                 endif
@@ -561,7 +567,7 @@ func! autopairs#AutoPairsReturn()
         " Used to prevent fuckups
         if before =~ '\V'.open.'\v.*$' && afterline =~ '^\s*\V'.close
 
-            if b:AutoPairsCarefulStringExpansion && index(b:AutoPairsQuotes, open) && count(before, open) % 2 == 0 
+            if b:AutoPairsCarefulStringExpansion && index(b:AutoPairsQuotes, open) && count(before, open) % 2 == 0
                 return ""
             endif
 
