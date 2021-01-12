@@ -844,8 +844,10 @@ func! autopairs#AutoPairsTryInit()
         if v:version == 703 && has('patch32') || v:version > 703
             " VIM 7.3 supports advancer maparg which could get <expr> info
             " then auto-pairs could remap <CR> in any case.
-            let info = maparg('<CR>', 'i', 0, 1)
+            let info = maparg(g:AutoPairsCRKey, 'i', 0, 1)
             if empty(info)
+                " Not _entirely_ sure if this should be <CR> or
+                " g:AutoPairsCRKey.
                 let old_cr = '<CR>'
                 let is_expr = 0
             else
@@ -859,7 +861,7 @@ func! autopairs#AutoPairsTryInit()
             " VIM version less than 7.3
             " the mapping's <expr> info is lost, so guess it is expr or not, it's
             " not accurate.
-            let old_cr = maparg('<CR>', 'i')
+            let old_cr = maparg(g:AutoPairsCRKey, 'i')
             if old_cr == ''
                 let old_cr = '<CR>'
                 let is_expr = 0
