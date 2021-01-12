@@ -5,14 +5,18 @@
 * Added `g:AutoPairsBackwardsCompat`
 * Backwards compat documentation
 * Added `g:AutoPairsMultilineFastWrap`; also means minor, optional changes to the fast wrap system
+* Added `g:AutoPairsFlyModeList`
+* Added `g:AutoPairsJumpBlacklist` ([jiangmiao/313](https://github.com/jiangmiao/auto-pairs/issues/313))
 
 ## Fixed
 * Incompatible with vim-visual-multi
-* Fixed weird fast wrap behavior when the closer is identical to the opener ([#296](https://github.com/jiangmiao/auto-pairs/issues/296))
+* Fixed weird fast wrap behavior when the closer is identical to the opener ([jiangmiao/296](https://github.com/jiangmiao/auto-pairs/issues/296))
 * Try to fix issue where brackets are imbalanced on the line, but that isn't indicative of bad balancing. Primarily an issue in multiline if-else blocks, or try-catch blocks in languages like C, C++, and Java.
 * Some function calls were not renamed (bad refactoring; [#13](https://github.com/LunarWatcher/auto-pairs/issues/13))
 * Handle strgetchar() returning -1 ([#14](https://github.com/LunarWatcher/auto-pairs/issues/14))
 * `g:AutoPairsCRKey` looking for expansions on `<CR>` when `g:AutoPairsCRKey` isn't `<CR>` (should look for keybinds to `g:AutoPairsCRKey` rather than just `<CR>`)
+* Update to flymode pairs that unescaped values unescaped ], which _has_ to be escaped.
+* Make sure g/b:AutoPairsNoJump = 1 doesn't interfere with balancing logic.
 
 ## Changed
 * `autopairs#AutoPairsFastWrap` argument movement changed from a required argument to a vararg to make it optional; defaults to `e` when not supplied
@@ -27,7 +31,7 @@
 
 ## Fixed
 * Load autopairs functions properly (switch primary script to autoload)
-* Jump keybind and backticks ([#299](https://github.com/jiangmiao/auto-pairs/issues/299))
+* Jump keybind and backticks ([jiangmiao/299](https://github.com/jiangmiao/auto-pairs/issues/299))
 * Moved variables from the wrong section of the help document to the right section. Whoops!
 * Make `g:AutoPairsOpenBalanceBlacklist` work (+ add docs)
 

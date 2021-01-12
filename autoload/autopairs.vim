@@ -195,7 +195,7 @@ call s:define('g:AutoPairsFlyMode', 0)
 " When skipping the closed pair, look at the current and
 " next line as well.
 " Krasjet: default changed to 0
-call s:define('g:AutoPairsMultilineClose', 0)
+call s:define('g:AutoPairsMultilineClose', 1)
 
 " Work with Fly Mode, insert pair where jumped
 call s:define('g:AutoPairsShortcutBackInsert', '<M-b>')
@@ -216,6 +216,9 @@ call s:define('g:AutoPairsCarefulStringExpansion', 1)
 call s:define('g:AutoPairsQuotes', ["'", '"'])
 
 call s:define('g:AutoPairsMultilineFastWrap', 0)
+
+call s:define('g:AutoPairsFlyModeList', '}\])')
+call s:define('g:AutoPairsJumpBlacklist', [])
 
 fun! autopairs#AutoPairsScriptInit()
     " This currently does nothing; see :h autopairs#AutoPairsScriptInit()
@@ -362,10 +365,6 @@ func! autopairs#AutoPairsInsert(key)
         end
         " Contains jump logic, apparently.
         if a:key == g:AutoPairsWildClosedPair || opt['mapclose'] && opt['key'] == a:key
-            " Olivia: return the key if we aren't jumping.
-            if b:AutoPairsNoJump == 1
-                return a:key
-            endif
             " the close pair is in the same line
             let searchRegex = b:AutoPairsSearchCloseAfterSpace == 1 ?  '^\v\s*\V' : '^\V'
 
@@ -393,6 +392,11 @@ func! autopairs#AutoPairsInsert(key)
                         return a:key
                     endif
                 endif
+
+                " Olivia: return the key if we aren't jumping.
+                if b:AutoPairsNoJump == 1 || index(b:AutoPairsJumpBlacklist, close) != -1
+                    return a:key
+                endif
                 if before =~ '\V'.open.'\v\s*$' && m[0] =~ '\v\s'
                     " remove the space we inserted if the text in pairs is blank
                     return "\<DEL>".s:right(m[1:])
@@ -400,6 +404,11 @@ func! autopairs#AutoPairsInsert(key)
                     return s:right(m)
                 endif
             end
+
+            " Olivia: return the key if we aren't jumping.
+            if b:AutoPairsNoJump == 1 || index(b:AutoPairsJumpBlacklist, close) != -1
+                return a:key
+            endif
             let m = matchstr(after, '^\V'.close)
             if m != ''
                 if a:key == g:AutoPairsWildClosedPair || opt['multiline']
@@ -417,7 +426,7 @@ func! autopairs#AutoPairsInsert(key)
 
 
     " Fly Mode, and the key is closed-pairs, search closed-pair and jump
-    if g:AutoPairsFlyMode &&  a:key =~ '\v[}])]'
+    if g:AutoPairsFlyMode &&  a:key =~ '\v[' . g:AutoPairsFlyModeList . ']'
         if search(a:key, 'We')
             return "\<Right>"
         endif
@@ -654,6 +663,8 @@ func! autopairs#AutoPairsInit()
     call s:define('b:AutoPairsAutoLineBreak', g:AutoPairsAutoLineBreak)
     call s:define('b:AutoPairsCarefulStringExpansion', g:AutoPairsCarefulStringExpansion)
     call s:define('b:AutoPairsQuotes', g:AutoPairsQuotes)
+    call s:define('b:AutoPairsFlyModeList', g:AutoPairsFlyModeList)
+    call s:define('b:AutoPairsJumpBlacklist', g:AutoPairsJumpBlacklist)
 
     let b:autopairs_return_pos = 0
     let b:autopairs_saved_pair = [0, 0]
@@ -663,7 +674,7 @@ func! autopairs#AutoPairsInit()
     let b:AutoPairsList = []
 
     " buffer level map pairs keys
-    " n - do not map the first charactor of closed pair to close key
+    " n - do not map the first character of closed pair to close key
     " m - close key jumps through multi line
     " s - close key jumps only in the same line
     for [open, close] in items(b:AutoPairs)
