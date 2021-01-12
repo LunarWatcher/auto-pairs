@@ -738,6 +738,28 @@ only expanding pairs on a different key. The compatibility bit is largely as a
 hack for when plugins think <CR> is only and will only be mapped to their
 plugin, and that no other plugins are gonna use it.
 
+------------------------------------------------------------------------------
+                                                      *g:AutoPairsJumpBlacklist*
+|g:AutoPairsJumpBlacklist|                                                  list
+This variable also exists in a buffer variant.~
+
+Default: []
+
+Defines a set of close keybinds that don't trigger jump. Note that this is
+independent of flymode; set |g:AutoPairsNoJump| = 1 to disable normal pair
+jumping entirely.
+
+------------------------------------------------------------------------------
+                                                        *g:AutoPairsFlyModeList*
+|g:AutoPairsFlyModeList|                                                   regex
+This variable also exists in a buffer variant.~
+
+Default: '}\])'
+
+Defines what close pairs trigger fly mode if |g:AutoPairsFlyMode| is enabled.
+Used inside a |\v| |regex| group. ] MUST be escaped (`\]` instead of `]`), or
+stuff breaks.
+
 ==============================================================================
 6. Troubleshooting                                   *autopairs-troubleshooting*
 
