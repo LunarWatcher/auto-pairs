@@ -96,15 +96,36 @@ func! s:sortByLength(i1, i2)
     return len(a:i2[0])-len(a:i1[0])
 endf
 
+" Unicode handling {{{
 " Idea by https://github.com/fenuks: https://github.com/jiangmiao/auto-pairs/issues/251#issuecomment-573901691
+" Patch for #14 by https://github.com/j-hui: https://github.com/LunarWatcher/auto-pairs/issues/14
 fun! s:GetFirstUnicodeChar(string)
-  return nr2char(strgetchar(a:string, 0))
+    if a:string == ""
+        return ""
+    endif
+
+    let l:nr = strgetchar(a:string, 0)
+    if l:nr == -1
+        return ""
+    else
+        return nr2char(l:nr)
+    endif
 endfun
 
 fun! s:GetLastUnicodeChar(string)
-  return nr2char(strgetchar(a:string, strchars(a:string) - 1))
+    if a:string == ""
+        return ""
+    endif
+
+    let l:nr = strgetchar(a:string, strchars(a:string) - 1)
+    if l:nr == -1
+        return ""
+    else
+        return nr2char(l:nr)
+    endif
 endfun
 
+" }}}
 " }}}
 " Default autopairs
 call s:define("g:AutoPairs", {'(': ')', '[': ']', '{': '}', "'": "'", '"': '"',
