@@ -191,15 +191,13 @@ call s:define('g:AutoPairsSingleQuoteExpandFor', 'fbr')
 
 call s:define('g:AutoPairsAutoLineBreak', [])
 
-" Whether or not to run AutoPairsReturn if a string is detected, but there's
-" no syngroup present.
 call s:define('g:AutoPairsCarefulStringExpansion', 1)
 call s:define('g:AutoPairsQuotes', ["'", '"'])
 
 call s:define('g:AutoPairsMultilineFastWrap', 0)
 
 fun! autopairs#AutoPairsScriptInit()
-    " This currently does nothing; see :h autopairs#AutoPairsInit()
+    " This currently does nothing; see :h autopairs#AutoPairsScriptInit()
 endfun
 
 " default pairs base on filetype
@@ -225,7 +223,7 @@ endf
 " AutoPairsDefine(addPairs:dict[, removeOpenPairList:list])
 "
 " eg:
-"   au FileType html let b:AutoPairs = AutoPairsDefine({'<!--' : '-->'}, ['{'])
+"   au FileType html let b:AutoPairs = autopairs#AutoPairsDefine({'<!--' : '-->'}, ['{'])
 "   add <!-- --> pair and remove '{' for html file
 func! autopairs#AutoPairsDefine(pairs, ...)
     let r = autopairs#AutoPairsDefaultPairs()
@@ -273,7 +271,7 @@ func! autopairs#AutoPairsInsert(key)
             " Krasjet: do not complete the closing pair until pairs are balanced
             if open !~# b:autopairs_open_blacklist
                 if open == close || (b:AutoPairsSingleQuoteBalanceCheck && close ==# "'")
-                    if count(before.afterline,close) % 2 != 0
+                    if count(before.afterline, close) % 2 != 0
                         break
                     end
                 else
@@ -528,16 +526,7 @@ fun! autopairs#AutoPairsDetermineCRMovement()
         return "\<ESC>".cmd."O"
     endif
 
-    " TODO: This is where the  line corrections happen.
-    " Including the if above, which checks for some thingy that isn't
-    " set by autoindent and smartindent for whatever reason, there's
-    " this bit. It returns a keybind that does some magic with the
-    " line, but I got no clue how to use it for fixing indentation.
-    " I could use a keybind to go to the start of the line, store the
-    " position, then restore the last position, do the rest, and
-    " somehow shift the bracket, but I have no idea how to do about
-    " that yet.
-
+    " Note: for indent issues, see :h autopairs-diagnose-indent
     " conflict with javascript and coffee
     " javascript   need   indent new line
     " coffeescript forbid indent new line
@@ -705,7 +694,7 @@ func! autopairs#AutoPairsInit()
     if empty(b:autopairs_next_char_whitelist)
         let b:autopairs_next_char_whitelist = '^$'
     else
-        let b:autopairs_next_char_whitelist = '^\V\('.join(b:autopairs_next_char_whitelist,'\|').'\)'
+        let b:autopairs_next_char_whitelist = '^\V\('.join(b:autopairs_next_char_whitelist, '\|').'\)'
     endif
 
     " Krasjet: add blacklisted open strings to the list
@@ -716,7 +705,7 @@ func! autopairs#AutoPairsInit()
     if empty(b:autopairs_open_blacklist)
         let b:autopairs_open_blacklist = '^$'
     else
-        let b:autopairs_open_blacklist = '\V\('.join(b:autopairs_open_blacklist,'\|').'\)'
+        let b:autopairs_open_blacklist = '\V\('.join(b:autopairs_open_blacklist, '\|').'\)'
     endif
 
     for item in b:AutoPairsList
@@ -840,7 +829,7 @@ func! autopairs#AutoPairsTryInit()
                 let is_expr = 0
             else
                 let old_cr = info['rhs']
-                let old_cr = ExpandMap(old_cr)
+                let old_cr = autopairs#ExpandMap(old_cr)
                 let old_cr = substitute(old_cr, '<SID>', '<SNR>' . info['sid'] . '_', 'g')
                 let is_expr = info['expr']
                 let wrapper_name = '<SID>AutoPairsOldCRWrapper73'
@@ -854,7 +843,7 @@ func! autopairs#AutoPairsTryInit()
                 let old_cr = '<CR>'
                 let is_expr = 0
             else
-                let old_cr = ExpandMap(old_cr)
+                let old_cr = autopairs#ExpandMap(old_cr)
                 " old_cr contain (, I guess the old cr is in expr mode
                 let is_expr = old_cr =~ '\V(' && toupper(old_cr) !~ '\V<C-R>'
 
