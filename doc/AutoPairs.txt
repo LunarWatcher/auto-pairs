@@ -725,6 +725,19 @@ also exists, in combination with * in |exists()|, to prevent major backwards
 compat fuckups, such as the one caused by moving functions into the
 `autopairs#` prefix.
 
+------------------------------------------------------------------------------
+                                                              *g:AutoPairsCRKey*
+|g:AutoPairsCRKey|                                                       keybind
+
+Default: '<CR>'
+
+Defines what key to use as CR if |g:AutoPairsMapCR| is true.
+
+This is added as a fallback compatibility option, as well as an option for
+only expanding pairs on a different key. The compatibility bit is largely as a
+hack for when plugins think <CR> is only and will only be mapped to their
+plugin, and that no other plugins are gonna use it.
+
 ==============================================================================
 6. Troubleshooting                                   *autopairs-troubleshooting*
 
