@@ -306,7 +306,7 @@ func! autopairs#AutoPairsInsert(key)
                     " before the cursor), and make sure there's actually a
                     " close character to close after the cursor
                     if (count(before.afterline, open) < count(before.afterline, close)
-                                \ && stridx(after, close) != -1 
+                                \ && stridx(after, close) != -1
                                 \ && count(after, open) < count(after, close))
                         break
                     end
