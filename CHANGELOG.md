@@ -1,3 +1,5 @@
+# 3.0.0-beta3
+
 # 3.0.0-beta2
 
 ## Added
@@ -9,7 +11,7 @@
 * Added `g:AutoPairsJumpBlacklist` ([jiangmiao/313](https://github.com/jiangmiao/auto-pairs/issues/313))
 
 ## Fixed
-* Incompatible with vim-visual-multi
+* Incompatibility with vim-visual-multi
 * Fixed weird fast wrap behavior when the closer is identical to the opener ([jiangmiao/296](https://github.com/jiangmiao/auto-pairs/issues/296))
 * Try to fix issue where brackets are imbalanced on the line, but that isn't indicative of bad balancing. Primarily an issue in multiline if-else blocks, or try-catch blocks in languages like C, C++, and Java. (fix has since been fixed)
 * Some function calls were not renamed (bad refactoring; [#13](https://github.com/LunarWatcher/auto-pairs/issues/13))
