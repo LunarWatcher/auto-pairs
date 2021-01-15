@@ -299,14 +299,16 @@ func! autopairs#AutoPairsInsert(key)
                         break
                     end
                 else
-                    if count(before.afterline, open) < count(before.afterline, close)
-                        " Olivia: disregard imbalance if the close is ahead of
-                        " the cursor.
-                        " Not entirely sure if this is good, but it works on
-                        " the try-catch case, or multiline if-else block
-                        if col('.') < strridx(before.afterline, close)
-                            break
-                        endif
+
+                    " Olivia: aside making sure there's an overall imbalance
+                    " in the line, only balance the brackets if there's an
+                    " imbalance after the cursor (we can disregard anything
+                    " before the cursor), and make sure there's actually a
+                    " close character to close after the cursor
+                    if (count(before.afterline, open) < count(before.afterline, close)
+                                \ && stridx(after, close) != -1 
+                                \ && count(after, open) < count(after, close))
+                        break
                     end
                 end
             end
