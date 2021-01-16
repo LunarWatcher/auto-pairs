@@ -17,6 +17,12 @@ You can also use the latest commit, though tags are recommended:
 Plug 'LunarWatcher/auto-pairs'
 ```
 
+### Versioning system (meta)
+
+This project roughly uses [semantic versioning](https://semver.org/spec/v2.0.0.html), with the minor exception that major version bumps may not be breaking in the sense that everything breaks, but introduces a set of features that significantly changes auto-pairs' functionality.
+
+Breaking API changes that affect code compatibility will never happen outside major version bumps (looking aside bugs). Additionally, the master branch is the main development branch and may therefore periodically break. While I do as many tests as I can before I push, there may still be bugs introduced on the main branch. If you want a stable (ish) experience, stick to tags. If you want updates when they're released, stick to the master branch. 
+
 ## Differences from jiangmiao
 
 At this point, there's far too many differences to list all of them. Aside removing some variables (such as remapping `<C-h>`), and tweaking defaults, many additional variables have been added. Including changes by Krasjet, here's a short list of some of the things this fork does that upstream doesn't:
