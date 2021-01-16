@@ -576,14 +576,14 @@ Used with |g:AutoPairsSingleQuoteMode| = 2
 |g:AutoPairsLanguagePairs|                                                   map
 
 Default: >
-    call s:define("g:AutoPairsLanguagePairs", {
+    {
         \ "erlang": {'<<': '>>'},
         \ "tex": {'``': "''" },
         \ "html": {'<': '>'},
-        \ 'vim': {'\v(^\s*\zs"|^((Plugi?n?|echoe?r?r?)\s*)@!("(\\\"|[^"])*"*|[^"])* \zs"\ze(\\\"|[^"])*$)': ''},
+        \ 'vim': {'\v(^\s*\zs"\ze|".*"\s*\zs"\ze$|^(\s*[a-zA-Z]+\s*([a-zA-Z]*\s*\=\s*)?)@!(\s*\zs"\ze(\\\"|[^"])*$))': ''},
         \ 'rust': {'\w\zs<': '>', '&\zs''': ''},
         \ 'php': {'<?': '?>//k]', '<?php': '?>//k]'}
-        \ })
+        \ }
 <
 
 Contains an map of maps containing language-specific expansions. This is
@@ -675,13 +675,14 @@ the same.
 |g:AutoPairsOpenBalanceBlacklist|                                          array
 This variable also exists in a buffer variant.~
 
-Default: ["'", '"', '`']
-Default rationale: quotes don't nest, and therefore have special balance
-                   requirements
+Default: []
 
-Blacklist for checking for balance before inserting. By default, this includes
-three types of quotes, as they don't (normally) nest like parentheses or
-brackets do.
+Blacklist for checking for balance before inserting.
+
+3.0.0-beta3:~
+    * Made the default [], because defaulting to quotes triggered weird
+      behavior, and I can't remember the rationale for adding them in the
+      first place
 
 ------------------------------------------------------------------------------
                                                   *g:AutoPairsMultilineFastWrap*

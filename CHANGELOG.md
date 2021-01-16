@@ -1,5 +1,13 @@
 # 3.0.0-beta3
 
+## Fixed
+
+* Made the vim comment regex less awful
+
+## Changed
+* Made `g:AutoPairsOpenBalanceBlacklist` empty by default. Can't remember the rationale behind adding them in the first place
+
+
 # 3.0.0-beta2
 
 ## Added

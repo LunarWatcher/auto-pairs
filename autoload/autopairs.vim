@@ -132,12 +132,12 @@ call s:define("g:AutoPairs", {'(': ')', '[': ']', '{': '}', "'": "'", '"': '"',
             \ '```': '```', '"""':'"""', "'''":"'''", "`":"`"})
 
 " Defines language-specific pairs. Please read the documentation before using!
-" The last paragraph of the help is extrememly important.
+" The last paragraph of the help is extremely important.
 call s:define("g:AutoPairsLanguagePairs", {
     \ "erlang": {'<<': '>>'},
     \ "tex": {'``': "''" },
     \ "html": {'<': '>'},
-    \ 'vim': {'\v(^\s*\zs"|^((Plugi?n?|echoe?r?r?)\s*)@!("(\\\"|[^"])*"*|[^"])* \zs"\ze(\\\"|[^"])*$)': ''},
+    \ 'vim': {'\v(^\s*\zs"\ze|".*"\s*\zs"\ze$|^(\s*[a-zA-Z]+\s*([a-zA-Z]*\s*\=\s*)?)@!(\s*\zs"\ze(\\\"|[^"])*$))': ''},
     \ 'rust': {'\w\zs<': '>', '&\zs''': ''},
     \ 'php': {'<?': '?>//k]', '<?php': '?>//k]'}
     \ })
@@ -151,7 +151,7 @@ call s:define('g:AutoPairsQuoteClosingChar', ['"', "'", '`'])
 call s:define('g:AutoPairsNextCharWhitelist', [])
 
 " Krasjet: don't perform open balance check on these characters
-call s:define('g:AutoPairsOpenBalanceBlacklist', ["'", '"'])
+call s:define('g:AutoPairsOpenBalanceBlacklist', [])
 
 " Krasjet: turn on/off the balance check for single quotes (')
 " suggestions: use ftplugin/autocmd to turn this off for text documents
