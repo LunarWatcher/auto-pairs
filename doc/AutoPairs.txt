@@ -761,6 +761,36 @@ Defines what close pairs trigger fly mode if |g:AutoPairsFlyMode| is enabled.
 Used inside a |\v| |regex| group. ] MUST be escaped (`\]` instead of `]`), or
 stuff breaks.
 
+------------------------------------------------------------------------------
+                                          *g:AutoPairsMultilineCloseDeleteSpace*
+|g:AutoPairsMultilineCloseDeleteSpace|                                       int
+This variable also exists in a buffer variant.~
+
+Default: 1
+
+Note that this only takes effect if |g:AutoPairsMultilineClose|. In theory.
+I'm not sure what other cases this potentially is triggered, because the code
+has extremely few comments from upstream (jiangmiao and Krasjet).
+
+Defines whether or not to delete the space in the event of a multiline close.
+From the readme, there's this example: >
+    {
+        | (press })
+    }
+<
+>
+    {
+    }|
+<
+
+Turning this option off when |g:AutoPairsMultilineClose| is 1 makes the
+outcome: >
+    {
+
+    }|
+<
+
+
 ==============================================================================
 6. Troubleshooting                                   *autopairs-troubleshooting*
 

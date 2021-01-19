@@ -1,12 +1,19 @@
 # 3.0.0-beta3
 
+## Added
+* `g:AutoPairsMultilineCloseDeleteSpace`
+
 ## Fixed
 
 * Made the vim comment regex less awful
+* `AutoPairsMultilineClose` didn't work
+* `g:AutoPairsCompleteOnlyOnSpace` regex: \S is enough. Newlines appear to be stripped anyway, so EOL is fine
+* Revert `g:AutoPairsMultilineClose` to 0; not sure when it changed to 1
+* Corrected multiline pair regex (`'^\V'.close` -> `'\v^\s*\zs\V'.close`); not sure why it was changed in the first place, doesn't appear to be relevant for space-only autoinsert. (Objections are welcome on this one; open an issue if you disagree or if this breaks your use of the plugin)
 
 ## Changed
 * Made `g:AutoPairsOpenBalanceBlacklist` empty by default. Can't remember the rationale behind adding them in the first place
-
+* [Meta] Removed old, outdated comments and add new confused ones
 
 # 3.0.0-beta2
 

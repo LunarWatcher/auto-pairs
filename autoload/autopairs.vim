@@ -7,7 +7,7 @@
 scriptencoding utf-8
 
 " Major, minor, patch, beta, alpha
-let g:AutoPairsVersion = 30020
+let g:AutoPairsVersion = 30030
 
 let s:save_cpo = &cpoptions
 set cpoptions&vim
@@ -64,7 +64,8 @@ func! s:getline()
         while i <= n
             let line = getline(i)
             let after = after.' '.line
-            if !(line =~ '\v^\s*$')
+
+            if line !~? '\v^\s*$'
                 break
             end
             let i = i+1
@@ -195,7 +196,10 @@ call s:define('g:AutoPairsFlyMode', 0)
 " When skipping the closed pair, look at the current and
 " next line as well.
 " Krasjet: default changed to 0
-call s:define('g:AutoPairsMultilineClose', 1)
+call s:define('g:AutoPairsMultilineClose', 0)
+
+" Default behavior for jiangmiao/auto-pairs: 1
+call s:define('g:AutoPairsMultilineCloseDeleteSpace', 1)
 
 " Work with Fly Mode, insert pair where jumped
 call s:define('g:AutoPairsShortcutBackInsert', '<M-b>')
@@ -282,13 +286,16 @@ func! autopairs#AutoPairsInsert(key)
     for [open, close, opt] in b:AutoPairsList
         let ms = s:matchend(before.a:key, open)
         let m = matchstr(afterline, '^\v\s*\zs\V'.close)
+
         if len(ms) > 0
+
             " process the open pair
 
             " Krasjet: only insert the closing pair if the next character is a space
             " or a non-quote closing pair, or a whitelisted character (string)
             " Olivia: that ^ if and only if it's desired.
-            if b:AutoPairsCompleteOnlyOnSpace == 1 && afterline[0] =~? '^\v(\S|\n)' && afterline !~# b:autopairs_next_char_whitelist
+
+            if b:AutoPairsCompleteOnlyOnSpace == 1 && afterline[0] =~? '^\v\S' && afterline[0] !~# b:autopairs_next_char_whitelist
                 break
             end
 
@@ -372,19 +379,11 @@ func! autopairs#AutoPairsInsert(key)
 
             " Krasjet: do not search for the closing pair if spaces are in between
             " Olivia: Add override for people who want this (like me)
+            " Note: this only checks the current line
             let m = matchstr(afterline, searchRegex . close)
             if m != ''
                 " Krasjet: only jump across the closing pair if pairs are balanced
-                " Olivia: that ^ but make it an option instead of forcing it
 
-
-                " Olivia (Note): Not sure if this needs to be wrapped in an if
-                " statement to work properly, or if this ends up being a waste
-                " somehow. Not gonna lie, I'm not entirely sure what this
-                " does. It clearly isn't called when
-                " b:AutoPairsSearchCloseAfterSpace == 0, but I don't
-                " understand why. It's failing the second condition, but I'm
-                " not sure why.
                 if open == close || (b:AutoPairsSingleQuoteBalanceCheck && close ==# "'")
                     if count(before.afterline,close) % 2 != 0
                         return a:key
@@ -406,15 +405,22 @@ func! autopairs#AutoPairsInsert(key)
                     return s:right(m)
                 endif
             end
+            " I have no idea why this isn't an if-else. Is execution
+            " guaranteed? More testing required
+            " FIXME pl0x
 
             " Olivia: return the key if we aren't jumping.
             if b:AutoPairsNoJump == 1 || index(b:AutoPairsJumpBlacklist, close) != -1
                 return a:key
             endif
-            let m = matchstr(after, '^\V'.close)
+            " This may check multiline depending on something.
+            " Still not entirely sure what this brings to the table that the
+            " other clause doesn't
+            let m = matchstr(after, '\v^\s*\zs\V'.close)
             if m != ''
+
                 if a:key == g:AutoPairsWildClosedPair || opt['multiline']
-                    if b:autopairs_return_pos == line('.') && getline('.') =~ '\v^\s*$'
+                    if b:AutoPairsMultilineCloseDeleteSpace && b:autopairs_return_pos == line('.') && getline('.') =~ '\v^\s*$'
                         normal! ddk$
                     end
                     call search(m, 'We')
@@ -667,6 +673,7 @@ func! autopairs#AutoPairsInit()
     call s:define('b:AutoPairsQuotes', g:AutoPairsQuotes)
     call s:define('b:AutoPairsFlyModeList', g:AutoPairsFlyModeList)
     call s:define('b:AutoPairsJumpBlacklist', g:AutoPairsJumpBlacklist)
+    call s:define('b:AutoPairsMultilineCloseDeleteSpace', g:AutoPairsMultilineCloseDeleteSpace)
 
     let b:autopairs_return_pos = 0
     let b:autopairs_saved_pair = [0, 0]
