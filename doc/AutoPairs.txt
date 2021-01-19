@@ -6,30 +6,43 @@ Author:  jiangmiao
 Fork: LunarWatcher (Olivia)
 License: MIT
 URL: https://github.com/jiangmiao/auto-pairs
-Fork URL: https://github.com/LunarWatcher/auto-pairs
+Fork URL: https://github.com/LunarWatcher/auto-pairs (bugs, feature requests,
+                                                      and pull requests go
+                                                      here)
+Changelog: https://github.com/LunarWatcher/auto-pairs/blob/master/CHANGELOG.md
 
 ==============================================================================
 CONTENTS                                                    *autopairs-contents*
 
-    1. Installation ............................. |autopairs-installation|
-    2. Features ..................................... |autopairs-features|
-        2.1. Multibyte pairs ....................... |autopairs-multibyte|
-    3. Fly Mode ...................................... |autopairs-flymode|
-    4. Shortcuts ................................... |autopairs-shortcuts|
-        4.1. Shortcut remapping ........... |autopairs-shortcut-remapping|
-    5. Options ....................................... |autopairs-options|
-    6. Troubleshooting ....................... |autopairs-troubleshooting|
-        6.1. Conflicting keybinds .................. |autopairs-conflicts|
-    7. Diagnosing indentation ................ |autopairs-diagnose-indent|
-    8. Functions (API) ............................. |autopairs-functions|
-    9. Credits/contributors .......................... |autopairs-credits|
+    1.  Installation ............................ |autopairs-installation|
+    2.  Features .................................... |autopairs-features|
+         2.1. Multibyte pairs ...................... |autopairs-multibyte|
+    3.  Fly Mode ..................................... |autopairs-flymode|
+    4.  Shortcuts .................................. |autopairs-shortcuts|
+         4.1. Shortcut remapping .......... |autopairs-shortcut-remapping|
+    5.  Options ...................................... |autopairs-options|
+    6.  Troubleshooting ...................... |autopairs-troubleshooting|
+         6.1. Conflicting keybinds ................. |autopairs-conflicts|
+    7.  Diagnosing indentation ............... |autopairs-diagnose-indent|
+    8.  Functions (API) ............................ |autopairs-functions|
+    9.  Credits/contributors ......................... |autopairs-credits|
 
 ==============================================================================
 1. Installation                                         *autopairs-installation*
 
-With vim-plug
+With vim-plug: >
 
     Plug 'LunarWatcher/auto-pairs'
+<
+Preferred/recommended: >
+    Plug 'LunarWatcher/auto-pairs', {'tag': '*'}
+<
+
+Other installation methods are of course supported, but aren't documented
+because the author of this help document couldn't be bothered to add all of
+them. Most of them should work with a similar syntax anyway, and there's no
+special install instructions aside just installing it. No compiling, no
+external dependencies, just pure Vimscript.
 
 ==============================================================================
 2. Features                                                 *autopairs-features*
