@@ -1,5 +1,0 @@
-TODOs:
-* [ ] Improve balance checks to ignore pairs in strings (and either ignore balance checks in strings, or something like that)
-    - [ ] Ignore comments?
-    - Note: use highlight groups
-
