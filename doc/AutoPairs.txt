@@ -312,6 +312,29 @@ You can set |b:AutoPairs| before |BufEnter|: >
 
 This sets |AutoPairs| to only match for parenthesis for 'FILETYPE'. See also
 |g:AutoPairsLanguagePairs|.
+                                                     |autopairs-weird-behavior|
+
+
+Open is used in a regex search, and because auto-pairs applies stuff directly,
+there's a minor input escape issue. Most people aren't going to experience it,
+but if you i.e. wanna add `'\left(': '\right)'`, there is actually a "right
+way" to add it. `\left` may cause `\l` to be interpreted as a group; |\l|
+to be specific.
+
+Consequentially, the pair has to be declared as `'\\left(': '\right)'` . The
+close pair is also used as a regex in some places, but shouldn't cause any
+problems. Additional escaping will be added soon to mitigate problems, but
+it's fairly niche. TL;DR: if you use backslash in an open pair, you _need_ to
+escape it with `\\` for it to work properly
+
+This is a bit of a double-sided blade, though; forcing escape of the close
+pair in certain places means regex cannot be used. Regex groups for replace
+cannot be used either way, so there should be relatively few reasons to have
+regex in the closing pair.
+
+Note that all the pairs are run through a \V, so some characters should be
+entirely escaped. Direct use consequentially means you can `\v` and get
+creative with regexes for pairs.
 
 ------------------------------------------------------------------------------
                                                 *g:AutoPairsCompleteOnlyOnSpace*
@@ -803,6 +826,23 @@ outcome: >
     }|
 <
 
+------------------------------------------------------------------------------
+                                                  *g:AutoPairsMultibyteFastWrap*
+|g:AutoPairsMultibyteFastWrap|                                               int
+This variable also exists in a buffer variant.~
+
+Default: 1
+
+Whether or not to enable multibyte fast wrap. Note that this is currently
+considered experimental even though it's enabled by default. If you experience
+that it doesn't work, please open an issue.
+
+When this is enabled, it enables wrapping multibyte pairs -- note that it only
+does this for pairs registered in *g:AutoPairs* , as arbitrary selections
+would be unpredictable.
+
+If a multibyte pair or a normal pair isn't found, it'll fall back to standard
+behavior and assume the next character is what you want to wrap.
 
 ==============================================================================
 6. Troubleshooting                                   *autopairs-troubleshooting*

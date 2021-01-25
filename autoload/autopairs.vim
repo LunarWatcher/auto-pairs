@@ -136,7 +136,7 @@ call s:define("g:AutoPairs", {'(': ')', '[': ']', '{': '}', "'": "'", '"': '"',
 " The last paragraph of the help is extremely important.
 call s:define("g:AutoPairsLanguagePairs", {
     \ "erlang": {'<<': '>>'},
-    \ "tex": {'``': "''" },
+    \ "tex": {'``': "''", '$': '$'},
     \ "html": {'<': '>'},
     \ 'vim': {'\v(^\s*\zs"\ze|".*"\s*\zs"\ze$|^(\s*[a-zA-Z]+\s*([a-zA-Z]*\s*\=\s*)?)@!(\s*\zs"\ze(\\\"|[^"])*$))': ''},
     \ 'rust': {'\w\zs<': '>', '&\zs''': ''},
@@ -224,6 +224,8 @@ call s:define('g:AutoPairsMultilineFastWrap', 0)
 call s:define('g:AutoPairsFlyModeList', '}\])')
 call s:define('g:AutoPairsJumpBlacklist', [])
 
+call s:define('g:AutoPairsMultibyteFastWrap', 1)
+
 fun! autopairs#AutoPairsScriptInit()
     " This currently does nothing; see :h autopairs#AutoPairsScriptInit()
 endfun
@@ -278,7 +280,8 @@ func! autopairs#AutoPairsInsert(key)
     let [before, after, afterline] = s:getline()
 
     " Ignore auto close if prev character is \
-    if before[-1:-1] == '\'
+    " And skip if it's double-escaped
+    if before[-1:-1] == '\' && before[-2:-1] != "\\\\"
         return a:key
     end
 
@@ -485,7 +488,46 @@ endf
 func! autopairs#AutoPairsFastWrap(...)
     let movement = get(a:, 1, 'e')
     let c = @"
-    normal! x
+    if b:AutoPairsMultibyteFastWrap
+        let [before, after, ig] = s:getline()
+        " At this point, after refers to the bit after the cursor.
+        " We haven't cut anything yet.
+        if after == ''
+            " While we do have multiline fast wrap, we actually do need
+            " something to wrap.
+            return ''
+        endif
+        let length = 1
+        for [open, close, opt] in b:AutoPairsList
+            if close == ''
+                continue
+            endif
+            
+            let match = []
+            let esc = substitute(close, "'", "''", "g")
+            let esc = substitute(esc, '\', '\\\\', "g")
+
+            let res = substitute(after, '^\V' . esc, '\=add(match, submatch(0))', '')
+
+            if len(match) > 0 && len(match[0]) > length
+
+                let length = len(match[0])
+            endif
+        endfor
+        
+        exec "normal! " . length . "x"
+        let cursorOffset = length - 1
+    else
+        let cursorOffset = 0
+        normal! x
+    endif
+
+    " Note regarding the previous note: an after == "" check doesn't make
+    " sense here, because we've already cut at this point. We may want
+    " multiline wrapping.
+    " I think xd This has always been a bit weird. Might be better to
+    " outsource the above check to outside the if-check to prevent weird
+    " moves
     let [before, after, ig] = s:getline()
 
     if after[0] =~ '\v[{[(<]'
@@ -510,6 +552,9 @@ func! autopairs#AutoPairsFastWrap(...)
                     call search(close, 'We')
                 endif
                 normal! p
+                if cursorOffset > 0
+                    exec "normal! " . repeat('h', cursorOffset)
+                endif
                 let @" = c
                 return ""
 
@@ -521,11 +566,15 @@ func! autopairs#AutoPairsFastWrap(...)
             normal! p
         else
             normal! p
-        end
-    end
+        endif
+        if cursorOffset > 0
+            exec "normal! " . repeat('h', cursorOffset)
+        endif
+    
+    endif
     let @" = c
     return ""
-endf
+endfun
 
 " TODO: determine whether this should be linked against g:AutoPairs or not
 " This function calls a manual jump. It jumps to the next character, which may
@@ -674,6 +723,7 @@ func! autopairs#AutoPairsInit()
     call s:define('b:AutoPairsFlyModeList', g:AutoPairsFlyModeList)
     call s:define('b:AutoPairsJumpBlacklist', g:AutoPairsJumpBlacklist)
     call s:define('b:AutoPairsMultilineCloseDeleteSpace', g:AutoPairsMultilineCloseDeleteSpace)
+    call s:define('b:AutoPairsMultibyteFastWrap', g:AutoPairsMultibyteFastWrap)
 
     let b:autopairs_return_pos = 0
     let b:autopairs_saved_pair = [0, 0]
