@@ -844,6 +844,17 @@ would be unpredictable.
 If a multibyte pair or a normal pair isn't found, it'll fall back to standard
 behavior and assume the next character is what you want to wrap.
 
+------------------------------------------------------------------------------
+                                                  *g:AutoPairsFiletypeBlacklist*
+|g:AutoPairsFiletypeBlacklist|                                             array
+
+Default: []
+
+List containing filetypes in which autopairs is disabled by default. Note that
+the keybinds and whatnot are loaded due to how the plugin is built up. This
+may change in a future version. The plugin may be manually enabled in spite of
+this blacklist. See |g:AutoPairsShortcutToggle|
+
 ==============================================================================
 6. Troubleshooting                                   *autopairs-troubleshooting*
 

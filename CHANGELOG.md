@@ -3,6 +3,7 @@
 ## Added
 * `g:AutoPairsMultilineCloseDeleteSpace`
 * `g:AutoPairsMultibyteFastWrap` -- fast wrap now supports multibyte pairs
+* `g:AutoPairsFiletypeBlacklist`
 
 ## Fixed
 

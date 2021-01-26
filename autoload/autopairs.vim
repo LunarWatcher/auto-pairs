@@ -163,6 +163,7 @@ call s:define('g:AutoPairsSingleQuoteBalanceCheck', 1)
 " (Pro tip: also a great use for autocmds and default-disable rather than
 " plugin configuration. Project .vimrcs work too)
 call s:define('g:AutoPairsDirectoryBlacklist', [])
+call s:define('g:AutoPairsFiletypeBlacklist', [])
 
 " Olivia: set to 0 based on my own personal biases
 call s:define('g:AutoPairsMapBS', 0)
@@ -892,7 +893,7 @@ func! autopairs#AutoPairsTryInit()
     if type(g:AutoPairsInitHook) == 2
         call g:AutoPairsInitHook()
     endif
-    if index(g:AutoPairsDirectoryBlacklist, getcwd()) >= 0
+    if index(g:AutoPairsDirectoryBlacklist, getcwd()) >= 0 || index(g:AutoPairsFiletypeBlacklist, &ft) != -1
         let b:autopairs_enabled = 0
     endif
 
