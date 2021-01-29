@@ -1,3 +1,9 @@
+# 3.0.0-beta4
+
+## Fixed
+
+* Balance checks where the open bracket is regex ([#15](https://github.com/LunarWatcher/auto-pairs/issues/15)) (`count(whatever, open) => s:regexCount(whatever, open)`)
+
 # 3.0.0-beta3
 
 ## Added

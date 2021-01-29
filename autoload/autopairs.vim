@@ -1,13 +1,13 @@
 " Insert or delete brackets, parens, quotes in pairs.
 " Fork Maintainer: Olivia
-" Version: 3.0.0-beta3
+" Version: 3.0.0-beta4
 " Fork Repository: https://github.com/LunarWatcher/auto-pairs
 " License: MIT
 
 scriptencoding utf-8
 
 " Major, minor, patch, beta, alpha
-let g:AutoPairsVersion = 30030
+let g:AutoPairsVersion = 30040
 
 let s:save_cpo = &cpoptions
 set cpoptions&vim
@@ -96,6 +96,17 @@ endf
 func! s:sortByLength(i1, i2)
     return len(a:i2[0])-len(a:i1[0])
 endf
+
+fun! s:regexCount(string, pattern)
+    if a:string == "" || a:pattern == ""
+        return 0
+    endif
+    let matches = []
+
+    call substitute('' . a:string, '' . a:pattern, '\=add(matches, submatch(0))[-1]', 'g')
+
+    return len(matches)
+endfun!
 
 " Unicode handling {{{
 " Idea by https://github.com/fenuks: https://github.com/jiangmiao/auto-pairs/issues/251#issuecomment-573901691
@@ -316,9 +327,11 @@ func! autopairs#AutoPairsInsert(key)
                     " imbalance after the cursor (we can disregard anything
                     " before the cursor), and make sure there's actually a
                     " close character to close after the cursor
-                    if (count(before.afterline, open) < count(before.afterline, close)
+
+                    if (s:regexCount(before.afterline, open) < count(before.afterline, close)
                                 \ && stridx(after, close) != -1
-                                \ && count(after, open) < count(after, close))
+                                \ && s:regexCount(after, open) < count(after, close))
+
                         break
                     end
                 end
@@ -393,7 +406,7 @@ func! autopairs#AutoPairsInsert(key)
                         return a:key
                     endif
                 else
-                    if count(before.afterline, open) > count(before.afterline, close)
+                    if s:regexCount(before.afterline, open) > count(before.afterline, close)
                         return a:key
                     endif
                 endif
