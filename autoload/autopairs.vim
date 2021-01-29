@@ -602,6 +602,9 @@ func! autopairs#AutoPairsJump()
     if !exists('b:AutoPairsJumpRegex')
         let b:AutoPairsJumpRegex = '\('
         for [open, close, _] in b:AutoPairsList
+            if close == ''
+                continue
+            endif
             "let res = substitute(close, ')', '\\)', 'g')
             let res = substitute(close, "'", "''", 'g')
             let res = substitute(res, '\', '\\\\', 'g')
