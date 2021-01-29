@@ -24,6 +24,8 @@ or steps to reproduce, or other important context, the issue may be closed until
 **What vim? (+ version)** (i.e. vim, gvim, nvim, nvim-qt, mvim, ...):
 **Reproduced in other variants of Vim?** (Optional):
 
+**Autopairs config** (if applicable):
+
 **Describe the bug**
 <!-- A detailed description is important. Include all the relevant details about the bug/error.
      In what situation you encountered it should go here as well. -->
