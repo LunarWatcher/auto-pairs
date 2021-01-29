@@ -259,8 +259,6 @@ func! autopairs#AutoPairsDefaultPairs()
     return r
 endf
 
-
-
 " add or delete pairs base on g:AutoPairs
 " AutoPairsDefine(addPairs:dict[, removeOpenPairList:list])
 "
@@ -597,7 +595,22 @@ endfun
 " iDunno how it deals with multipair jumps.
 " Gonna backlog this for now and rather deal with it later
 func! autopairs#AutoPairsJump()
-    call search('["\]'')}`]','W')
+    if len(b:AutoPairs) == 0
+        return
+    endif
+
+    if !exists('b:AutoPairsJumpRegex')
+        let b:AutoPairsJumpRegex = '\('
+        for [open, close, _] in b:AutoPairsList
+            "let res = substitute(close, ')', '\\)', 'g')
+            let res = substitute(close, "'", "''", 'g')
+            let res = substitute(res, '\', '\\\\', 'g')
+            let b:AutoPairsJumpRegex .= (len(b:AutoPairsJumpRegex) > 2 ? '\|' : '') . res
+        endfor
+        let b:AutoPairsJumpRegex .= '\)'
+    endif
+
+    call search('\V' . b:AutoPairsJumpRegex, 'W')
 endf
 
 func! autopairs#AutoPairsMoveCharacter(key)

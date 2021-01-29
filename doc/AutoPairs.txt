@@ -855,6 +855,28 @@ the keybinds and whatnot are loaded due to how the plugin is built up. This
 may change in a future version. The plugin may be manually enabled in spite of
 this blacklist. See |g:AutoPairsShortcutToggle|
 
+------------------------------------------------------------------------------
+                                                          *b:AutoPairsJumpRegex*
+|b:AutoPairsJumpRegex|                                                     regex
+
+Default: (undefined, generated on-demand as a regex group of buffer pairs)
+
+Regex used with `search` when |g:AutoPairsShortcutJump| is used. This is
+generated automatically per-buffer the first time the function is used, to
+prevent unnecessary regeneration, or unnecessary generation if it's not used.
+
+If this is defined when auto-pairs normally tries to generate it, it'll assume
+the variable already exists, and use whatever is in it as the jump regex. This
+can therefore be used to define a custom jump system (but only for the
+explicit jumps), but it can also break it.
+
+Also note that the regex is prefixed with a `\V` regardless of the source. If
+you need to use this explicitly, be aware of that. You can prefix the variable
+with `\v` to ignore the effects of `\V`, but you'll otherwise have to follow
+the syntax rules for when `\V` is in effect.
+
+See also: |\v|, |\V|
+
 ==============================================================================
 6. Troubleshooting                                   *autopairs-troubleshooting*
 
