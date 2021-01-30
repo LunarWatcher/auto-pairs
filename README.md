@@ -4,7 +4,7 @@ Insert or delete brackets, parens, and quotes in pair.
 
 ## Installation
 
-There's several installation methods, and you're free to use whatever you want, but I personally cannot recommened [vim-plug](https://github.com/junegunn/vim-plug) enough, in part because of the previous line of text. Installation, if you expect a more or less working variant, should be done with:
+There's several installation methods, and you're free to use whatever you want, but I personally cannot recommend [vim-plug](https://github.com/junegunn/vim-plug) enough, in part because of the previous line of text. Installation, if you expect a more or less working variant, should be done with:
 
 ```vim
 Plug 'LunarWatcher/auto-pairs', { 'tag': '*' }
