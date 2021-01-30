@@ -1,3 +1,12 @@
+# 3.0.0-beta5
+
+## Fixed
+
+* Bad fast wrap when open == close and there isn't a space before open ([#17](https://github.com/LunarWatcher/auto-pairs/issues/17))
+
+## Changed
+* `g:AutoPairsVersion` no longer has a semantic meaning
+
 # 3.0.0-beta4
 
 ## Added
@@ -6,7 +15,7 @@
 ## Fixed
 
 * Balance checks where the open bracket is regex ([#15](https://github.com/LunarWatcher/auto-pairs/issues/15)) (`count(whatever, open) => s:regexCount(whatever, open)`)
-* Manual jump now includes custom pairs
+* Manual jump now includes custom pairs ([#16](https://github.com/LunarWatcher/auto-pairs/issues/16))
 
 # 3.0.0-beta3
 

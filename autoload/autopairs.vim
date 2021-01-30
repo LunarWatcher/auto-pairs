@@ -1,13 +1,15 @@
 " Insert or delete brackets, parens, quotes in pairs.
 " Fork Maintainer: Olivia
-" Version: 3.0.0-beta4
+" Version: 3.0.0-beta5
 " Fork Repository: https://github.com/LunarWatcher/auto-pairs
 " License: MIT
 
 scriptencoding utf-8
 
-" Major, minor, patch, beta, alpha
-let g:AutoPairsVersion = 30040
+" Current version; not representative of tags or real versions, but purely
+" meant as a number associated with the version. Semantic meaning on the first
+" digit will take place. See the documentation for more details.
+let g:AutoPairsVersion = 30050
 
 let s:save_cpo = &cpoptions
 set cpoptions&vim
@@ -560,7 +562,7 @@ func! autopairs#AutoPairsFastWrap(...)
                 " Search goes for the first one rather than the logical option
                 " -- the last one. This is only a problem when open == close,
                 "  which means in the case of quotes.
-                if open == close && ig =~ '^\v\s+\V' . close
+                if open == close && after =~ '^\v\s+\V' . close
                     call search(close, 'We')
                 endif
                 normal! p

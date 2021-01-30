@@ -752,15 +752,26 @@ keybinds or anything else around the legacy API. Please see
 
 ------------------------------------------------------------------------------
                                                             *g:AutoPairsVersion*
-|g:AutoPairsVersion|                                                         int
+|g:AutoPairsVersion|                                                        list
 
-Defines the current version. There's 5 numbers, indicating:
-Major, minor, patch, beta, alpha, in that order.
+Defines the current version. Note that while this is largely intended to
+follow certain semantic aspects regarding the version whereever possible, to
+facilitate for the use of >=, it's semi-arbitrarily set (effective
+3.0.0-beta5: increment by 1). this way, it's guaranteed to always go up.
+
+Note that the first number will increase as versions do. From 4.0.0 up to (but
+excluding) 5.0.0 will be greater than or equal to 40000, and less than 50000.
+Other updates uses a Vim-like patch number instead, largely because there's no
+chance in hell there's going to be 10000 tagged releases between two major
+versions.
 
 This is purely meant for script use, as well as cosmetic use if desired. This
 also exists, in combination with * in |exists()|, to prevent major backwards
 compat fuckups, such as the one caused by moving functions into the
 `autopairs#` prefix.
+
+3.0.0-beta5~
+    Changed representation meaning (backwards compatible)
 
 ------------------------------------------------------------------------------
                                                               *g:AutoPairsCRKey*
