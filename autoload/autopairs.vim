@@ -560,7 +560,7 @@ func! autopairs#AutoPairsFastWrap(...)
                 " Search goes for the first one rather than the logical option
                 " -- the last one. This is only a problem when open == close,
                 "  which means in the case of quotes.
-                if open == close
+                if open == close && ig =~ '^\v\s+\V' . close
                     call search(close, 'We')
                 endif
                 normal! p
