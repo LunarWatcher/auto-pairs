@@ -1,6 +1,6 @@
 " Insert or delete brackets, parens, quotes in pairs.
 " Fork Maintainer: Olivia
-" Version: See g:AutoPairsVersion, or the git tag 
+" Version: See g:AutoPairsVersion, or the git tag
 " Fork Repository: https://github.com/LunarWatcher/auto-pairs
 " License: MIT
 
@@ -239,6 +239,8 @@ call s:define('g:AutoPairsFlyModeList', '}\])')
 call s:define('g:AutoPairsJumpBlacklist', [])
 
 call s:define('g:AutoPairsMultibyteFastWrap', 1)
+
+call s:define('g:AutoPairsEnableMove', 0)
 
 fun! autopairs#AutoPairsScriptInit()
     " This currently does nothing; see :h autopairs#AutoPairsScriptInit()
@@ -516,7 +518,7 @@ func! autopairs#AutoPairsFastWrap(...)
             if close == ''
                 continue
             endif
-            
+
             let match = []
             let esc = substitute(close, "'", "''", "g")
             let esc = substitute(esc, '\', '\\\\', "g")
@@ -528,7 +530,7 @@ func! autopairs#AutoPairsFastWrap(...)
                 let length = len(match[0])
             endif
         endfor
-        
+
         exec "normal! " . length . "x"
         let cursorOffset = length - 1
     else
@@ -584,7 +586,7 @@ func! autopairs#AutoPairsFastWrap(...)
         if cursorOffset > 0
             exec "normal! " . repeat('h', cursorOffset)
         endif
-    
+
     endif
     let @" = c
     return ""
@@ -848,10 +850,12 @@ func! autopairs#AutoPairsInit()
         end
     endfor
 
-    for key in split(b:AutoPairsMoveCharacter, '\s*')
-        let escaped_key = substitute(key, "'", "''", 'g')
-        execute 'inoremap <silent> <buffer> <M-'.key."> <C-R>=autopairs#AutoPairsMoveCharacter('".escaped_key."')<CR>"
-    endfor
+    if g:AutoPairsEnableMove
+        for key in split(b:AutoPairsMoveCharacter, '\s*')
+            let escaped_key = substitute(key, "'", "''", 'g')
+            execute 'inoremap <silent> <buffer> <C-'.key."> <C-R>=autopairs#AutoPairsMoveCharacter('".escaped_key."')<CR>"
+        endfor
+    endif
 
     " Still use <buffer> level mapping for <BS> <SPACE>
     if g:AutoPairsMapBS

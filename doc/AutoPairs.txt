@@ -888,6 +888,28 @@ the syntax rules for when `\V` is in effect.
 
 See also: |\v|, |\V|
 
+------------------------------------------------------------------------------
+                                                         *g:AutoPairsEnableMove*
+|g:AutoPairsEnableMove|                                                      int
+
+Default: 0
+
+Whether or not to enable default mappings for g:AutoPairsMoveCharacter, a
+utility for moving the character under the cursor to a defined pair.
+
+Disabled by default due to keybinds causing conflicts, and the ctrl variants
+not being viable in terminal Vim. For this reason, I only recommend enabling
+this if you're using gVim.
+
+Alternatively, if you like the move character feature
+>
+    " Defines a move keybind for ) (as in whatever keybind triggers a move to
+    " the ) character)
+    inoremap <silent> <buffer> <Whatever keybind> <C-R>=autopairs#AutoPairsMoveCharacter(')')<CR>
+<
+The function can theoretically be used with any characters. For a default
+mapping to <M-key>, add it to g:AutoPairsMoveCharacter.
+
 ==============================================================================
 6. Troubleshooting                                   *autopairs-troubleshooting*
 
