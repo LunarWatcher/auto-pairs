@@ -4,6 +4,8 @@
 
 * Bad fast wrap when open == close and there isn't a space before open ([#17](https://github.com/LunarWatcher/auto-pairs/issues/17))
 * Bad balance check caused by `if index(...)` rather than `if index(...) != -1`
+* Fixed broken `foo[]|<BS>`-check (early return, bugged since the start)
+* Make `foo[]|<BS>` run a multiline check in reverse
 
 ## Changed
 * `g:AutoPairsVersion` no longer has a semantic meaning
