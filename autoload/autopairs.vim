@@ -209,8 +209,7 @@ call s:define('g:AutoPairsFlyMode', 0)
 
 " When skipping the closed pair, look at the current and
 " next line as well.
-" Krasjet: default changed to 0
-call s:define('g:AutoPairsMultilineClose', 0)
+call s:define('g:AutoPairsMultilineClose', 1)
 
 " Default behavior for jiangmiao/auto-pairs: 1
 call s:define('g:AutoPairsMultilineCloseDeleteSpace', 1)

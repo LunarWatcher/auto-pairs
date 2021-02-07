@@ -443,9 +443,7 @@ Set it to 1 to enable |autopairs-flymode|.
                                                      *g:AutoPairsMultilineClose*
 |g:AutoPairsMultilineClose|                                                  int
 
-Default: 0
-
-Krasjet's fork defined this to be 0 due to personal preference.
+Default: 1
 
 When you press the key for the closing pair (e.g. `)`) it jumps past it.
 If set to 1, then it'll jump to the next line, if there is only 'whitespace'.
