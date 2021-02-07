@@ -628,7 +628,6 @@ func! autopairs#AutoPairsBackInsert()
 endf
 
 fun! autopairs#AutoPairsDetermineCRMovement()
-
     let cmd = ''
     if g:AutoPairsCenterLine && winline() * 3 >= winheight(0) * 2
         " Recenter before adding new line to avoid replacing line content
@@ -670,8 +669,7 @@ func! autopairs#AutoPairsReturn()
         " start of a group, which would yield incorrect results.
         " Used to prevent fuckups
         if before =~ '\V'.open.'\v.*$' && afterline =~ '^\s*\V'.close
-
-            if b:AutoPairsCarefulStringExpansion && index(b:AutoPairsQuotes, open) && count(before, open) % 2 == 0
+            if b:AutoPairsCarefulStringExpansion && index(b:AutoPairsQuotes, open) != -1 && count(before, open) % 2 == 0
                 return ""
             endif
 
