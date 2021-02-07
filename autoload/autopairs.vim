@@ -467,10 +467,12 @@ func! autopairs#AutoPairsDelete()
     end
 
     let [before, after, ig] = s:getline()
+
     for [open, close, opt] in b:AutoPairsList
         let rest_of_line = opt['multiline'] ? after : ig
         let b = matchstr(before, '\V'.open.'\v\s?$')
         let a = matchstr(rest_of_line, '^\v\s*\V'.close)
+
         if b != '' && a != ''
             if b[-1:-1] == ' '
                 if a[0] == ' '
@@ -483,12 +485,30 @@ func! autopairs#AutoPairsDelete()
         end
     endfor
 
-    return "\<BS>"
     " delete the pair foo[]| <BS> to foo
     for [open, close, opt] in b:AutoPairsList
         let m = s:matchend(before, '\V'.open.'\v\s*'.'\V'.close.'\v$')
+
         if len(m) > 0
             return s:backspace(m[2])
+        else
+            let m = matchstr(before, '^\v\s*\V' . close)
+            if m != ''
+                let b = ""
+                let offset = 1
+                " a = m
+                while getline(line('.') - offset) =~ "^\s*$"
+                    let b .= getline(line('.') - offset) . ' '
+                    let offset += 1
+                    if (line('.') - offset == 0)
+                        return "\<BS>"
+                    endif
+                endwhile
+                let a = matchstr(getline(line('.') - offset), '\V' . open . '\v\s*$') . ' '
+                if a != '' || b != ''
+                    return s:backspace(a) . s:backspace(b) . s:backspace(m)
+                endif
+            endif
         end
     endfor
     return "\<BS>"
@@ -656,7 +676,7 @@ func! autopairs#AutoPairsReturn()
     end
 
     let b:autopairs_return_pos = 0
-    let before = getline(line('.')-1)
+    let before = getline(line('.') - 1)
     let [ig, ig, afterline] = s:getline()
 
     for [open, close, opt] in b:AutoPairsList
