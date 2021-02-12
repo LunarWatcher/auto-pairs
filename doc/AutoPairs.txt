@@ -201,7 +201,7 @@ Fly Mode is DISABLED by default. To enable Fly Mode add following to your
 Default Options: >
 
     let g:AutoPairsFlyMode = 0
-    let g:AutoPairsShortcutBackInsert = '<M-b>'
+    let g:AutoPairsShortcutBackInsert = '<C-a><C-b>'
 
 Note: Flymode is currently considered buggy and unreliable. It should be avoided
 unless you enjoy spending time on flymode doing weird shit while you're
@@ -353,7 +353,7 @@ you try: `{|word`, you'll get `{|word`, rather than `{|}word` if this is 0.
                                                      *g:AutoPairsShortcutToggle*
 |g:AutoPairsShortcutToggle|                                               string
 
-Default: <M-p>
+Default: <C-a><C-t>
 
 The shortcut to toggle autopairs.
 
@@ -361,7 +361,7 @@ The shortcut to toggle autopairs.
                                                    *g:AutoPairsShortcutFastWrap*
 |g:AutoPairsShortcutFastWrap|                                             string
 
-Default: <M-e>
+Default: <C-a><C-b>
 
 Fast wrap the word. All pairs will be considered as a block (including <>).
 
@@ -373,7 +373,7 @@ Fast wrap the word. All pairs will be considered as a block (including <>).
                                                        *g:AutoPairsShortcutJump*
 |g:AutoPairsShortcutJump|                                                 string
 
-Default: <M-n>
+Default: <C-a><C-s>
 
 Jump to the next closed pair.
 
@@ -381,7 +381,7 @@ Jump to the next closed pair.
                                                  *g:AutoPairsShortcutBackInsert*
 |g:AutoPairsShortcutBackInsert|                                           string
 
-Default: <M-b>
+Default: <C-a><C-b>
 
 Work with |autopairs-flymode|, insert the key at the Fly Mode jumped position.
 

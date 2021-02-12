@@ -9,7 +9,7 @@ scriptencoding utf-8
 " Current version; not representative of tags or real versions, but purely
 " meant as a number associated with the version. Semantic meaning on the first
 " digit will take place. See the documentation for more details.
-let g:AutoPairsVersion = 30050
+let g:AutoPairsVersion = 30051
 
 let s:save_cpo = &cpoptions
 set cpoptions&vim
@@ -191,9 +191,8 @@ call s:define('g:AutoPairsMapSpace', 1)
 
 call s:define('g:AutoPairsCenterLine', 1)
 
-call s:define('g:AutoPairsShortcutToggle', '<M-p>')
-
-call s:define('g:AutoPairsShortcutFastWrap', '<M-e>')
+call s:define('g:AutoPairsShortcutToggle', '<C-a><C-t>')
+call s:define('g:AutoPairsShortcutFastWrap', '<C-f>')
 
 call s:define('g:AutoPairsMoveCharacter', "()[]{}\"'")
 
@@ -201,7 +200,7 @@ call s:define('g:AutoPairsMoveCharacter', "()[]{}\"'")
 " bracket pairs. Extension off Krasjet.
 call s:define('g:AutoPairsCompleteOnlyOnSpace', 0)
 
-call s:define('g:AutoPairsShortcutJump', '<M-n>')
+call s:define('g:AutoPairsShortcutJump', '<C-a><C-s>')
 
 " Fly mode will for closed pair to jump to closed pair instead of insert.
 " also support AutoPairsBackInsert to insert pairs where jumped.
@@ -215,7 +214,7 @@ call s:define('g:AutoPairsMultilineClose', 1)
 call s:define('g:AutoPairsMultilineCloseDeleteSpace', 1)
 
 " Work with Fly Mode, insert pair where jumped
-call s:define('g:AutoPairsShortcutBackInsert', '<M-b>')
+call s:define('g:AutoPairsShortcutBackInsert', '<C-a><C-b>')
 
 call s:define('g:AutoPairsNoJump', 0)
 

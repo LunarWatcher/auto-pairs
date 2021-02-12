@@ -1,3 +1,9 @@
+# 3.0.0-beta6
+
+## Changed
+* All the keybinds ([#18](https://github.com/LunarWatcher/auto-pairs/issues/18))
+    - The new scheme uses largely compound keybinds: `<C-a>` as a prefix (ctrl-autopairs), followed by some semi-representative ctrl keybind. `<C-s>` for jump (ctrl skip), `<C-b>` for back insert, `<C-t>` for toggling auto-pairs.
+
 # 3.0.0-beta5
 
 ## Fixed
