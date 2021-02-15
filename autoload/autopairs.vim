@@ -178,6 +178,8 @@ call s:define('g:AutoPairsSingleQuoteBalanceCheck', 1)
 call s:define('g:AutoPairsDirectoryBlacklist', [])
 call s:define('g:AutoPairsFiletypeBlacklist', [])
 
+call s:define('g:AutoPairsCompatibleMaps', 1)
+
 " Olivia: set to 0 based on my own personal biases
 call s:define('g:AutoPairsMapBS', 0)
 
@@ -191,8 +193,8 @@ call s:define('g:AutoPairsMapSpace', 1)
 
 call s:define('g:AutoPairsCenterLine', 1)
 
-call s:define('g:AutoPairsShortcutToggle', '<C-a><C-t>')
-call s:define('g:AutoPairsShortcutFastWrap', '<C-f>')
+call s:define('g:AutoPairsShortcutToggle', g:AutoPairsCompatibleMaps ? '<M-p>': '<C-a><C-t>')
+call s:define('g:AutoPairsShortcutFastWrap', g:AutoPairsCompatibleMaps ? '<M-e>' : '<C-f>')
 
 call s:define('g:AutoPairsMoveCharacter', "()[]{}\"'")
 
@@ -200,7 +202,7 @@ call s:define('g:AutoPairsMoveCharacter', "()[]{}\"'")
 " bracket pairs. Extension off Krasjet.
 call s:define('g:AutoPairsCompleteOnlyOnSpace', 0)
 
-call s:define('g:AutoPairsShortcutJump', '<C-a><C-s>')
+call s:define('g:AutoPairsShortcutJump', g:AutoPairsCompatibleMaps ? '<M-n>' : '<C-a><C-s>')
 
 " Fly mode will for closed pair to jump to closed pair instead of insert.
 " also support AutoPairsBackInsert to insert pairs where jumped.
@@ -214,7 +216,7 @@ call s:define('g:AutoPairsMultilineClose', 1)
 call s:define('g:AutoPairsMultilineCloseDeleteSpace', 1)
 
 " Work with Fly Mode, insert pair where jumped
-call s:define('g:AutoPairsShortcutBackInsert', '<C-a><C-b>')
+call s:define('g:AutoPairsShortcutBackInsert', g:AutoPairsCompatibleMaps ? '<M-b>' : '<C-a><C-b>')
 
 call s:define('g:AutoPairsNoJump', 0)
 
