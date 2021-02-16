@@ -2,8 +2,9 @@
 
 ## Changed
 * All the keybinds ([#18](https://github.com/LunarWatcher/auto-pairs/issues/18))
-    - The new scheme uses largely compound keybinds: `<C-a>` as a prefix (ctrl-autopairs), followed by some semi-representative ctrl keybind. `<C-a><C-s>` for jump (ctrl skip), `<C-a><C-b>` for back insert, `<C-a><C-t>` for toggling auto-pairs. `<C-f>` is for fast wrap, but note that `<C-a>` is not used for this keybind at all.
+    - The new scheme uses largely compound keybinds: `<C-p>` as a prefix (ctrl-auto**p**airs), followed by some semi-representative ctrl keybind. `<C-p><C-s>` for jump (ctrl skip), `<C-p><C-b>` for back insert, `<C-p><C-t>` for toggling auto-pairs. `<C-f>` is for fast wrap, but note that `<C-p>` is not used for this keybind at all.
     - `let g:AutoPairsCompatibleMaps` added ([#20](https://github.com/LunarWatcher/auto-pairs/issues/20); defaults to 1 for the near foreseeable future)
+* Re-disable `g:AutoPairsMultilineClose`
 
 # 3.0.0-beta5
 
