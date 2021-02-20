@@ -9,7 +9,7 @@ scriptencoding utf-8
 " Current version; not representative of tags or real versions, but purely
 " meant as a number associated with the version. Semantic meaning on the first
 " digit will take place. See the documentation for more details.
-let g:AutoPairsVersion = 30051
+let g:AutoPairsVersion = 30052
 
 let s:save_cpo = &cpoptions
 set cpoptions&vim
@@ -241,6 +241,8 @@ call s:define('g:AutoPairsJumpBlacklist', [])
 call s:define('g:AutoPairsMultibyteFastWrap', 1)
 
 call s:define('g:AutoPairsEnableMove', 0)
+
+call s:define('g:AutoPairsReturnOnEmptyOnly', 0)
 
 fun! autopairs#AutoPairsScriptInit()
     " This currently does nothing; see :h autopairs#AutoPairsScriptInit()
@@ -488,6 +490,9 @@ func! autopairs#AutoPairsDelete()
 
     " delete the pair foo[]| <BS> to foo
     for [open, close, opt] in b:AutoPairsList
+        if (close == '')
+            continue
+        endif
         let m = s:matchend(before, '\V'.open.'\v\s*'.'\V'.close.'\v$')
 
         if len(m) > 0
@@ -506,7 +511,7 @@ func! autopairs#AutoPairsDelete()
                     endif
                 endwhile
                 let a = matchstr(getline(line('.') - offset), '\V' . open . '\v\s*$') . ' '
-                if a != '' || b != ''
+                if a != ' '
                     return s:backspace(a) . s:backspace(b) . s:backspace(m)
                 endif
             endif
@@ -770,6 +775,7 @@ func! autopairs#AutoPairsInit()
     call s:define('b:AutoPairsJumpBlacklist', g:AutoPairsJumpBlacklist)
     call s:define('b:AutoPairsMultilineCloseDeleteSpace', g:AutoPairsMultilineCloseDeleteSpace)
     call s:define('b:AutoPairsMultibyteFastWrap', g:AutoPairsMultibyteFastWrap)
+    call s:define('b:AutoPairsReturnOnEmptyOnly', g:AutoPairsReturnOnEmptyOnly)
 
     let b:autopairs_return_pos = 0
     let b:autopairs_saved_pair = [0, 0]

@@ -1,4 +1,12 @@
+# 3.0.0-beta7
+`g:AutoPairsVersion = 30052`
+
+## Fixed
+* Bug in backspace triggered by empty close not being ignored ([#22](https://github.com/LunarWatcher/auto-pairs/issues/22))
+* Bug in backspace triggered by a bad comparison (causing bad `<bs>` when not deleting actual pairs, but i.e. half a pair
+
 # 3.0.0-beta6
+`g:AutoPairsVersion = 30051`
 
 ## Changed
 * All the keybinds ([#18](https://github.com/LunarWatcher/auto-pairs/issues/18))
@@ -7,6 +15,7 @@
 * Re-disable `g:AutoPairsMultilineClose`
 
 # 3.0.0-beta5
+`g:AutoPairsVersion = 30050`
 
 ## Fixed
 
