@@ -4,6 +4,7 @@
 ## Fixed
 * Bug in backspace triggered by empty close not being ignored ([#22](https://github.com/LunarWatcher/auto-pairs/issues/22))
 * Bug in backspace triggered by a bad comparison (causing bad `<bs>` when not deleting actual pairs, but i.e. half a pair
+* Add `g:AutoPairsReturnOnEmptyOnly`
 
 # 3.0.0-beta6
 `g:AutoPairsVersion = 30051`

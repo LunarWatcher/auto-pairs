@@ -254,9 +254,8 @@ exists, but as it's still being added, it may be incomplete. See
 autopairs#AutoPairsInit()'s source if in doubt.
 
 ------------------------------------------------------------------------------
-                                                                   *g:AutoPairs*
-                                                                   *b:AutoPairs*
-|g:AutoPairs|                                                             dict
+                                                       *g:AutoPairs* *b:AutoPairs*
+                                                                          dict
 This variable also exists in a buffer variant.~
 
 Default: >
@@ -346,7 +345,7 @@ creative with regexes for pairs.
 
 ------------------------------------------------------------------------------
                                                 *g:AutoPairsCompleteOnlyOnSpace*
-|g:AutoPairsCompleteOnlyOnSpace|                                          number
+                                                                        number
 This variable also exists in a buffer variant.~
 
 Default: 0
@@ -359,7 +358,7 @@ you try: `{|word`, you'll get `{|word`, rather than `{|}word` if this is 0.
 
 ------------------------------------------------------------------------------
                                                      *g:AutoPairsShortcutToggle*
-|g:AutoPairsShortcutToggle|                                               string
+                                                                        string
 
 Default: <C-p><C-t> if |g:AutoPairsCompatibleMaps| is 0, <M-p> otherwise
 
@@ -367,7 +366,7 @@ The shortcut to toggle autopairs.
 
 ------------------------------------------------------------------------------
                                                    *g:AutoPairsShortcutFastWrap*
-|g:AutoPairsShortcutFastWrap|                                             string
+                                                                        string
 
 Default: <C-p><C-b> if |g:AutoPairsCompatibleMaps| is 0, <M-e> otherwise
 
@@ -379,7 +378,7 @@ Fast wrap the word. All pairs will be considered as a block (including <>).
 
 ------------------------------------------------------------------------------
                                                        *g:AutoPairsShortcutJump*
-|g:AutoPairsShortcutJump|                                                 string
+                                                                        string
 
 Default: <C-p><C-s> if |g:AutoPairsCompatibleMaps| is 0, <M-n> otherwise
 
@@ -387,7 +386,7 @@ Jump to the next closed pair.
 
 ------------------------------------------------------------------------------
                                                  *g:AutoPairsShortcutBackInsert*
-|g:AutoPairsShortcutBackInsert|                                           string
+                                                                        string
 
 Default: <C-p><C-b> if |g:AutoPairsCompatibleMaps| is 0, <M-b> otherwise
 
@@ -396,7 +395,7 @@ Work with |autopairs-flymode|, insert the key at the Fly Mode jumped position.
 
 ------------------------------------------------------------------------------
                                                               *g:AutoPairsMapBS*
-|g:AutoPairsMapBS|                                                           int
+                                                                           int
 
 Default: 0
 
@@ -406,7 +405,7 @@ Map <BS> to delete brackets and quotes in pair, executes:
 
 ------------------------------------------------------------------------------
                                                               *g:AutoPairsMapCR*
-|g:AutoPairsMapCR|                                                           int
+                                                                           int
 
 Default: 1
 
@@ -416,7 +415,7 @@ Executes: >
 <
 ------------------------------------------------------------------------------
                                                          *g:AutoPairsCenterLine*
-|g:AutoPairsCenterLine|                                                      int
+                                                                           int
 
 Default: 1
 
@@ -425,7 +424,7 @@ is at the bottom 1/3 of the window.
 
 ------------------------------------------------------------------------------
                                                            *g:AutoPairsMapSpace*
-|g:AutoPairsMapSpace|                                                        int
+                                                                           int
 
 Default: 1
 
@@ -440,7 +439,7 @@ Executes: >
 
 ------------------------------------------------------------------------------
                                                             *g:AutoPairsFlyMode*
-|g:AutoPairsFlyMode|                                                         int
+                                                                           int
 
 Default: 0
 This variable also exists in a buffer variant.~
@@ -449,7 +448,7 @@ Set it to 1 to enable |autopairs-flymode|.
 
 ------------------------------------------------------------------------------
                                                      *g:AutoPairsMultilineClose*
-|g:AutoPairsMultilineClose|                                                  int
+                                                                           int
 
 Default: 1
 
@@ -459,7 +458,7 @@ If set to 0, then it'll only jump to a closing pair on the same line.
 
 ------------------------------------------------------------------------------
                                                  *g:AutoPairsDirectoryBlacklist*
-|g:AutoPairsDirectoryBlacklist|                                        path list
+                                                                     path list
 
 Default: []
 
@@ -519,7 +518,7 @@ you don't _have_ to use a |function()| to get the funcref.
 
 ------------------------------------------------------------------------------
                                                              *g:AutoPairsNoJump*
-|g:AutoPairsNoJump|                                                          int
+                                                                           int
 Default: 0
 This variable also exists in a buffer variant.~
 
@@ -539,7 +538,7 @@ value = 1:
 
 ------------------------------------------------------------------------------
                                               *g:AutoPairsSearchCloseAfterSpace*
-|g:AutoPairsSearchCloseAfterSpace|                                           int
+                                                                           int
 Default: 1
 This variable also exists in a buffer variant.~
 
@@ -561,7 +560,7 @@ value = 1:
 
 ------------------------------------------------------------------------------
                                                     *g:AutoPairsSingleQuoteMode*
-|g:AutoPairsSingleQuoteMode|                                                 int
+                                                                           int
 
 Default: 2
 Default for upstream: 0
@@ -603,7 +602,7 @@ whatever combination you want based on what works for you.
 
 ------------------------------------------------------------------------------
                                                *g:AutoPairsSingleQuoteExpandFor*
-|g:AutoPairsSingleQuoteExpandFor|         (case-sensitive) regex character group
+                                        (case-sensitive) regex character group
 This variable also exists in a buffer variant.~
 
 Default: 'fbr'
@@ -615,7 +614,7 @@ Used with |g:AutoPairsSingleQuoteMode| = 2
 
 ------------------------------------------------------------------------------
                                                       *g:AutoPairsLanguagePairs*
-|g:AutoPairsLanguagePairs|                                                   map
+                                                                           map
 
 Default: >
     {
@@ -651,7 +650,7 @@ means attempts to deal with HTML-like tags using regex simply aren't feasible.
 
 ------------------------------------------------------------------------------
                                                       *g:AutoPairsAutoLineBreak*
-|g:AutoPairsAutoLineBreak|                                                  list
+                                                                          list
 
 Default: []
 This variable also exists in a buffer variant.~
@@ -671,7 +670,7 @@ Note that the exact cursor and bracket positions may vary. See
 |autopairs-indent-problems| and |indent|.
 ------------------------------------------------------------------------------
                                              *g:AutoPairsCarefulStringExpansion*
-|g:AutoPairsCarefulStringExpansion|                                          int
+                                                                           int
 
 Default: 0
 This variable also exists in a buffer variant.~
@@ -703,7 +702,7 @@ config with some languages into the general public.
 
 ------------------------------------------------------------------------------
                                                              *g:AutoPairsQuotes*
-|g:AutoPairsQuotes|                                                          int
+                                                                           int
 
 Default: ["'", '"']
 This variable also exists in a buffer variant.~
@@ -714,7 +713,7 @@ the same.
 
 ------------------------------------------------------------------------------
                                                *g:AutoPairsOpenBalanceBlacklist*
-|g:AutoPairsOpenBalanceBlacklist|                                          array
+                                                                         array
 This variable also exists in a buffer variant.~
 
 Default: []
@@ -728,7 +727,7 @@ Blacklist for checking for balance before inserting.
 
 ------------------------------------------------------------------------------
                                                   *g:AutoPairsMultilineFastWrap*
-|g:AutoPairsMultilineFastWrap|                                               int
+                                                                           int
 
 Default: 0
 
@@ -745,7 +744,7 @@ fast-wrap across lines if a pair is detected independently of this setting.
 Disabled by default because this introduced breaking behavior in comparison.
 ------------------------------------------------------------------------------
                                                     *g:AutoPairsBackwardsCompat*
-|g:AutoPairsBackwardsCompat|                                                 int
+                                                                           int
 
 Default: 1 if mg979/vim-visual-multi is detected, 0 otherwise
 
@@ -758,7 +757,7 @@ keybinds or anything else around the legacy API. Please see
 
 ------------------------------------------------------------------------------
                                                             *g:AutoPairsVersion*
-|g:AutoPairsVersion|                                                        list
+                                                                          list
 
 Defines the current version. Note that while this is largely intended to
 follow certain semantic aspects regarding the version whereever possible, to
@@ -781,7 +780,7 @@ compat fuckups, such as the one caused by moving functions into the
 
 ------------------------------------------------------------------------------
                                                               *g:AutoPairsCRKey*
-|g:AutoPairsCRKey|                                                       keybind
+                                                                       keybind
 
 Default: '<CR>'
 
@@ -794,7 +793,7 @@ plugin, and that no other plugins are gonna use it.
 
 ------------------------------------------------------------------------------
                                                       *g:AutoPairsJumpBlacklist*
-|g:AutoPairsJumpBlacklist|                                                  list
+                                                                          list
 This variable also exists in a buffer variant.~
 
 Default: []
@@ -805,7 +804,7 @@ jumping entirely.
 
 ------------------------------------------------------------------------------
                                                         *g:AutoPairsFlyModeList*
-|g:AutoPairsFlyModeList|                                                   regex
+                                                                         regex
 This variable also exists in a buffer variant.~
 
 Default: '}\])'
@@ -816,7 +815,7 @@ stuff breaks.
 
 ------------------------------------------------------------------------------
                                           *g:AutoPairsMultilineCloseDeleteSpace*
-|g:AutoPairsMultilineCloseDeleteSpace|                                       int
+                                                                           int
 This variable also exists in a buffer variant.~
 
 Default: 1
@@ -845,7 +844,7 @@ outcome: >
 
 ------------------------------------------------------------------------------
                                                   *g:AutoPairsMultibyteFastWrap*
-|g:AutoPairsMultibyteFastWrap|                                               int
+                                                                           int
 This variable also exists in a buffer variant.~
 
 Default: 1
@@ -863,7 +862,7 @@ behavior and assume the next character is what you want to wrap.
 
 ------------------------------------------------------------------------------
                                                   *g:AutoPairsFiletypeBlacklist*
-|g:AutoPairsFiletypeBlacklist|                                             array
+                                                                         array
 
 Default: []
 
@@ -874,7 +873,7 @@ this blacklist. See |g:AutoPairsShortcutToggle|
 
 ------------------------------------------------------------------------------
                                                           *b:AutoPairsJumpRegex*
-|b:AutoPairsJumpRegex|                                                     regex
+                                                                         regex
 
 Default: (undefined, generated on-demand as a regex group of buffer pairs)
 
@@ -896,7 +895,7 @@ See also: |\v|, |\V|
 
 ------------------------------------------------------------------------------
                                                          *g:AutoPairsEnableMove*
-|g:AutoPairsEnableMove|                                                      int
+                                                                           int
 
 Default: 0
 
@@ -918,7 +917,7 @@ mapping to <M-key>, add it to g:AutoPairsMoveCharacter.
 
 ------------------------------------------------------------------------------
                                                      *g:AutoPairsCompatibleMaps*
-|g:AutoPairsCompatibleMaps|                                                  int
+                                                                           int
 
 Default: 1
 
@@ -933,6 +932,27 @@ If you're experiencing certain letters breaking, this should be set to 0.
 
 Note: this will be changed to 0 in a future release, and may be removed
 entirely.
+
+------------------------------------------------------------------------------
+                                                  *g:AutoPairsReturnOnEmptyOnly*
+                                                                           int
+This variable also exists in a buffer variant.~
+
+Default: 1
+
+Whether or not to trigger return actions on pairs with content. Essentially,
+whether or not in a situation like this: >
+    if (parenthesesArePairs|)   <cr> at |
+<
+to produce (value 1): >
+    if (parenthesesArePairs
+        |)                      Note: with possibly different indent (see |cino|)
+<
+or (value 0): >
+    if (parenthesesArePairs
+        |                       Note: possibly with different indent (see |cino|)
+    )
+<
 
 ==============================================================================
 6. Troubleshooting                                   *autopairs-troubleshooting*

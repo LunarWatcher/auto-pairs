@@ -55,12 +55,13 @@ func! s:backspace(s)
 endf
 
 func! s:getline()
+
     let line = getline('.')
     let pos = col('.') - 1
     let before = strpart(line, 0, pos)
     let after = strpart(line, pos)
     let afterline = after
-    if g:AutoPairsMultilineClose
+    if b:AutoPairsMultilineClose
         let n = line('$')
         let i = line('.')+1
         while i <= n
@@ -242,7 +243,7 @@ call s:define('g:AutoPairsMultibyteFastWrap', 1)
 
 call s:define('g:AutoPairsEnableMove', 0)
 
-call s:define('g:AutoPairsReturnOnEmptyOnly', 0)
+call s:define('g:AutoPairsReturnOnEmptyOnly', 1)
 
 fun! autopairs#AutoPairsScriptInit()
     " This currently does nothing; see :h autopairs#AutoPairsScriptInit()
@@ -371,7 +372,7 @@ func! autopairs#AutoPairsInsert(key)
                     end
                 endfor
                 if !found
-                    " delete charactor
+                    " delete character
                     let ms = s:matchend(before, '\v.')
                     if len(ms)
                         let before = ms[1]|
@@ -693,7 +694,7 @@ func! autopairs#AutoPairsReturn()
         " \V<open>\v is basically escaping. Makes sure ( isn't considered the
         " start of a group, which would yield incorrect results.
         " Used to prevent fuckups
-        if before =~ '\V'.open.'\v.*$' && afterline =~ '^\s*\V'.close
+        if before =~ '\V'.open.'\v' . (b:AutoPairsReturnOnEmptyOnly ? '\s*' : '.*') . '$' && afterline =~ '^\s*\V'.close
             if b:AutoPairsCarefulStringExpansion && index(b:AutoPairsQuotes, open) != -1 && count(before, open) % 2 == 0
                 return ""
             endif
@@ -722,7 +723,7 @@ func! autopairs#AutoPairsSpace()
             if close =~ '\v^[''"`]$'
                 return "\<SPACE>"
             else
-                return "\<SPACE>\<SPACE>".s:Left
+                return "\<SPACE>\<SPACE>" . s:Left
             end
         end
     endfor
@@ -776,6 +777,7 @@ func! autopairs#AutoPairsInit()
     call s:define('b:AutoPairsMultilineCloseDeleteSpace', g:AutoPairsMultilineCloseDeleteSpace)
     call s:define('b:AutoPairsMultibyteFastWrap', g:AutoPairsMultibyteFastWrap)
     call s:define('b:AutoPairsReturnOnEmptyOnly', g:AutoPairsReturnOnEmptyOnly)
+    call s:define('b:AutoPairsMultilineClose', g:AutoPairsMultilineClose)
 
     let b:autopairs_return_pos = 0
     let b:autopairs_saved_pair = [0, 0]
