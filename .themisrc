@@ -1,0 +1,23 @@
+let s:expect = themis#helper('expect')
+
+syntax on
+filetype plugin indent on
+set noswapfile
+
+" We have to set this to make sure indent-sensitive checks work as expected.
+" This is largely just to make sure indent changes don't break working tests
+set expandtab
+set sw=2
+
+" Not sure why I have to use a function to forward, but okay
+fun! Expect(input)
+    return s:expect(a:input)
+endfun
+
+fun! ToMatchImpl(input, output)
+    %d " Clear the file
+    execute 'normal i' . a:input . "\<Esc>"
+    return join(getline(1, '$'), '\n') ==# a:output
+endfun
+
+call themis#helper#expect#define_matcher('ToMatch', function('ToMatchImpl'), '"Expected:\n" . a:2 . "\nActual:\n". join(getline(1, ''$''), ''\n'')')

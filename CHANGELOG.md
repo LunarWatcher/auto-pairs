@@ -1,3 +1,9 @@
+# 3.0.0-beta8
+
+## Added
+* [Meta] Testing
+
+
 # 3.0.0-beta7
 `g:AutoPairsVersion = 30052`
 
