@@ -61,19 +61,19 @@ func! s:getline()
     let before = strpart(line, 0, pos)
     let after = strpart(line, pos)
     let afterline = after
-    if b:AutoPairsMultilineClose
-        let n = line('$')
-        let i = line('.')+1
-        while i <= n
-            let line = getline(i)
-            let after = after.' '.line
+    "if b:AutoPairsMultilineClose
+        "let n = line('$')
+        "let i = line('.')+1
+        "while i <= n
+            "let line = getline(i)
+            "let after = after.' '.line
 
-            if line !~? '\v^\s*$'
-                break
-            end
-            let i = i+1
-        endwhile
-    end
+            "if line !~? '\v^\s*$'
+                "break
+            "end
+            "let i = i+1
+        "endwhile
+    "end
     return [before, after, afterline]
 endf
 
