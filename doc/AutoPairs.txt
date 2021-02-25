@@ -25,7 +25,9 @@ CONTENTS                                                    *autopairs-contents*
          6.1. Conflicting keybinds ................. |autopairs-conflicts|
     7.  Diagnosing indentation ............... |autopairs-diagnose-indent|
     8.  Functions (API) ............................ |autopairs-functions|
-    9.  Credits/contributors ......................... |autopairs-credits|
+    9.  Declaring custom pairs ...................|autopairs-custom-pairs|
+    10. Credits/contributors ......................... |autopairs-credits|
+    11. Backwards compatibility ............. |autopairs-backwards-compat|
 
 ==============================================================================
 1. Installation                                         *autopairs-installation*
@@ -274,7 +276,7 @@ longer the case.
 The example above will enable matching of `<` with `>`. You can also use: >
     let g:AutoPairs = { '(': ')', ...}
 <
-
+    TODO: expand with new additions to AutoPairsAddPairs
 ... where the `...` represents additional mappings, but note that this overrides
 all the defaults. If you only do the first mapping in the above example, for
 an instance, the ONLY key bracket/quote/other auto-pairs knows of is ().
@@ -1106,6 +1108,8 @@ Arguments: (pairs[, pairs_to_remove])
     pairs                   Type: Map of key-value pairs
                             Defines what additional keys to include in the
                             map.
+                            Since v3.0.0-beta8: can also be a list of
+                            |autopairs-pair-object|s
 
     pairs_to_remove         Type: list of keys
                             Lists keys to remove from the default
@@ -1122,11 +1126,16 @@ parts of the plugin has been moved to an autoload file. As outlined in
 files are loaded when `autopair#` functions are called. This means using, for
 an instance, `autopairs#AutoPairsDefine` loads the file and makes the function
 valid.
+
                                                *autopairs#AutoPairsScriptInit()*
-If you want to access something that doesn't have an associated function (such
-as index-assigning autopairs), you can call `autopairs#AutoPairsScriptInit`,
-which does absolutely nothing (the function is, as can be verified by the
-reader, empty), aside forcing autopairs to load.
+This function has been deprecated with the improvement of
+|autopairs#AutoPairsDefine()| and the addition of |autopairs-pair-object| and
+|autopairs#AutoPairsAdd()|.
+
+To add language pairs, use the substantially better language key in
+|autopairs-pair-object|. The key has semantic meaning with the use of either a
+list of pair objects for |autopairs#AutoPairsDefine()|, or explicit use of
+|autopairs#AutoPairsAdd()|
 
 ------------------------------------------------------------------------------
 AutoPairsMap()                     *autopairs#AutoPairsMap()* *auto-pairs-map-key*
@@ -1162,7 +1171,90 @@ to map a key to this function unless:
     3. You're doing scripting involving the function
 
 ==============================================================================
-9. Credits                                                   *autopairs-credits*
+9. Declaring custom pairs                               *autopairs-custom-pairs*
+
+Since v3.0.0-beta8, there's additional ways to declare pairs. While the bulk
+of the logic should be put through |autopairs#AutoPairsAddPair|, each entry to
+|g:AutoPairs| and |g:AutoPairsLanguagePairs| has a specific syntax.
+
+For backwards-compatibility and other optimization reasons, there's one syntax
+that'll always be allowed: `"open": "close"` -- this is a perfectly valid
+definition of a close-open pair, and can be directly appended to either
+variable, or by using |autopairs#AutoPairsAddPair| or
+|autopairs#AutoPairsLanguagePairs|.
+
+There's no specific instructions to these, and the system is meant to support
+them.
+
+    Differences between AddPair and Define~
+
+While there may not appear to be differences, there are different use cases.
+Starting with v3.0.0-beta8, auto-pairs is pushing for increased modularity.
+That means that certain script functions that seem redundant are introduced.
+
+The primary difference is that AddPair can be substantially more scripted by
+you as a user of auto-pairs. This means that you gain fine-grained control
+over what you add, but without losing access to functions. In the past, you
+would have to use Define, which would overwrite the entire variable. Now, for
+the global variable, you can use AddPair with conditions (based on whatever
+you feel like doing with it).
+
+Note that while AddPair does take a variable as input, it's purely meant to
+_add_, NOT to initialize. If you'd like to add a variable to |b:AutoPairs|,
+and keep defaults, you'll have to initialize it first.
+
+AutoPairsDefine now supports the new syntax by utilizing AutoPairsAdd under
+the hood. Note that for the function to actually call the method,
+AutoPairsDefine has to receive a list; not a dict. Dicts are assumed to be
+plain, and are parsed in on a "you probably know what you're doing"-basis.
+Continuing to use AutoPairsDefine is completely fine.
+
+See also |autopairs#AutoPairsDefine()|
+
+------------------------------------------------------------------------------
+                                                  *autopairs#AutoPairsAddPair()*
+
+While functions are normally a part of the API section, this is an exception.
+
+
+
+Arguments: (pair[, target_variable])
+    pair:            an object (CANNOT be anything that isn't an object) containing the
+                     definition for the pair. See |autopairs-pair-object| for more
+                     details.
+    target_variable: The variable to add pairs to. This has to be a dict.
+                     Defaults to g:AutoPairs.
+
+------------------------------------------------------------------------------
+                                                 *autopairs#AutoPairsAddPairs()*
+
+|autopairs#AutoPairsAddPair()|, but takes a list of pairs instead of a single
+pair.
+
+------------------------------------------------------------------------------
+                                                         *autopairs-pair-object*
+Each object specified to be a pair object has a certain set of allowed and
+required keys.
+
+While undefined keys have no effect, missing required will throw errors.
+
+Essentially: >
+    {
+        "open": "The opening pair; required",
+        "close": "The closing pair; required, but can be an empty string",
+        "filetype": ["Array of strings or a single string. Matches the
+            filetype variable. Optional, only used with AutoPairsAddPair"],
+        "mapclose": "if int, enable or disable. If string, the keybind to
+            trigger expansion. Optional, defaults to 1 and auto-resolve",
+        "mapopen": "if int, enable or disable. If string, the keybind to
+            trigger expansion. Optional, defaults to 1 and auto-resolve",
+        "multiline": "0/1, whether or not to enable multiline. 1 by default
+            for compliant pairs. Optional."
+    }
+<
+
+==============================================================================
+10. Credits                                                  *autopairs-credits*
 
 Being a fork (and open-source), this plugin does contain work from other
 people.
@@ -1180,7 +1272,7 @@ plugin. The complete list is available on GitHub:
     https://github.com/LunarWatcher/auto-pairs/graphs/contributors
 
 ==============================================================================
-10. Backwards compatibility                         *autopairs-backwards-compat*
+11. Backwards compatibility                         *autopairs-backwards-compat*
 
 Backwards compat is apparently tricker than initially expected. Following the
 resolution of [issue 12](https://github.com/LunarWatcher/auto-pairs/issues/12)

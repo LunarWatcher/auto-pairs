@@ -119,6 +119,84 @@ call autopairs#Strings#define('g:AutoPairsReturnOnEmptyOnly', 1)
 
 fun! autopairs#AutoPairsScriptInit()
     " This currently does nothing; see :h autopairs#AutoPairsScriptInit()
+    echoerr "This method has been deprecated."
+endfun
+
+fun! autopairs#AutoPairsAddLanguagePair(pair, language)
+    if !has_key(a:pair, "open") || !has_key(a:pair, "close")
+        echoerr "Invalid pair: missing open and/or close"
+        return
+    endif
+
+    let open = get(a:pair, 'open')
+    let close = get(a:pair, 'close')
+
+    if (!has_key(g:AutoPairsLanguagePairs, a:language))
+        let g:AutoPairsLanguagePairs[a:language] = {}
+    endif
+    " As usual, make simple open:close pairs just that, and ditch objects.
+    if (len(a:pair) == 2)
+        let g:AutoPairsLanguagePairs[a:language][open] = close
+    else
+        let g:AutoPairsLanguagePairs[a:language][open] = a:pair
+    endif
+endfun
+
+fun! autopairs#AutoPairsAddPairs(pairs, ...)
+    let PairsObject = get(a:, '1', g:AutoPairs)
+    for pair in a:pairs
+        call autopairs#AutoPairsAddPair(pair, PairsObject)
+    endfor
+endfun
+
+" @param pair       A object containing a pair and other metadata
+fun! autopairs#AutoPairsAddPair(pair, ...)
+    if !has_key(a:pair, "open") || !has_key(a:pair, "close")
+        echoerr "Invalid pair: missing open and/or close"
+        return
+    endif
+    let PairsObject = get(a:, '1', g:AutoPairs)
+
+    let open = get(a:pair, 'open')
+    let close = get(a:pair, 'close')
+
+    " Prevent empty open
+    " Empty close is fine, but empty open isn't.
+    if (open == "")
+        echoerr "Open cannot be empty. Discarding invalid pair"
+        return
+    endif
+    " We know close is defined (and well-defined)
+    " Meta-optimization; pairs consisting of close and open
+    " are plain and not objects
+    if len(a:pair) == 2 && has_key(a:pair, "close")
+        let PairsObject[open] = close
+    else
+        " Now, that was clearly not a basic pair, which means it may have a
+        " language attribute.
+        " Let's check:
+
+        if has_key(a:pair, "filetype")
+
+            let filetypes = a:pair["filetype"]
+            unlet a:pair["filetype"]
+            if type(filetypes) == v:t_string
+
+                call autopairs#AutoPairsAddLanguagePair(a:pair, filetypes)
+                return
+            elseif type(filetypes) == v:t_list
+                for ft in filetypes
+                    call autopairs#AutoPairsAddLanguagePair(a:pair, ft)                 
+                endfor
+                return
+            else
+                echoerr "Invalid filetype: " . filetypes . " - must be string or list. Discarding pair"
+                return
+            endif
+        endif
+        " Otherwise, we inject the entire pair
+        let PairsObject[open] = a:pair
+    endif
 endfun
 
 " default pairs base on filetype
@@ -153,9 +231,14 @@ func! autopairs#AutoPairsDefine(pairs, ...)
             endif
         endfor
     end
-    for [open, close] in items(a:pairs)
-        let r[open] = close
-    endfor
+    " Dict: iterate as normal
+    if type(a:pairs) == v:t_dict
+        for [open, close] in items(a:pairs)
+            let r[open] = close
+        endfor
+    else
+        call autopairs#AutoPairsAddPairs(a:pairs, r)
+    endif
     return r
 endf
 
@@ -498,7 +581,7 @@ func! autopairs#AutoPairsJump()
 
     " Cache to prevent regenerating the regex
     if !exists('b:AutoPairsJumpRegex')
-        " Defines teh start of a regex group
+        " Defines the start of a regex group
         let b:AutoPairsJumpRegex = '\('
         " We then iterate all the pairs...
         for [open, close, _] in b:AutoPairsList
