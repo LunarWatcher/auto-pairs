@@ -14,141 +14,13 @@ let g:AutoPairsVersion = 30053
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
-" Local utility functions (private API) {{{
-" 7.4.849 support <C-G>U to avoid breaking '.'
-" Issue talk: https://github.com/jiangmiao/auto-pairs/issues/3
-" Vim note: https://github.com/vim/vim/releases/tag/v7.4.849
-if v:version > 704 || v:version == 704 && has("patch849")
-    let s:Go = "\<C-G>U"
-else
-    let s:Go = ""
-endif
-
-let s:Left = s:Go."\<LEFT>"
-let s:Right = s:Go."\<RIGHT>"
-
-fun! s:define(name, default)
-    if !exists(a:name)
-        let {a:name} = a:default
-    endif
-endfun
-
-" unicode len
-func! s:ulen(s)
-    return len(split(a:s, '\zs'))
-endf
-
-func! s:left(s)
-    return repeat(s:Left, s:ulen(a:s))
-endf
-
-func! s:right(s)
-    return repeat(s:Right, s:ulen(a:s))
-endf
-
-func! s:delete(s)
-    return repeat("\<DEL>", s:ulen(a:s))
-endf
-
-func! s:backspace(s)
-    return repeat("\<BS>", s:ulen(a:s))
-endf
-
-func! s:getline()
-
-    let line = getline('.')
-    let pos = col('.') - 1
-    let before = strpart(line, 0, pos)
-    let after = strpart(line, pos)
-    let afterline = after
-    "if b:AutoPairsMultilineClose
-        "let n = line('$')
-        "let i = line('.')+1
-        "while i <= n
-            "let line = getline(i)
-            "let after = after.' '.line
-
-            "if line !~? '\v^\s*$'
-                "break
-            "end
-            "let i = i+1
-        "endwhile
-    "end
-    return [before, after, afterline]
-endf
-
-" split text to two part
-" returns [orig, text_before_open, open]
-func! s:matchend(text, open)
-    let m = matchstr(a:text, '\V'.a:open.'\v$')
-    if m == ""
-        return []
-    end
-    return [a:text, strpart(a:text, 0, len(a:text)-len(m)), m]
-endf
-
-" returns [orig, close, text_after_close]
-func! s:matchbegin(text, close)
-    let m = matchstr(a:text, '^\V'.a:close)
-    if m == ""
-        return []
-    end
-    return [a:text, m, strpart(a:text, len(m), len(a:text)-len(m))]
-endf
-
-func! s:sortByLength(i1, i2)
-    return len(a:i2[0])-len(a:i1[0])
-endf
-
-fun! s:regexCount(string, pattern)
-    if a:string == "" || a:pattern == ""
-        return 0
-    endif
-    let matches = []
-
-    call substitute('' . a:string, '' . a:pattern, '\=add(matches, submatch(0))[-1]', 'g')
-
-    return len(matches)
-endfun!
-
-" Unicode handling {{{
-" Idea by https://github.com/fenuks: https://github.com/jiangmiao/auto-pairs/issues/251#issuecomment-573901691
-" Patch for #14 by https://github.com/j-hui: https://github.com/LunarWatcher/auto-pairs/issues/14
-fun! s:GetFirstUnicodeChar(string)
-    if a:string == ""
-        return ""
-    endif
-
-    let l:nr = strgetchar(a:string, 0)
-    if l:nr == -1
-        return ""
-    else
-        return nr2char(l:nr)
-    endif
-endfun
-
-fun! s:GetLastUnicodeChar(string)
-    if a:string == ""
-        return ""
-    endif
-
-    let l:nr = strgetchar(a:string, strchars(a:string) - 1)
-    if l:nr == -1
-        return ""
-    else
-        return nr2char(l:nr)
-    endif
-endfun
-
-" }}}
-" }}}
 " Default autopairs
-call s:define("g:AutoPairs", {'(': ')', '[': ']', '{': '}', "'": "'", '"': '"',
+call autopairs#Strings#define("g:AutoPairs", {'(': ')', '[': ']', '{': '}', "'": "'", '"': '"',
             \ '```': '```', '"""':'"""', "'''":"'''", "`":"`"})
 
 " Defines language-specific pairs. Please read the documentation before using!
 " The last paragraph of the help is extremely important.
-call s:define("g:AutoPairsLanguagePairs", {
+call autopairs#Strings#define("g:AutoPairsLanguagePairs", {
     \ "erlang": {'<<': '>>'},
     \ "tex": {'``': "''", '$': '$'},
     \ "html": {'<': '>'},
@@ -159,91 +31,91 @@ call s:define("g:AutoPairsLanguagePairs", {
 
 " Krasjet: the closing character for quotes, auto completion will be
 " inhibited when the next character is one of these
-call s:define('g:AutoPairsQuoteClosingChar', ['"', "'", '`'])
+call autopairs#Strings#define('g:AutoPairsQuoteClosingChar', ['"', "'", '`'])
 
 " Krasjet: if the next character is any of these, auto-completion will still
 " be triggered
-call s:define('g:AutoPairsNextCharWhitelist', [])
+call autopairs#Strings#define('g:AutoPairsNextCharWhitelist', [])
 
 " Krasjet: don't perform open balance check on these characters
-call s:define('g:AutoPairsOpenBalanceBlacklist', [])
+call autopairs#Strings#define('g:AutoPairsOpenBalanceBlacklist', [])
 
 " Krasjet: turn on/off the balance check for single quotes (')
 " suggestions: use ftplugin/autocmd to turn this off for text documents
-call s:define('g:AutoPairsSingleQuoteBalanceCheck', 1)
+call autopairs#Strings#define('g:AutoPairsSingleQuoteBalanceCheck', 1)
 
 " Disables the plugin in some directories.
 " This is not available in a whitelist variant, because I'm lazy.
 " (Pro tip: also a great use for autocmds and default-disable rather than
 " plugin configuration. Project .vimrcs work too)
-call s:define('g:AutoPairsDirectoryBlacklist', [])
-call s:define('g:AutoPairsFiletypeBlacklist', [])
+call autopairs#Strings#define('g:AutoPairsDirectoryBlacklist', [])
+call autopairs#Strings#define('g:AutoPairsFiletypeBlacklist', [])
 
-call s:define('g:AutoPairsCompatibleMaps', 1)
+call autopairs#Strings#define('g:AutoPairsCompatibleMaps', 1)
 
 " Olivia: set to 0 based on my own personal biases
-call s:define('g:AutoPairsMapBS', 0)
+call autopairs#Strings#define('g:AutoPairsMapBS', 0)
 
-call s:define('g:AutoPairsMapCR', 1)
+call autopairs#Strings#define('g:AutoPairsMapCR', 1)
 
-call s:define('g:AutoPairsWildClosedPair', '')
+call autopairs#Strings#define('g:AutoPairsWildClosedPair', '')
 
-call s:define('g:AutoPairsCRKey', '<CR>')
+call autopairs#Strings#define('g:AutoPairsCRKey', '<CR>')
 
-call s:define('g:AutoPairsMapSpace', 1)
+call autopairs#Strings#define('g:AutoPairsMapSpace', 1)
 
-call s:define('g:AutoPairsCenterLine', 1)
+call autopairs#Strings#define('g:AutoPairsCenterLine', 1)
 
-call s:define('g:AutoPairsShortcutToggle', g:AutoPairsCompatibleMaps ? '<M-p>': '<C-p><C-t>')
-call s:define('g:AutoPairsShortcutFastWrap', g:AutoPairsCompatibleMaps ? '<M-e>' : '<C-f>')
+call autopairs#Strings#define('g:AutoPairsShortcutToggle', g:AutoPairsCompatibleMaps ? '<M-p>': '<C-p><C-t>')
+call autopairs#Strings#define('g:AutoPairsShortcutFastWrap', g:AutoPairsCompatibleMaps ? '<M-e>' : '<C-f>')
 
-call s:define('g:AutoPairsMoveCharacter', "()[]{}\"'")
+call autopairs#Strings#define('g:AutoPairsMoveCharacter', "()[]{}\"'")
 
 " Variable controlling whether or not to require a space or EOL to complete
 " bracket pairs. Extension off Krasjet.
-call s:define('g:AutoPairsCompleteOnlyOnSpace', 0)
+call autopairs#Strings#define('g:AutoPairsCompleteOnlyOnSpace', 0)
 
-call s:define('g:AutoPairsShortcutJump', g:AutoPairsCompatibleMaps ? '<M-n>' : '<C-p><C-s>')
+call autopairs#Strings#define('g:AutoPairsShortcutJump', g:AutoPairsCompatibleMaps ? '<M-n>' : '<C-p><C-s>')
 
 " Fly mode will for closed pair to jump to closed pair instead of insert.
 " also support AutoPairsBackInsert to insert pairs where jumped.
-call s:define('g:AutoPairsFlyMode', 0)
+call autopairs#Strings#define('g:AutoPairsFlyMode', 0)
 
 " When skipping the closed pair, look at the current and
 " next line as well.
-call s:define('g:AutoPairsMultilineClose', 0)
+call autopairs#Strings#define('g:AutoPairsMultilineClose', 0)
 
 " Default behavior for jiangmiao/auto-pairs: 1
-call s:define('g:AutoPairsMultilineCloseDeleteSpace', 1)
+call autopairs#Strings#define('g:AutoPairsMultilineCloseDeleteSpace', 1)
 
 " Work with Fly Mode, insert pair where jumped
-call s:define('g:AutoPairsShortcutBackInsert', g:AutoPairsCompatibleMaps ? '<M-b>' : '<C-p><C-b>')
+call autopairs#Strings#define('g:AutoPairsShortcutBackInsert', g:AutoPairsCompatibleMaps ? '<M-b>' : '<C-p><C-b>')
 
-call s:define('g:AutoPairsNoJump', 0)
+call autopairs#Strings#define('g:AutoPairsNoJump', 0)
 
-call s:define('g:AutoPairsInitHook', 0)
+call autopairs#Strings#define('g:AutoPairsInitHook', 0)
 
-call s:define('g:AutoPairsSearchCloseAfterSpace', 1)
+call autopairs#Strings#define('g:AutoPairsSearchCloseAfterSpace', 1)
 
-call s:define('g:AutoPairsSingleQuoteMode', 2)
+call autopairs#Strings#define('g:AutoPairsSingleQuoteMode', 2)
 
-call s:define('g:AutoPairsSingleQuoteExpandFor', 'fbr')
+call autopairs#Strings#define('g:AutoPairsSingleQuoteExpandFor', 'fbr')
 
-call s:define('g:AutoPairsAutoLineBreak', [])
+call autopairs#Strings#define('g:AutoPairsAutoLineBreak', [])
 
-call s:define('g:AutoPairsCarefulStringExpansion', 1)
-call s:define('g:AutoPairsQuotes', ["'", '"'])
+call autopairs#Strings#define('g:AutoPairsCarefulStringExpansion', 1)
+call autopairs#Strings#define('g:AutoPairsQuotes', ["'", '"'])
 
-call s:define('g:AutoPairsMultilineFastWrap', 0)
+call autopairs#Strings#define('g:AutoPairsMultilineFastWrap', 0)
 
-call s:define('g:AutoPairsFlyModeList', '}\])')
-call s:define('g:AutoPairsJumpBlacklist', [])
+call autopairs#Strings#define('g:AutoPairsFlyModeList', '}\])')
+call autopairs#Strings#define('g:AutoPairsJumpBlacklist', [])
 
-call s:define('g:AutoPairsMultibyteFastWrap', 1)
+call autopairs#Strings#define('g:AutoPairsMultibyteFastWrap', 1)
 
-call s:define('g:AutoPairsEnableMove', 0)
+call autopairs#Strings#define('g:AutoPairsEnableMove', 0)
 
-call s:define('g:AutoPairsReturnOnEmptyOnly', 1)
+call autopairs#Strings#define('g:AutoPairsReturnOnEmptyOnly', 1)
 
 fun! autopairs#AutoPairsScriptInit()
     " This currently does nothing; see :h autopairs#AutoPairsScriptInit()
@@ -294,7 +166,7 @@ func! autopairs#AutoPairsInsert(key)
 
     let b:autopairs_saved_pair = [a:key, getpos('.')]
 
-    let [before, after, afterline] = s:getline()
+    let [before, after, afterline] = autopairs#Strings#getline()
 
     " Ignore auto close if prev character is \
     " And skip if it's double-escaped
@@ -304,7 +176,7 @@ func! autopairs#AutoPairsInsert(key)
 
     " check open pairs
     for [open, close, opt] in b:AutoPairsList
-        let ms = s:matchend(before.a:key, open)
+        let ms = autopairs#Strings#matchend(before.a:key, open)
         let m = matchstr(afterline, '^\v\s*\zs\V'.close)
 
         if len(ms) > 0
@@ -333,9 +205,9 @@ func! autopairs#AutoPairsInsert(key)
                     " before the cursor), and make sure there's actually a
                     " close character to close after the cursor
 
-                    if (s:regexCount(before.afterline, open) < count(before.afterline, close)
+                    if (autopairs#Strings#regexCount(before.afterline, open) < count(before.afterline, close)
                                 \ && stridx(after, close) != -1
-                                \ && s:regexCount(after, open) < count(after, close))
+                                \ && autopairs#Strings#regexCount(after, open) < count(after, close))
 
                         break
                     end
@@ -356,32 +228,32 @@ func! autopairs#AutoPairsInsert(key)
                 let found = 0
                 " delete pair
                 for [o, c, opt] in b:AutoPairsList
-                    let os = s:matchend(before, o)
+                    let os = autopairs#Strings#matchend(before, o)
                     if len(os) && len(os[1]) < len(target)
                         " any text before openPair should not be deleted
                         continue
                     end
-                    let cs = s:matchbegin(afterline, c)
+                    let cs = autopairs#Strings#matchbegin(afterline, c)
                     if len(os) && len(cs)
                         let found = 1
                         let before = os[1]
                         let afterline = cs[2]
-                        let bs = bs.s:backspace(os[2])
-                        let del = del.s:delete(cs[1])
+                        let bs = bs.autopairs#Strings#backspace(os[2])
+                        let del = del.autopairs#Strings#delete(cs[1])
                         break
                     end
                 endfor
                 if !found
                     " delete character
-                    let ms = s:matchend(before, '\v.')
+                    let ms = autopairs#Strings#matchend(before, '\v.')
                     if len(ms)
                         let before = ms[1]|
-                        let bs = bs.s:backspace(ms[2])
+                        let bs = bs.autopairs#Strings#backspace(ms[2])
                     end
                 end
             endwhile
 
-            return bs.del.openPair.close.s:left(close)
+            return bs.del.openPair.close.autopairs#Strings#left(close)
                         \ . (index(b:AutoPairsAutoLineBreak, open) != -1 ?
                         \     "\<cr>".autopairs#AutoPairsDetermineCRMovement()
                         \     : '')
@@ -411,7 +283,7 @@ func! autopairs#AutoPairsInsert(key)
                         return a:key
                     endif
                 else
-                    if s:regexCount(before.afterline, open) > count(before.afterline, close)
+                    if autopairs#Strings#regexCount(before.afterline, open) > count(before.afterline, close)
                         return a:key
                     endif
                 endif
@@ -422,9 +294,9 @@ func! autopairs#AutoPairsInsert(key)
                 endif
                 if before =~ '\V'.open.'\v\s*$' && m[0] =~ '\v\s'
                     " remove the space we inserted if the text in pairs is blank
-                    return "\<DEL>".s:right(m[1:])
+                    return "\<DEL>".autopairs#Strings#right(m[1:])
                 else
-                    return s:right(m)
+                    return autopairs#Strings#right(m)
                 endif
             end
             " I have no idea why this isn't an if-else. Is execution
@@ -470,7 +342,7 @@ func! autopairs#AutoPairsDelete()
         return "\<BS>"
     end
 
-    let [before, after, ig] = s:getline()
+    let [before, after, ig] = autopairs#Strings#getline()
 
     for [open, close, opt] in b:AutoPairsList
         let rest_of_line = opt['multiline'] ? after : ig
@@ -485,7 +357,7 @@ func! autopairs#AutoPairsDelete()
                     return "\<BS>"
                 end
             end
-            return s:backspace(b).s:delete(a)
+            return autopairs#Strings#backspace(b).autopairs#Strings#delete(a)
         end
     endfor
 
@@ -494,10 +366,10 @@ func! autopairs#AutoPairsDelete()
         if (close == '')
             continue
         endif
-        let m = s:matchend(before, '\V'.open.'\v\s*'.'\V'.close.'\v$')
+        let m = autopairs#Strings#matchend(before, '\V'.open.'\v\s*'.'\V'.close.'\v$')
 
         if len(m) > 0
-            return s:backspace(m[2])
+            return autopairs#Strings#backspace(m[2])
         else
             let m = matchstr(before, '^\v\s*\V' . close)
             if m != ''
@@ -513,7 +385,7 @@ func! autopairs#AutoPairsDelete()
                 endwhile
                 let a = matchstr(getline(line('.') - offset), '\V' . open . '\v\s*$') . ' '
                 if a != ' '
-                    return s:backspace(a) . s:backspace(b) . s:backspace(m)
+                    return autopairs#Strings#backspace(a) . autopairs#Strings#backspace(b) . autopairs#Strings#backspace(m)
                 endif
             endif
         end
@@ -531,7 +403,7 @@ func! autopairs#AutoPairsFastWrap(...)
     let movement = get(a:, 1, 'e')
     let c = @"
     if b:AutoPairsMultibyteFastWrap
-        let [before, after, ig] = s:getline()
+        let [before, after, ig] = autopairs#Strings#getline()
         " At this point, after refers to the bit after the cursor.
         " We haven't cut anything yet.
         if after == ''
@@ -570,7 +442,7 @@ func! autopairs#AutoPairsFastWrap(...)
     " I think xd This has always been a bit weird. Might be better to
     " outsource the above check to outside the if-check to prevent weird
     " moves
-    let [before, after, ig] = s:getline()
+    let [before, after, ig] = autopairs#Strings#getline()
 
     if after[0] =~ '\v[{[(<]'
         normal! %
@@ -684,7 +556,7 @@ func! autopairs#AutoPairsReturn()
 
     let b:autopairs_return_pos = 0
     let before = getline(line('.') - 1)
-    let [ig, ig, afterline] = s:getline()
+    let [ig, ig, afterline] = autopairs#Strings#getline()
 
     for [open, close, opt] in b:AutoPairsList
         if close == ''
@@ -713,7 +585,7 @@ func! autopairs#AutoPairsSpace()
         return "\<SPACE>"
     end
 
-    let [before, after, ig] = s:getline()
+    let [before, after, ig] = autopairs#Strings#getline()
 
     for [open, close, opt] in b:AutoPairsList
         if close == ''
@@ -723,7 +595,7 @@ func! autopairs#AutoPairsSpace()
             if close =~ '\v^[''"`]$'
                 return "\<SPACE>"
             else
-                return "\<SPACE>\<SPACE>" . s:Left
+                return "\<SPACE>\<SPACE>" . g:autopairs#Strings#Left
             end
         end
     endfor
@@ -756,28 +628,28 @@ endf
 func! autopairs#AutoPairsInit()
     let b:autopairs_loaded = 1
 
-    call s:define('b:autopairs_enabled', 1)
-    call s:define('b:AutoPairs', autopairs#AutoPairsDefaultPairs())
-    call s:define('b:AutoPairsQuoteClosingChar', copy(g:AutoPairsQuoteClosingChar))
-    call s:define('b:AutoPairsNextCharWhitelist', copy(g:AutoPairsNextCharWhitelist))
-    call s:define('b:AutoPairsOpenBalanceBlacklist', copy(g:AutoPairsOpenBalanceBlacklist))
-    call s:define('b:AutoPairsSingleQuoteBalanceCheck', g:AutoPairsSingleQuoteBalanceCheck)
-    call s:define('b:AutoPairsMoveCharacter', g:AutoPairsMoveCharacter)
-    call s:define('b:AutoPairsCompleteOnlyOnSpace', g:AutoPairsCompleteOnlyOnSpace)
-    call s:define('b:AutoPairsFlyMode', g:AutoPairsFlyMode)
-    call s:define('b:AutoPairsNoJump', g:AutoPairsNoJump)
-    call s:define('b:AutoPairsSearchCloseAfterSpace', g:AutoPairsSearchCloseAfterSpace)
-    call s:define('b:AutoPairsSingleQuoteMode', g:AutoPairsSingleQuoteMode)
-    call s:define('b:AutoPairsSingleQuoteExpandFor', g:AutoPairsSingleQuoteExpandFor)
-    call s:define('b:AutoPairsAutoLineBreak', g:AutoPairsAutoLineBreak)
-    call s:define('b:AutoPairsCarefulStringExpansion', g:AutoPairsCarefulStringExpansion)
-    call s:define('b:AutoPairsQuotes', g:AutoPairsQuotes)
-    call s:define('b:AutoPairsFlyModeList', g:AutoPairsFlyModeList)
-    call s:define('b:AutoPairsJumpBlacklist', g:AutoPairsJumpBlacklist)
-    call s:define('b:AutoPairsMultilineCloseDeleteSpace', g:AutoPairsMultilineCloseDeleteSpace)
-    call s:define('b:AutoPairsMultibyteFastWrap', g:AutoPairsMultibyteFastWrap)
-    call s:define('b:AutoPairsReturnOnEmptyOnly', g:AutoPairsReturnOnEmptyOnly)
-    call s:define('b:AutoPairsMultilineClose', g:AutoPairsMultilineClose)
+    call autopairs#Strings#define('b:autopairs_enabled', 1)
+    call autopairs#Strings#define('b:AutoPairs', autopairs#AutoPairsDefaultPairs())
+    call autopairs#Strings#define('b:AutoPairsQuoteClosingChar', copy(g:AutoPairsQuoteClosingChar))
+    call autopairs#Strings#define('b:AutoPairsNextCharWhitelist', copy(g:AutoPairsNextCharWhitelist))
+    call autopairs#Strings#define('b:AutoPairsOpenBalanceBlacklist', copy(g:AutoPairsOpenBalanceBlacklist))
+    call autopairs#Strings#define('b:AutoPairsSingleQuoteBalanceCheck', g:AutoPairsSingleQuoteBalanceCheck)
+    call autopairs#Strings#define('b:AutoPairsMoveCharacter', g:AutoPairsMoveCharacter)
+    call autopairs#Strings#define('b:AutoPairsCompleteOnlyOnSpace', g:AutoPairsCompleteOnlyOnSpace)
+    call autopairs#Strings#define('b:AutoPairsFlyMode', g:AutoPairsFlyMode)
+    call autopairs#Strings#define('b:AutoPairsNoJump', g:AutoPairsNoJump)
+    call autopairs#Strings#define('b:AutoPairsSearchCloseAfterSpace', g:AutoPairsSearchCloseAfterSpace)
+    call autopairs#Strings#define('b:AutoPairsSingleQuoteMode', g:AutoPairsSingleQuoteMode)
+    call autopairs#Strings#define('b:AutoPairsSingleQuoteExpandFor', g:AutoPairsSingleQuoteExpandFor)
+    call autopairs#Strings#define('b:AutoPairsAutoLineBreak', g:AutoPairsAutoLineBreak)
+    call autopairs#Strings#define('b:AutoPairsCarefulStringExpansion', g:AutoPairsCarefulStringExpansion)
+    call autopairs#Strings#define('b:AutoPairsQuotes', g:AutoPairsQuotes)
+    call autopairs#Strings#define('b:AutoPairsFlyModeList', g:AutoPairsFlyModeList)
+    call autopairs#Strings#define('b:AutoPairsJumpBlacklist', g:AutoPairsJumpBlacklist)
+    call autopairs#Strings#define('b:AutoPairsMultilineCloseDeleteSpace', g:AutoPairsMultilineCloseDeleteSpace)
+    call autopairs#Strings#define('b:AutoPairsMultibyteFastWrap', g:AutoPairsMultibyteFastWrap)
+    call autopairs#Strings#define('b:AutoPairsReturnOnEmptyOnly', g:AutoPairsReturnOnEmptyOnly)
+    call autopairs#Strings#define('b:AutoPairsMultilineClose', g:AutoPairsMultilineClose)
 
     let b:autopairs_return_pos = 0
     let b:autopairs_saved_pair = [0, 0]
@@ -791,8 +663,8 @@ func! autopairs#AutoPairsInit()
     " m - close key jumps through multi line
     " s - close key jumps only in the same line
     for [open, close] in items(b:AutoPairs)
-        let o = s:GetLastUnicodeChar(open)
-        let c = s:GetFirstUnicodeChar(close)
+        let o = autopairs#Strings#GetLastUnicodeChar(open)
+        let c = autopairs#Strings#GetFirstUnicodeChar(close)
         let opt = {'mapclose': 1, 'multiline':1}
         let opt['key'] = c
         if o == c || len(c) == 0
@@ -829,7 +701,7 @@ func! autopairs#AutoPairsInit()
     endfor
 
     " sort pairs by length, longer pair should have higher priority
-    let b:AutoPairsList = sort(b:AutoPairsList, "s:sortByLength")
+    let b:AutoPairsList = sort(b:AutoPairsList, "autopairs#Strings#sortByLength")
 
     " Krasjet: add whitelisted strings to the list
     for str in b:AutoPairsNextCharWhitelist
