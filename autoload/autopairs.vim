@@ -58,8 +58,6 @@ call autopairs#Strings#define('g:AutoPairsMapBS', 0)
 
 call autopairs#Strings#define('g:AutoPairsMapCR', 1)
 
-call autopairs#Strings#define('g:AutoPairsWildClosedPair', '')
-
 call autopairs#Strings#define('g:AutoPairsCRKey', '<CR>')
 
 call autopairs#Strings#define('g:AutoPairsMapSpace', 1)
@@ -118,8 +116,7 @@ call autopairs#Strings#define('g:AutoPairsEnableMove', 0)
 call autopairs#Strings#define('g:AutoPairsReturnOnEmptyOnly', 1)
 
 fun! autopairs#AutoPairsScriptInit()
-    " This currently does nothing; see :h autopairs#AutoPairsScriptInit()
-    echoerr "This method has been deprecated."
+    echoerr "This method has been deprecated. See the help for further steps"
 endfun
 
 fun! autopairs#AutoPairsAddLanguagePair(pair, language)
@@ -350,7 +347,7 @@ func! autopairs#AutoPairsInsert(key)
             continue
         end
         " Contains jump logic, apparently.
-        if a:key == g:AutoPairsWildClosedPair || opt['mapclose'] && opt['key'] == a:key
+        if opt['mapclose'] && opt['key'] == a:key
             " the close pair is in the same line
             let searchRegex = b:AutoPairsSearchCloseAfterSpace == 1 ?  '^\v\s*\V' : '^\V'
 
@@ -395,8 +392,10 @@ func! autopairs#AutoPairsInsert(key)
             " other clause doesn't
             let m = matchstr(after, '\v^\s*\zs\V'.close)
             if m != ''
-
-                if a:key == g:AutoPairsWildClosedPair || opt['multiline']
+                " Note to self; this bit of the jump check did wild close as
+                " well. I'm not entirely sure why, but that entire feature was
+                " deprecated, so might've been bad in the first place.
+                if opt['multiline']
                     if b:AutoPairsMultilineCloseDeleteSpace && b:autopairs_return_pos == line('.') && getline('.') =~ '\v^\s*$'
                         normal! ddk$
                     end
