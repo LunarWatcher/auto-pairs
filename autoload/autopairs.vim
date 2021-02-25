@@ -490,34 +490,47 @@ func! autopairs#AutoPairsFastWrap(...)
     return ""
 endfun
 
+" Contains manual jumping
 func! autopairs#AutoPairsJump()
-    if len(b:AutoPairs) == 0
+    if len(b:AutoPairs) == 0 || b:autopairs_enabled == 0
         return
     endif
 
+    " Cache to prevent regenerating the regex
     if !exists('b:AutoPairsJumpRegex')
+        " Defines teh start of a regex group
         let b:AutoPairsJumpRegex = '\('
+        " We then iterate all the pairs...
         for [open, close, _] in b:AutoPairsList
             if close == ''
                 continue
             endif
-            "let res = substitute(close, ')', '\\)', 'g')
+            " ... and do some quick substitutions
             let res = substitute(close, "'", "''", 'g')
             let res = substitute(res, '\', '\\\\', 'g')
+            " Append the element
             let b:AutoPairsJumpRegex .= (len(b:AutoPairsJumpRegex) > 2 ? '\|' : '') . res
         endfor
+        " End the regex group and finalize the variable
         let b:AutoPairsJumpRegex .= '\)'
     endif
 
+    " Use the variable (either freshly generated or cached)
     call search('\V' . b:AutoPairsJumpRegex, 'W')
 endf
 
+" Handles the move feature -- note that the move feature has been disabled by
+" default. DO NOT confuse this for the jump feature.
 func! autopairs#AutoPairsMoveCharacter(key)
     let c = getline(".")[col(".")-1]
     let escaped_key = substitute(a:key, "'", "''", 'g')
     return "\<DEL>\<ESC>:call search("."'".escaped_key."'".")\<CR>a".c."\<LEFT>"
 endf
 
+" Back insert for flymode.
+" setpos() makes this method unfit to be used as a backup for anything using
+" mutation. If the code changes, the position to jump back to is unreliable
+" and may be completely wrong.
 func! autopairs#AutoPairsBackInsert()
     let pair = b:autopairs_saved_pair[0]
     let pos  = b:autopairs_saved_pair[1]
@@ -525,6 +538,8 @@ func! autopairs#AutoPairsBackInsert()
     return pair
 endf
 
+" Helper function. Determines what movement to do when <CR> is pushed.
+" It's modularized to also enable g:AutoPairsAutoLineBreak.
 fun! autopairs#AutoPairsDetermineCRMovement()
     let cmd = ''
     if g:AutoPairsCenterLine && winline() * 3 >= winheight(0) * 2
@@ -532,8 +547,9 @@ fun! autopairs#AutoPairsDetermineCRMovement()
         let cmd = "zz"
     end
 
-    " If equalprg has been set, then avoid call =
+    " If equalprg has been set, then avoid call
     " https://github.com/jiangmiao/auto-pairs/issues/24
+    " This is essentially custom balancing beyond what Vim does.
     if &equalprg != ''
         return "\<ESC>".cmd."O"
     endif
@@ -659,6 +675,8 @@ func! autopairs#AutoPairsInit()
     let b:AutoPairsList = []
 
     " buffer level map pairs keys
+    " This contains primary mapping logic, and is a prime target for
+    " converting keybinds to supporting maps as well as strings.
     " n - do not map the first character of closed pair to close key
     " m - close key jumps through multi line
     " s - close key jumps only in the same line
@@ -764,6 +782,10 @@ func! autopairs#AutoPairsInit()
     if g:AutoPairsMapSpace
         " Try to respect abbreviations on a <SPACE>
         let do_abbrev = ""
+        " neovim appears to set v:version to 800, so it should be compatible
+        " with this.
+        " Admittedly, probably not compatible with the same version checks,
+        " but hey, it's fine.
         if v:version == 703 && has("patch489") || v:version > 703
             let do_abbrev = "<C-]>"
         endif

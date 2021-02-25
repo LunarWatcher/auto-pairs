@@ -1,6 +1,8 @@
 Describe Basic tests of pair functionality
-    Before each
+    Before all
         let g:CachePairs = autopairs#AutoPairsDefine({})
+    End
+    Before each
         new | only!
         call autopairs#AutoPairsTryInit()
     End
@@ -42,6 +44,10 @@ Describe Basic tests of pair functionality
         " which is substantially uglier.
         let g:AutoPairsMapBS = 0
         call Expect("((\<bs>(").ToMatch("(())")
+    End
+    It shouldn't forcibly do multiline bullshit
+        call Expect("[\<CR>").ToMatch('[\n\n]')
+        call Expect("[\<CR>]").ToMatch('[\n]\n]')
     End
 End
 " vim:sw=4

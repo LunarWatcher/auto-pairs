@@ -57,6 +57,11 @@ func! autopairs#Strings#getline()
             "let i = i+1
         "endwhile
     "end
+
+    " before: text before the cursor
+    " after: text after the cursor
+    " afterline: appears to be the line after the modifications (AKA the line
+    "            in its current state)
     return [before, after, afterline]
 endf
 
