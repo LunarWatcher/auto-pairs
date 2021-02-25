@@ -2,7 +2,11 @@
 
 ## Added
 * [Meta] Testing
+* `autopairs#AutoPairsAddPair()`
+* `autopairs#AutoPairsAddPairs()`
 
+## Changed
+* Made `autopairs#AutoPairsDefine` accept a list as well. The list contains a different type of more powerful objects; see the documentation (autopairs-pair-object)
 
 # 3.0.0-beta7
 `g:AutoPairsVersion = 30052`
