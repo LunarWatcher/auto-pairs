@@ -79,10 +79,6 @@ call autopairs#Strings#define('g:AutoPairsShortcutJump', g:AutoPairsCompatibleMa
 " also support AutoPairsBackInsert to insert pairs where jumped.
 call autopairs#Strings#define('g:AutoPairsFlyMode', 0)
 
-" When skipping the closed pair, look at the current and
-" next line as well.
-call autopairs#Strings#define('g:AutoPairsMultilineClose', 0)
-
 " Default behavior for jiangmiao/auto-pairs: 1
 call autopairs#Strings#define('g:AutoPairsMultilineCloseDeleteSpace', 1)
 
@@ -114,6 +110,8 @@ call autopairs#Strings#define('g:AutoPairsMultibyteFastWrap', 1)
 call autopairs#Strings#define('g:AutoPairsEnableMove', 0)
 
 call autopairs#Strings#define('g:AutoPairsReturnOnEmptyOnly', 1)
+
+call autopairs#Strings#define('g:AutoPairsShortcutMultilineClose', '<C-p>c')
 
 fun! autopairs#AutoPairsScriptInit()
     echoerr "This method has been deprecated. See the help for further steps"
@@ -243,14 +241,15 @@ func! autopairs#AutoPairsDefine(pairs, ...)
     return r
 endf
 
-func! autopairs#AutoPairsInsert(key)
+func! autopairs#AutoPairsInsert(key, ...)
     if !b:autopairs_enabled
         return a:key
     end
+    let l:multiline = get(a:, '1', 0)
 
     let b:autopairs_saved_pair = [a:key, getpos('.')]
 
-    let [before, after, afterline] = autopairs#Strings#getline()
+    let [before, after, afterline] = autopairs#Strings#getline(l:multiline)
 
     " Ignore auto close if prev character is \
     " And skip if it's double-escaped
@@ -260,14 +259,10 @@ func! autopairs#AutoPairsInsert(key)
 
     " check open pairs
     for [open, close, opt] in b:AutoPairsList
-
-
         let ms = autopairs#Strings#matchend(before . a:key, open)
         let m = matchstr(afterline, '^\v\s*\zs\V'.close)
-        
-        if len(ms) > 0
 
-            " process the open pair
+        if len(ms) > 0
 
             " Krasjet: only insert the closing pair if the next character is a space
             " or a non-quote closing pair, or a whitelisted character (string)
@@ -284,8 +279,10 @@ func! autopairs#AutoPairsInsert(key)
             " remove inserted pair
             " eg: if the pairs include < > and  <!-- -->
             " when <!-- is detected the inserted pair < > should be clean up
+            "
             let target = ms[1]
             let openPair = ms[2]
+
             if (len(openPair) == 1 && m == openPair) || (close == '')
                 break
             end
@@ -328,74 +325,13 @@ func! autopairs#AutoPairsInsert(key)
         end
     endfor
 
-    " check close pairs
-    for [open, close, opt] in b:AutoPairsList
-        if close == ''
-            continue
-        end
-        " Contains jump logic, apparently.
-        if opt['mapclose'] && opt['key'] == a:key || opt["alwaysmapdefaultclose"] == 1 && a:key == autopairs#Strings#GetFirstUnicodeChar(close)
-            " the close pair is in the same line
-            let searchRegex = b:AutoPairsSearchCloseAfterSpace == 1 ?  '^\v\s*\V' : '^\V'
-
-            " Krasjet: do not search for the closing pair if spaces are in between
-            " Olivia: Add override for people who want this (like me)
-            " Note: this only checks the current line
-            let m = matchstr(afterline, searchRegex . close)
-            if m != ''
-                " Krasjet: only jump across the closing pair if pairs are balanced
-
-                if open == close || (b:AutoPairsSingleQuoteBalanceCheck && close ==# "'")
-                    if count(before.afterline,close) % 2 != 0
-                        return a:key
-                    endif
-                else
-                    if autopairs#Strings#regexCount(before.afterline, open) > count(before.afterline, close)
-                        return a:key
-                    endif
-                endif
-
-                " Olivia: return the key if we aren't jumping.
-                if b:AutoPairsNoJump == 1 || index(b:AutoPairsJumpBlacklist, close) != -1
-                    return a:key
-                endif
-                if before =~ '\V'.open.'\v\s*$' && m[0] =~ '\v\s'
-                    " remove the space we inserted if the text in pairs is blank
-                    return "\<DEL>".autopairs#Strings#right(m[1:])
-                else
-                    return autopairs#Strings#right(m)
-                endif
-            end
-            " I have no idea why this isn't an if-else. Is execution
-            " guaranteed? More testing required
-            " FIXME pl0x
-
-            " Olivia: return the key if we aren't jumping.
-            if b:AutoPairsNoJump == 1 || index(b:AutoPairsJumpBlacklist, close) != -1
-                return a:key
-            endif
-            " This may check multiline depending on something.
-            " Still not entirely sure what this brings to the table that the
-            " other clause doesn't
-            let m = matchstr(after, '\v^\s*\zs\V'.close)
-            if m != ''
-                " Note to self; this bit of the jump check did wild close as
-                " well. I'm not entirely sure why, but that entire feature was
-                " deprecated, so might've been bad in the first place.
-                if opt['multiline']
-                    if b:AutoPairsMultilineCloseDeleteSpace && b:autopairs_return_pos == line('.') && getline('.') =~ '\v^\s*$'
-                        normal! ddk$
-                    end
-                    call search(m, 'We')
-                    return "\<Right>"
-                else
-                    break
-                end
-            end
-        end
-    endfor
-
-
+    let checkClose = autopairs#Insert#checkClose(a:key, before, after, afterline)
+    if checkClose != ""
+        " If we end up with checkClose != "", we know the close returned
+        " something. That means the check was successful, and we wanna return
+        " it
+        return checkClose
+    endif
     " Fly Mode, and the key is closed-pairs, search closed-pair and jump
     if g:AutoPairsFlyMode &&  a:key =~ '\v[' . b:AutoPairsFlyModeList . ']'
         if search(a:key, 'We')
@@ -403,6 +339,8 @@ func! autopairs#AutoPairsInsert(key)
         endif
     endif
 
+    " As a final fallback, if we end up at the end, just return the key to
+    " minimize distruption.
     return a:key
 endf
 
@@ -469,6 +407,17 @@ func! autopairs#AutoPairsDelete()
     return "\<BS>"
 endf
 
+fun! autopairs#AutoPairsMultilineClose()
+    " We get a char
+    let char = getchar()
+    " If the char is empty or esc (or CR), we skip and assume the user
+    " aborted.
+    if char == "" || char == "\<ESC>" || char == "\<CR>"
+        return ""
+    endif
+
+    return autopairs#AutoPairsInsert(nr2char(char), 1)
+endfun
 
 " Fast wrap the word in brackets
 " Note to self: default arguments aren't supported until
@@ -745,7 +694,6 @@ func! autopairs#AutoPairsInit()
     call autopairs#Strings#define('b:AutoPairsMultilineCloseDeleteSpace', g:AutoPairsMultilineCloseDeleteSpace)
     call autopairs#Strings#define('b:AutoPairsMultibyteFastWrap', g:AutoPairsMultibyteFastWrap)
     call autopairs#Strings#define('b:AutoPairsReturnOnEmptyOnly', g:AutoPairsReturnOnEmptyOnly)
-    call autopairs#Strings#define('b:AutoPairsMultilineClose', g:AutoPairsMultilineClose)
 
     let b:autopairs_return_pos = 0
     let b:autopairs_saved_pair = [0, 0]
@@ -769,7 +717,7 @@ func! autopairs#AutoPairsInit()
                 let close["close"] = ""
             endif
             " Objects store it in a key
-            let stringClose = close["close"]            
+            let stringClose = close["close"]
         else
             " Strings store it in itself, for obvious reasons.
             let stringClose = close
@@ -779,7 +727,7 @@ func! autopairs#AutoPairsInit()
         " TODO: link some global options against (some of) these
         let opt = {'mapclose': 1,
                     \ 'alwaysmapdefaultclose': 1,
-                    \ 'delete': 1 , 'multiline': 1,
+                    \ 'delete': 1, 'multiline': 1,
                     \ 'passiveclose': 1}
         " Default: set key = c
         let opt['key'] = c
@@ -818,12 +766,9 @@ func! autopairs#AutoPairsInit()
             if has_key(close, "delete")
                 let opt["delete"] = close["delete"]
             endif
-            " TODO: re-enable the ability to disable auto-insert on a per-pair
-            " basis
             let opt["alwaysmapdefaultclose"] = get(close, 'alwaysmapdefaultclose', 1)
             let opt["passiveclose"] = get(close, "passiveclose", 1)
         endif
-
 
         call autopairs#AutoPairsMap(o)
         if o != c && c != '' && opt['mapclose']
@@ -897,6 +842,10 @@ func! autopairs#AutoPairsInit()
             let escaped_key = substitute(key, "'", "''", 'g')
             execute 'inoremap <silent> <buffer> <C-'.key."> <C-R>=autopairs#AutoPairsMoveCharacter('".escaped_key."')<CR>"
         endfor
+    endif
+
+    if g:AutoPairsShortcutMultilineClose != ""
+        execute 'inoremap <buffer> <silent> ' . g:AutoPairsShortcutMultilineClose . " <C-r>=autopairs#AutoPairsMultilineClose()<CR>"
     endif
 
     " Still use <buffer> level mapping for <BS> <SPACE>
@@ -1034,8 +983,6 @@ func! autopairs#AutoPairsTryInit()
     endif
     call autopairs#AutoPairsInit()
 endf
-
-
 
 " Always silent the command
 inoremap <silent> <SID>autopairs#AutoPairsReturn <C-R>=autopairs#AutoPairsReturn()<CR>

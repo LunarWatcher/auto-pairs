@@ -52,5 +52,16 @@ Describe Basic tests of pair functionality
         call Expect("[\<CR>").ToMatch('[\n\n]')
         call Expect("[\<CR>]").ToMatch('[\n]\n]')
     End
+    It should allow explicit multiline close
+        new | only!
+        call autopairs#AutoPairsTryInit()
+        call Expect("[\<CR>\<C-p>c]").ToMatch('[\n]')
+    End
+    It should work with spaces
+        new | only!
+        call autopairs#AutoPairsTryInit()
+        call Expect("[ ").ToMatch("[  ]")
+
+    End
 End
 " vim:sw=4

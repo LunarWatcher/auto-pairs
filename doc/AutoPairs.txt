@@ -452,11 +452,22 @@ Set it to 1 to enable |autopairs-flymode|.
                                                      *g:AutoPairsMultilineClose*
                                                                            int
 
-Default: 1
+This variable has been removed, largely for the reasons outlined in #21: 
+    https://github.com/LunarWatcher/auto-pairs/issues/21
 
-When you press the key for the closing pair (e.g. `)`) it jumps past it.
-If set to 1, then it'll jump to the next line, if there is only 'whitespace'.
-If set to 0, then it'll only jump to a closing pair on the same line.
+This feature is now available as an explicit keybind; see
+|g:AutoPairsShortcutMultilineClose|
+
+------------------------------------------------------------------------------
+                                             *g:AutoPairsShortcutMultilineClose*
+
+Default: <C-p>c
+
+Additional note: this doesn't make assumptions on what you wanna close. When
+you press the keybind, getchar() is called. If you then type }, it'll perform
+a multiline close for }.
+
+There's currently no way to enable this by default, as the behavior 
 
 ------------------------------------------------------------------------------
                                                  *g:AutoPairsDirectoryBlacklist*
@@ -735,7 +746,7 @@ Default: 0
 
 Whether or not to enable multiline fast wrap.
 
-The only real differenec is that it enables $ in the fallback condition.
+The only real difference is that it enables $ in the fallback condition.
 When $ isn't present, pressing the fast wrap key at a position that doesn't
 match \w for the next character results in nothing changing. If $ is present,
 it moves to the next line if said line exists.
@@ -743,7 +754,9 @@ it moves to the next line if said line exists.
 Note that this does NOT affect multilines triggered by brackets. It'll still
 fast-wrap across lines if a pair is detected independently of this setting.
 
-Disabled by default because this introduced breaking behavior in comparison.
+Disabled by default because this introduced breaking behavior in comparison to
+jiangmiao/auto-pairs.
+
 ------------------------------------------------------------------------------
                                                     *g:AutoPairsBackwardsCompat*
                                                                            int
@@ -822,9 +835,8 @@ This variable also exists in a buffer variant.~
 
 Default: 1
 
-Note that this only takes effect if |g:AutoPairsMultilineClose|. In theory.
-I'm not sure what other cases this potentially is triggered, because the code
-has extremely few comments from upstream (jiangmiao and Krasjet).
+Note that this variable only has an effect when triggered by
+|g:AutoPairsShortcutMultilineClose|
 
 Defines whether or not to delete the space in the event of a multiline close.
 From the readme, there's this example: >
@@ -1261,7 +1273,7 @@ Essentially: >
             difference if mapclose is equal to the default map (the first key
             in the closing pair) Optional; defaults to 1.",
         "passiveclose": "Whether or not an explicit mapclose should override
-            other maps, or just ride the wave"
+            other maps, or just ride the wave",
     }
 <
 
@@ -1272,7 +1284,8 @@ when converted to b:AutoPairs, which is what's actually used to do runtime
 stuff)
 
 Note that for implementation reasons, `open` is converted to a key and dropped
-from the array.
+     from the object. This is largely to avoid data repetition where it isn't
+     needed.
 
 Note that for other implementation reasons, `mapclose` is converted to an int,
      and the keybind is stored in opt["key"]. This has no practical meaning
@@ -1282,15 +1295,7 @@ Note that numeric values cannot be strings. If they're strings, they're
      interpreted with a different meaning, which may or may not be what you
      want. Types matter here.
 
-Also, note that mapClose has no effect if open == close, and mapopen is set.
-      mapopen will trigger the action and only balance checks can determine
-      whether or not the quote is an open or close.
-
-Additionally, note that if you set mapopen = "" or mapopen = 0 (as in
-disabling the map that triggers the open expansion), there's currently no way
-to expand the pair. An explicit keybind will be added soon, but if you're
-venturing into the world of unreleased versions, please keep this in mind. The
-removal of this notice means the feature has been implemented.
+Also, note that mapClose has no effect if open == close
 
 ------------------------------------------------------------------------------
                                                      *autopairs-migrating-pairs*

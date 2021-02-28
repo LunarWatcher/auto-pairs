@@ -37,26 +37,27 @@ func! autopairs#Strings#backspace(s)
     return repeat("\<BS>", autopairs#Strings#ulen(a:s))
 endf
 
-func! autopairs#Strings#getline()
+func! autopairs#Strings#getline(...)
+    let multilineClose = get(a:, '1', 0)
 
     let line = getline('.')
     let pos = col('.') - 1
     let before = strpart(line, 0, pos)
     let after = strpart(line, pos)
     let afterline = after
-    "if b:AutoPairsMultilineClose
-        "let n = line('$')
-        "let i = line('.')+1
-        "while i <= n
-            "let line = getline(i)
-            "let after = after.' '.line
+    if multilineClose
+        let n = line('$')
+        let i = line('.')+1
+        while i <= n
+            let line = getline(i)
+            let after = after.' '.line
 
-            "if line !~? '\v^\s*$'
-                "break
-            "end
-            "let i = i+1
-        "endwhile
-    "end
+            if line !~? '\v^\s*$'
+                break
+            end
+            let i = i+1
+        endwhile
+    end
 
     " before: text before the cursor
     " after: text after the cursor

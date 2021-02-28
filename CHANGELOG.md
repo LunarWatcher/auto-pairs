@@ -9,6 +9,7 @@
     * `g:AutoPairs` and `autopairs#AutoPairsAddPair` (+ `autopairs#AutoPairsAddPairs` by extension) support a `language` tag, meaning there's now a way to make all your pairs work by modifying a single variable. The language tag also takes a single language as well as a list of languages, meaning it's easy to apply a single pair to several languages. 
     * The option to disable delete for individual pairs
     * The option to map a related or unrelated key to explicitly jump through the pair. 
+* `g:AutoPairsShortcutMultilineClose` ([#19](https://github.com/lunarwatcher/auto-pairs/issues/19), [#21](https://github.com/lunarwatcher/auto-pairs/issues/21))
 
 ## Changed
 * Made `autopairs#AutoPairsDefine` accept a list as well. The list contains a different type of more powerful objects; see the documentation (autopairs-pair-object)
