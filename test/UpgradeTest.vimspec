@@ -1,0 +1,17 @@
+Describe Make sure upgrades work,
+    Before each
+        let g:AutoPairs = copy(g:CachePairs)
+    End
+    It because it should blatantly ignore //n
+        let g:AutoPairs = {'{': '}//n'}
+        call autopairs#AutoPairsInit()
+        new | only!
+        call Expect('{').ToMatch('{}//n')
+    End
+    It because it should blatantly ignore //k
+        let g:AutoPairs = { '<?': '?>//k]' }
+        call autopairs#AutoPairsInit()
+        new | only!
+        call Expect('<?').ToMatch("<??>//k]")
+    End
+End

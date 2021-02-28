@@ -24,9 +24,9 @@ call autopairs#Strings#define("g:AutoPairsLanguagePairs", {
     \ "erlang": {'<<': '>>'},
     \ "tex": {'``': "''", '$': '$'},
     \ "html": {'<': '>'},
-    \ 'vim': {'\v(^\s*\zs"\ze|".*"\s*\zs"\ze$|^(\s*[a-zA-Z]+\s*([a-zA-Z]*\s*\=\s*)?)@!(\s*\zs"\ze(\\\"|[^"])*$))': ''},
+    \ 'vim': {'\v(^\s*\zs"\ze|".*"\s*\zs"\ze$|^(\s*[a-zA-Z]+\s*([a-zA-Z]*\s*\=\s*)?)@!(\s*\zs"\ze(\\\"|[^"])*$))': {"close": '', 'mapclose': 0}},
     \ 'rust': {'\w\zs<': '>', '&\zs''': ''},
-    \ 'php': {'<?': '?>//k]', '<?php': '?>//k]'}
+    \ 'php': {'<?': { 'close': '?>', 'mapclose': ']'}, '<?php': {'close': '?>', 'mapclose': ']'}}
     \ })
 
 " Krasjet: the closing character for quotes, auto completion will be
@@ -135,6 +135,8 @@ fun! autopairs#AutoPairsAddLanguagePair(pair, language)
     if (len(a:pair) == 2)
         let g:AutoPairsLanguagePairs[a:language][open] = close
     else
+        " Make sure we don't have redundant information
+        unlet a:pair["open"]
         let g:AutoPairsLanguagePairs[a:language][open] = a:pair
     endif
 endfun
@@ -183,7 +185,7 @@ fun! autopairs#AutoPairsAddPair(pair, ...)
                 return
             elseif type(filetypes) == v:t_list
                 for ft in filetypes
-                    call autopairs#AutoPairsAddLanguagePair(a:pair, ft)                 
+                    call autopairs#AutoPairsAddLanguagePair(a:pair, ft)
                 endfor
                 return
             else
@@ -191,6 +193,8 @@ fun! autopairs#AutoPairsAddPair(pair, ...)
                 return
             endif
         endif
+        " Prevent information duplication
+        unlet a:pair["open"]
         " Otherwise, we inject the entire pair
         let PairsObject[open] = a:pair
     endif
@@ -256,9 +260,11 @@ func! autopairs#AutoPairsInsert(key)
 
     " check open pairs
     for [open, close, opt] in b:AutoPairsList
-        let ms = autopairs#Strings#matchend(before.a:key, open)
-        let m = matchstr(afterline, '^\v\s*\zs\V'.close)
 
+
+        let ms = autopairs#Strings#matchend(before . a:key, open)
+        let m = matchstr(afterline, '^\v\s*\zs\V'.close)
+        
         if len(ms) > 0
 
             " process the open pair
@@ -271,28 +277,9 @@ func! autopairs#AutoPairsInsert(key)
                 break
             end
 
-            " Krasjet: do not complete the closing pair until pairs are balanced
-            if open !~# b:autopairs_open_blacklist
-                if open == close || (b:AutoPairsSingleQuoteBalanceCheck && close ==# "'")
-                    if count(before.afterline, close) % 2 != 0
-                        break
-                    end
-                else
-
-                    " Olivia: aside making sure there's an overall imbalance
-                    " in the line, only balance the brackets if there's an
-                    " imbalance after the cursor (we can disregard anything
-                    " before the cursor), and make sure there's actually a
-                    " close character to close after the cursor
-
-                    if (autopairs#Strings#regexCount(before.afterline, open) < count(before.afterline, close)
-                                \ && stridx(after, close) != -1
-                                \ && autopairs#Strings#regexCount(after, open) < count(after, close))
-
-                        break
-                    end
-                end
-            end
+            if !autopairs#Insert#checkBalance(open, close, opt, before, after, afterline)
+                break
+            endif
 
             " remove inserted pair
             " eg: if the pairs include < > and  <!-- -->
@@ -347,7 +334,7 @@ func! autopairs#AutoPairsInsert(key)
             continue
         end
         " Contains jump logic, apparently.
-        if opt['mapclose'] && opt['key'] == a:key
+        if opt['mapclose'] && opt['key'] == a:key || opt["alwaysmapdefaultclose"] == 1 && a:key == autopairs#Strings#GetFirstUnicodeChar(close)
             " the close pair is in the same line
             let searchRegex = b:AutoPairsSearchCloseAfterSpace == 1 ?  '^\v\s*\V' : '^\V'
 
@@ -427,6 +414,10 @@ func! autopairs#AutoPairsDelete()
     let [before, after, ig] = autopairs#Strings#getline()
 
     for [open, close, opt] in b:AutoPairsList
+        if !opt["delete"]
+            " Non-deletable pairs? Skip 'em
+            continue
+        endif
         let rest_of_line = opt['multiline'] ? after : ig
         let b = matchstr(before, '\V'.open.'\v\s?$')
         let a = matchstr(rest_of_line, '^\v\s*\V'.close)
@@ -445,6 +436,9 @@ func! autopairs#AutoPairsDelete()
 
     " delete the pair foo[]| <BS> to foo
     for [open, close, opt] in b:AutoPairsList
+        if !opt["delete"]
+            continue
+        endif
         if (close == '')
             continue
         endif
@@ -461,7 +455,7 @@ func! autopairs#AutoPairsDelete()
                 while getline(line('.') - offset) =~ "^\s*$"
                     let b .= getline(line('.') - offset) . ' '
                     let offset += 1
-                    if (line('.') - offset == 0)
+                    if (line('.') - offset <= 0)
                         return "\<BS>"
                     endif
                 endwhile
@@ -700,16 +694,19 @@ func! autopairs#AutoPairsSpace()
     return "\<SPACE>"
 endf
 
-func! autopairs#AutoPairsMap(key)
+func! autopairs#AutoPairsMap(key, ...)
     " | is special key which separate map command from text
+    let l:explicit = get(a:, '1', 0)
     let key = a:key
     if key == '|'
         let key = '<BAR>'
     end
     let escaped_key = substitute(key, "'", "''", 'g')
     " use expr will cause search() doesn't work
-
-    execute 'inoremap <buffer> <silent> '.key." <C-R>=autopairs#AutoPairsInsert('".escaped_key."')<cr>"
+    if explicit && len(maparg(key, "i")) != 0
+        return
+    endif
+    execute 'inoremap <buffer> <silent> '.key." <C-R>=autopairs#AutoPairsInsert('". escaped_key."')<cr>"
 endf
 
 func! autopairs#AutoPairsToggle()
@@ -724,6 +721,7 @@ func! autopairs#AutoPairsToggle()
 endf
 
 func! autopairs#AutoPairsInit()
+    " Why can't we be consistent about capitalization? Ugh
     let b:autopairs_loaded = 1
 
     call autopairs#Strings#define('b:autopairs_enabled', 1)
@@ -756,47 +754,93 @@ func! autopairs#AutoPairsInit()
     let b:autopairs_next_char_whitelist = []
     let b:AutoPairsList = []
 
-    " buffer level map pairs keys
-    " This contains primary mapping logic, and is a prime target for
-    " converting keybinds to supporting maps as well as strings.
-    " n - do not map the first character of closed pair to close key
-    " m - close key jumps through multi line
-    " s - close key jumps only in the same line
     for [open, close] in items(b:AutoPairs)
         let o = autopairs#Strings#GetLastUnicodeChar(open)
-        let c = autopairs#Strings#GetFirstUnicodeChar(close)
-        let opt = {'mapclose': 1, 'multiline':1}
+        " We wanna proxy the string value of close so we can start converting
+        " to a different format. There's _way_ too many formats, admittedly,
+        " but this means we can sort shit into opt instead, which is already
+        " present in the system. This also means close gets a canonical
+        " meaning, and we don't need to rewrite other bits of the code to
+        " add a proxy for something we already have.
+        let stringClose = ""
+        if type(close) == v:t_dict
+            if !has_key(close, "close")
+                " Let's silently make sure we have a close.
+                let close["close"] = ""
+            endif
+            " Objects store it in a key
+            let stringClose = close["close"]            
+        else
+            " Strings store it in itself, for obvious reasons.
+            let stringClose = close
+        endif
+        " This line right here is part of why we filter it out this early.
+        let c = autopairs#Strings#GetFirstUnicodeChar(stringClose)
+        " TODO: link some global options against (some of) these
+        let opt = {'mapclose': 1,
+                    \ 'alwaysmapdefaultclose': 1,
+                    \ 'delete': 1 , 'multiline': 1,
+                    \ 'passiveclose': 1}
+        " Default: set key = c
         let opt['key'] = c
+
         if o == c || len(c) == 0
             let opt['multiline'] = 0
-        end
-        let m = matchlist(close, '\v(.*)//(.*)$')
-        if len(m) > 0
-            if m[2] =~ 'n'
-                let opt['mapclose'] = 0
-            end
-            if m[2] =~ 'm'
-                let opt['multiline'] = 1
-            end
-            if m[2] =~ 's'
-                let opt['multiline'] = 0
-            end
-            let ks = matchlist(m[2], '\vk(.)')
-            if len(ks) > 0
-                let opt['key'] = ks[1]
-                let c = opt['key']
-            end
-            let close = m[1]
-        end
+        else
+            if type(close) == v:t_dict && has_key(close, 'multiline')
+                let opt['multiline'] = close['multiline']
+            endif
+        endif
+
+        if type(close) == v:t_dict
+            " We have a brand fucking new object!
+            " Let's handle mappings first
+            if (has_key(close, "mapclose"))
+                let mc = close["mapclose"]
+                if type(mc) == v:t_number
+                    let opt["mapclose"] = mc
+                else
+                    let opt["key"] = mc
+                    " This is largely a compat util; if the key is empty, it's
+                    " equivalent to setting it to 0
+                    if (mc != "")
+                        let opt["mapclose"] = 1
+                    else
+                        let opt["mapclose"] = 0
+                    endif
+                endif
+            endif
+            " We've handled multiline earlier, so we only need to handle
+            " delete.
+            " Filetype is only handled in intialization methods (and is purely
+            " syntactic sugar for using a different variable), and therefore
+            " isn't used here.
+            if has_key(close, "delete")
+                let opt["delete"] = close["delete"]
+            endif
+            " TODO: re-enable the ability to disable auto-insert on a per-pair
+            " basis
+            let opt["alwaysmapdefaultclose"] = get(close, 'alwaysmapdefaultclose', 1)
+            let opt["passiveclose"] = get(close, "passiveclose", 1)
+        endif
+
+
         call autopairs#AutoPairsMap(o)
         if o != c && c != '' && opt['mapclose']
-            call autopairs#AutoPairsMap(c)
+            if opt["key"] != c && opt["alwaysmapdefaultclose"]
+                call autopairs#AutoPairsMap(c)
+            endif
+
+            call autopairs#AutoPairsMap(opt["key"], opt["key"] != c && opt["passiveclose"])
         end
 
         " Krasjet: add any non-string closing characters to a list
-        let b:AutoPairsList += [[open, close, opt]]
-        if close !=? '' && close !~# '\V\['.escape(join(b:AutoPairsQuoteClosingChar,''),'\').']'
-            let b:autopairs_next_char_whitelist += [escape(close,'\')]
+        let b:AutoPairsList += [[open, stringClose, opt]]
+        " What in the fuck is this?
+        " This is arguably Krasjet's least documented feature. Figure out what
+        " it does pl0x
+        if stringClose !=? '' && stringClose !~# '\V\['.escape(join(b:AutoPairsQuoteClosingChar,''),'\').']'
+            let b:autopairs_next_char_whitelist += [escape(stringClose, '\')]
         end
     endfor
 

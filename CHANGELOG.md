@@ -1,12 +1,27 @@
 # 3.0.0-beta8
+`let :AutoPairsVersion = 30053`
 
 ## Added
 * [Meta] Testing
 * `autopairs#AutoPairsAddPair()`
 * `autopairs#AutoPairsAddPairs()`
+* Lots of customization functionality through `:h autopairs-pair-object`. Highlights:
+    * `g:AutoPairs` and `autopairs#AutoPairsAddPair` (+ `autopairs#AutoPairsAddPairs` by extension) support a `language` tag, meaning there's now a way to make all your pairs work by modifying a single variable. The language tag also takes a single language as well as a list of languages, meaning it's easy to apply a single pair to several languages. 
+    * The option to disable delete for individual pairs
+    * The option to map a related or unrelated key to explicitly jump through the pair. 
 
 ## Changed
 * Made `autopairs#AutoPairsDefine` accept a list as well. The list contains a different type of more powerful objects; see the documentation (autopairs-pair-object)
+* Made explicit jump keys map themselves if no mappings are defined. The explicit meaning of the map may change, but it's designed not to conflict with other keys (and as such, it's designed to maintain backwards-compatibility, without breaking stuff)
+* Internal: moved open pair balancing to a separate function
+* Prevent an explicit close key from preventing close when it's also desired to close by the normal key
+
+## Removed
+* An API that gave some minor customization access to pairs. The API has been replaced with a substantially more flexible API (see `:h autopairs-pair-object`)
+* `g:AutoPairsWildClosedPair`
+
+## Deprecated
+* `autopairs#AutoPairsScriptInit`
 
 # 3.0.0-beta7
 `g:AutoPairsVersion = 30052`

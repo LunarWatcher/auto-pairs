@@ -1238,20 +1238,80 @@ required keys.
 
 While undefined keys have no effect, missing required will throw errors.
 
+*autopairs-open* *autopairs-close* *autopairs-passiveopen*
+*autopairs-passiveclose* *autopairs-mapclose* *autopairs-mapopen*
+*autopairs-close* *autopairs-alwaysmapdefault* *autopairs-
+
 Essentially: >
     {
         "open": "The opening pair; required",
         "close": "The closing pair; required, but can be an empty string",
         "filetype": ["Array of strings or a single string. Matches the
             filetype variable. Optional, only used with AutoPairsAddPair"],
-        "mapclose": "if int, enable or disable. If string, the keybind to
-            trigger expansion. Optional, defaults to 1 and auto-resolve",
-        "mapopen": "if int, enable or disable. If string, the keybind to
-            trigger expansion. Optional, defaults to 1 and auto-resolve",
+        "mapclose": "if int, enable or disable. If string, the keybind used
+            to trigger the pair (specifically jump logic).
+            Optional, defaults to 1 and auto-resolve",
+        "delete": "int; whether or not to allow deletion. Forcibly set to 1
+            for pairs with an empty close, for implementation reasons. Still
+            requires deletion to be enabled to have an effect",
         "multiline": "0/1, whether or not to enable multiline. 1 by default
-            for compliant pairs. Optional."
+            for compliant pairs. Optional.",
+        "alwaysmapdefaultclose": "whether or not to also map the first close
+            character in addition to mapclose. Defaults to 1. Makes no
+            difference if mapclose is equal to the default map (the first key
+            in the closing pair) Optional; defaults to 1.",
+        "passiveclose": "Whether or not an explicit mapclose should override
+            other maps, or just ride the wave"
     }
 <
+
+
+Note that filetype is only respected when passed to a method like
+AutoPairsAddPair(s), or when added to g:AutoPairs (g:AutoPairs is processed
+when converted to b:AutoPairs, which is what's actually used to do runtime
+stuff)
+
+Note that for implementation reasons, `open` is converted to a key and dropped
+from the array.
+
+Note that for other implementation reasons, `mapclose` is converted to an int,
+     and the keybind is stored in opt["key"]. This has no practical meaning
+     for end-users of the plugin, but potentially has scripting significance.
+
+Note that numeric values cannot be strings. If they're strings, they're
+     interpreted with a different meaning, which may or may not be what you
+     want. Types matter here.
+
+Also, note that mapClose has no effect if open == close, and mapopen is set.
+      mapopen will trigger the action and only balance checks can determine
+      whether or not the quote is an open or close.
+
+Additionally, note that if you set mapopen = "" or mapopen = 0 (as in
+disabling the map that triggers the open expansion), there's currently no way
+to expand the pair. An explicit keybind will be added soon, but if you're
+venturing into the world of unreleased versions, please keep this in mind. The
+removal of this notice means the feature has been implemented.
+
+------------------------------------------------------------------------------
+                                                     *autopairs-migrating-pairs*
+
+For normal pairs, the system is entirely backwards-compatible. If you have a
+normal "a": "b" pair, you don't need to do anything.
+
+If, however, you relied on the undocumented feature where the closing pair
+could contain `//<a set of keycodes>`, this bit of the help document is for
+you.
+
+`n` is equivalent to setting `mapclose = 0`
+`m` is equivalent to setting `multiline = 1`, but note that this option has no
+effect if close == "", for implementation reasons.
+`s` is equivalent to `multiline = 0`
+`k` is equivalent to `mapclose = "whatever key"`
+
+Note that failure to migrate these will result in the close pair literally
+inserting the bit after the //. This is because the parser for these
+expressions is dropped during the migration to proper objects.
+
 
 ==============================================================================
 10. Credits                                                  *autopairs-credits*

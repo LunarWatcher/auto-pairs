@@ -4,13 +4,16 @@ Describe <BS> tests
         let g:AutoPairsMapBS = 1
     End
     Before each
-        new | only!
-        call autopairs#AutoPairsInit()
+        let g:AutoPairs = copy(g:CachePairs)
     End
     It isn't explicitly made to handle balanced deletion
+        new | only!
+        call autopairs#AutoPairsInit()
         call Expect("some random text ((\<delete>\<bs>").ToMatch("some random text (")
     End
     It is supposed to delete pairs
+        new | only!
+        call autopairs#AutoPairsInit()
         " Let's do this incrementally
         call Expect("(((\<BS>").ToMatch("(())")
         call Expect("(((\<BS>\<BS>").ToMatch("()")

@@ -1,4 +1,5 @@
 let s:expect = themis#helper('expect')
+let g:CachePairs = autopairs#AutoPairsDefine({})
 
 syntax on
 filetype plugin indent on
@@ -14,10 +15,15 @@ fun! Expect(input)
     return s:expect(a:input)
 endfun
 
+fun! CheckBuffImpl(input, output)
+    return join(getline(1, '$'), '\n') ==# a:output
+endfun
+
 fun! ToMatchImpl(input, output)
     %d " Clear the file
     execute 'normal i' . a:input . "\<Esc>"
     return join(getline(1, '$'), '\n') ==# a:output
 endfun
 
+call themis#helper#expect#define_matcher('CheckBuff', function('CheckBuffImpl'), '"Expected:\n" . a:2 . "\nActual:\n". join(getline(1, ''$''), ''\n'')')
 call themis#helper#expect#define_matcher('ToMatch', function('ToMatchImpl'), '"Expected:\n" . a:2 . "\nActual:\n". join(getline(1, ''$''), ''\n'')')

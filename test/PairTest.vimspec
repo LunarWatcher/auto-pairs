@@ -1,15 +1,10 @@
 Describe Basic tests of pair functionality
-    Before all
-        let g:CachePairs = autopairs#AutoPairsDefine({})
-    End
     Before each
-        new | only!
-        call autopairs#AutoPairsTryInit()
-    End
-    After each
-        let g:AutoPairs = g:CachePairs
+        let g:AutoPairs = copy(g:CachePairs)
     End
     It should do basic insertion
+        new | only!
+        call autopairs#AutoPairsTryInit()
         call Expect("(").ToMatch("()")
         call Expect("Hello (me").ToMatch("Hello (me)")
         " Welcome to a random mid-test rant: why the fuck does Vim require
@@ -20,9 +15,13 @@ Describe Basic tests of pair functionality
     End
     It should properly break blocks
         let g:AutoPairsReturnOnEmptyOnly = 1
+        new | only!
+        call autopairs#AutoPairsTryInit()
         call Expect("if(blah\<cr>").ToMatch('if(blah\n)')
     End
     It should also make other block expansions
+        new | only!
+        call autopairs#AutoPairsTryInit()
         let b:AutoPairsReturnOnEmptyOnly = 0
         " The resulting indent is a bit weird - not sure why.
         call Expect("if(blah\<cr>").ToMatch('if(blah\n\n  )')
@@ -43,9 +42,13 @@ Describe Basic tests of pair functionality
         " specific situation. It's either that or \<left>\<delete> instead,
         " which is substantially uglier.
         let g:AutoPairsMapBS = 0
+        new | only!
+        call autopairs#AutoPairsTryInit()
         call Expect("((\<bs>(").ToMatch("(())")
     End
     It shouldn't forcibly do multiline bullshit
+        new | only!
+        call autopairs#AutoPairsTryInit()
         call Expect("[\<CR>").ToMatch('[\n\n]')
         call Expect("[\<CR>]").ToMatch('[\n]\n]')
     End
