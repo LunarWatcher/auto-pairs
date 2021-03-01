@@ -199,11 +199,7 @@ fun! autopairs#AutoPairsAddPair(pair, ...)
 endfun
 
 " default pairs base on filetype
-func! autopairs#AutoPairsDefaultPairs()
-    if exists('b:autopairs_defaultpairs')
-        return b:autopairs_defaultpairs
-    end
-
+func! autopairs#AutoPairsDefaultPairs(...)
     let r = copy(g:AutoPairs)
     if has_key(g:AutoPairsLanguagePairs, &ft)
         for [open, close] in items(g:AutoPairsLanguagePairs[&ft])
@@ -211,7 +207,6 @@ func! autopairs#AutoPairsDefaultPairs()
         endfor
     endif
 
-    let b:autopairs_defaultpairs = r
     return r
 endf
 
