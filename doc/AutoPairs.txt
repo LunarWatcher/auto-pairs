@@ -115,12 +115,17 @@ Quick jump to closed pair: >
             something;|
         }
 
-        (press } at |)
+        (press <C-p>c} at |)
 
         output:
         {
-
+            something;
         }|
+
+See |g:AutoPairsShortcutMultilineClose|. Note that for various implementation
+reasons, |g:AutoPairsShortcutJump| generally works better. Multiline close
+does come with some optional space removal
+(|g:AutoPairsMultilineCloseDeleteSpace|), but is otherwise just a short jump.
 
 Support ```, ''' and """: >
 
@@ -168,9 +173,11 @@ Fly Mode (|autopairs-flymode|): >
             world();
         }
 
-        See |Fly Mode| section for details
+See |autopairs-flymode| section for details
 
-Only inserting when the next character is a space (*autopairs-tbd*)
+Only inserting when the next character is a space:
+|g:AutoPairsCompleteOnlyOnSpace|
+
 ------------------------------------------------------------------------------
 2.1. Multibyte pairs                                       *autopairs-multibyte*
 
@@ -384,7 +391,43 @@ Fast wrap the word. All pairs will be considered as a block (including <>).
 
 Default: <C-p><C-s> if |g:AutoPairsCompatibleMaps| is 0, <M-n> otherwise
 
-Jump to the next closed pair.
+Jump to the first close pair after the cursor, regardless of which it is.
+
+Assuming {}, (), "", and [] are all pairs: >
+    {
+        switch (chr) {
+            case 'a':
+                for (;;) do something;|                    Press <C-p><C-s> or <M-n>
+                break;
+            default:
+                throw std::exception("Not implemented for blah blah");
+        }
+    }
+<
+After: >
+    {
+        switch (chr) {
+            case 'a':
+                for (;;) do something;
+            break;
+            default:
+                throw std::exception("|Not implemented for blah blah");
+        }
+    }
+<
+Note: some jumps may be inaccurate where close == open. This is a detail being
+worked out.
+
+Before: >
+    {
+        test[]| = new test[];       <C-p><C-s> or <M-n> at |
+    }
+<
+After: >
+    {
+        test[] = new test[]|;
+    }
+<
 
 ------------------------------------------------------------------------------
                                                  *g:AutoPairsShortcutBackInsert*
@@ -392,8 +435,8 @@ Jump to the next closed pair.
 
 Default: <C-p><C-b> if |g:AutoPairsCompatibleMaps| is 0, <M-b> otherwise
 
-Work with |autopairs-flymode|, insert the key at the Fly Mode jumped position.
-
+When |autopairs-flymode| does a jump you don't want it to do, you can use this
+shortcut to jump back, and automatically do a normal insert.
 
 ------------------------------------------------------------------------------
                                                               *g:AutoPairsMapBS*
@@ -452,7 +495,7 @@ Set it to 1 to enable |autopairs-flymode|.
                                                      *g:AutoPairsMultilineClose*
                                                                            int
 
-This variable has been removed, largely for the reasons outlined in #21: 
+This variable has been removed, largely for the reasons outlined in #21:
     https://github.com/LunarWatcher/auto-pairs/issues/21
 
 This feature is now available as an explicit keybind; see
@@ -467,7 +510,7 @@ Additional note: this doesn't make assumptions on what you wanna close. When
 you press the keybind, getchar() is called. If you then type }, it'll perform
 a multiline close for }.
 
-There's currently no way to enable this by default, as the behavior 
+There's currently no way to enable this by default, as the behavior
 
 ------------------------------------------------------------------------------
                                                  *g:AutoPairsDirectoryBlacklist*
