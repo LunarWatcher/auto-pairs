@@ -247,11 +247,12 @@ These are also defined, but may be one of two variants. See
 ------------------------------------------------------------------------------
 4.1. Remapping shortcuts                          *autopairs-shortcut-remapping*
 
-At this time, most keybinds are remappable by using various options (see
+At this time, all keybinds are remappable by using various options (see
 |autopairs-options|). The goal is for all of them to be possible to remap.
 
-Additionally, there's currently one keybind that lets you remap `<cr>`, to
-prevent <cr> conflicts. It requires you to remap it explicitly, though.
+Additionally, there's currently one keybind that lets you remap `<cr>`. This
+also lets you prevent <cr> conflicts, or just remap it if you prefer having
+the actions mapped to <CR> on a different key.
 
 ==============================================================================
 5. Options                                                   *autopairs-options*
@@ -373,17 +374,27 @@ Default: <C-p><C-t> if |g:AutoPairsCompatibleMaps| is 0, <M-p> otherwise
 
 The shortcut to toggle autopairs.
 
+Note that auto-pairs will still be initialized, but no action is taken when
+keybinds are pressed, or similar.
+
 ------------------------------------------------------------------------------
                                                    *g:AutoPairsShortcutFastWrap*
                                                                         string
 
-Default: <C-p><C-b> if |g:AutoPairsCompatibleMaps| is 0, <M-e> otherwise
+Default: <C-f> if |g:AutoPairsCompatibleMaps| is 0, <M-e> otherwise
 
 Fast wrap the word. All pairs will be considered as a block (including <>).
 
         (|)'hello' after fast wrap at |, the word will be ('hello')
         (|)<hello> after fast wrap at |, the word will be (<hello>)
 
+Custom pairs are also taken into consideration for multibyte pairs. In
+remaining cases, autopairs jumps through words and places it after the current
+word.
+
+See also:~
+- |g:AutoPairsMultilineFastWrap|
+- |g:AutoPairsMultibyteFastWrap|
 
 ------------------------------------------------------------------------------
                                                        *g:AutoPairsShortcutJump*
