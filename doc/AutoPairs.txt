@@ -1021,6 +1021,39 @@ or (value 0): >
         |                       Note: possibly with different indent (see |cino|)
     )
 <
+------------------------------------------------------------------------------
+                                                *g:AutoPairsExperimentalAutocmd*
+
+Default: 0
+
+Sounds super fancy, but it really isn't.
+The only difference is that it uses |BufWinEnter| (value = 1)
+instead of |BufEnter| (value = 0) to trigger `autopairs#AutoPairsTryInit()`
+(AKA the function that actually starts auto-pairs by mapping everything).
+
+This exists purely because |BufWinEnter| is invoked when the buffer is
+completely loaded. This most importantly means the autocmd is invoked after
+modelines have been evaluated, which means it yields the correct output for
+modeline files, and potentially autocmd-set files.
+
+Auto-pairs itself is still somewhat rigid, and dynamic keybind switching by
+filetype is currently not an option. This option doesn't do anything magic in
+that regard - switching filetypes in the middle of editing will retain
+whatever keybinds and language-specific pairs were there prior to the filetype
+change.
+
+The intent is to make the help file load keybinds properly, which it doesn't
+with BufEnter.
+
+This is an experimental variable that might be removed in a future version of
+auto-pairs. I'm not sure why BufEnter was used over BufWinEnter, and I
+therefore need time to evaluate. This is largely to make sure there's no
+side-effects if I decide to roll this change out for everyone.
+
+Feedback on any change in experience is appreciated if you set this to 1; open
+a discussion or issue on GitHub (https://github.com/lunarwatcher/auto-pairs),
+especially if you experience problems after enabling this. User experience
+will determine the future of this variable.
 
 ==============================================================================
 6. Troubleshooting                                   *autopairs-troubleshooting*

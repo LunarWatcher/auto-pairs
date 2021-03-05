@@ -113,6 +113,8 @@ call autopairs#Strings#define('g:AutoPairsReturnOnEmptyOnly', 1)
 
 call autopairs#Strings#define('g:AutoPairsShortcutMultilineClose', '<C-p>c')
 
+call autopairs#Strings#define('g:AutoPairsExperimentalAutocmd', 0)
+
 fun! autopairs#AutoPairsScriptInit()
     echoerr "This method has been deprecated. See the help for further steps"
 endfun

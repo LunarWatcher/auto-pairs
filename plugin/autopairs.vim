@@ -27,6 +27,10 @@ if g:AutoPairsBackwardsCompat
     endfun
 endif
 
-au BufEnter * :call autopairs#AutoPairsTryInit()
+if exists('g:AutoPairsExperimentalAutocmd') && g:AutoPairsExperimentalAutocmd
+    au BufWinEnter * :call autopairs#AutoPairsTryInit()
+else
+    au BufEnter * :call autopairs#AutoPairsTryInit()
+endif
 
 " vim:sw=4:expandtab
