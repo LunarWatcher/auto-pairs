@@ -1055,6 +1055,33 @@ a discussion or issue on GitHub (https://github.com/lunarwatcher/auto-pairs),
 especially if you experience problems after enabling this. User experience
 will determine the future of this variable.
 
+------------------------------------------------------------------------------
+                                                 *g:AutoPairsStringHandlingMode*
+                                                                           int
+
+Default: 0
+
+Legal values:
+    0: No differentiation between strings and code
+    1: Content outside strings matches content outside strings, and content in
+       strings matches content in _a_ string (NOTE: for implementation
+       reasons, this doesn't check _the current string_ - it checks _a_
+       string. This behavior may change in the future, and may be made
+       available as a separate option)
+    2: Auto-pairs is disabled inside strings, and all open and close brackets
+       inside strings are ignored.
+
+0 is equivalent ot jiangmiao/auto-pairs. This option overall controls how
+auto-pairs behaves with auto-insert in and around strings.
+
+Note that due to being experimental, this feature may break entirely. If Vim
+starts to misbehave, `let g:AutoPairsStringHandlingMode = 0` (so you can keep
+using Vim even if this bit is broken), and open a bug report on GitHub.
+
+Also, note that due to me having no idea how to optimally implement this, the
+feature is disabled by default to prevent disruption. This will change in a
+future release.
+
 ==============================================================================
 6. Troubleshooting                                   *autopairs-troubleshooting*
 

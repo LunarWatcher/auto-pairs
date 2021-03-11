@@ -98,7 +98,88 @@ fun! autopairs#Strings#regexCount(string, pattern)
     call substitute('' . a:string, '' . a:pattern, '\=add(matches, submatch(0))[-1]', 'g')
 
     return len(matches)
-endfun!
+endfun
+
+" Returns: [int, int, int, int, int, int]
+" Which are, in order:
+" * closes before the cursor
+" * opens before the cursor
+" * closes after the cursor
+" * opens after the cursor
+" The four above groups are all outside strings. The final two are (still in
+" order):
+" * closes in string
+" * closes outside string
+fun! autopairs#Strings#countHighlightMatches(open, close, highlightGroup, checkInside)
+    if g:AutoPairsStringHandlingMode == 0 || g:AutoPairsStringHandlingMode > 2 || close == ''
+        return [0, 0, 0, 0, 0, 0]
+    endif
+    let lineNum = line('.')
+    " TODO: Add a counter for some increased multiline stuff
+    let line = getline(lineNum)
+    " We wanna keep track of the current index as well
+    let cursorIdx = col('.')
+    " This is largely just a tracker to check whether we're inside or outside
+    " a string. This is partly used to keep counts, and partly to separate
+    " string opens from string content. That's actually relatively tricky.
+    let inString = 0
+    " Where we're at in the string parsing
+    let parseIdx = 0
+    " The clusterfuck of variables.
+    " These keep track of closes and opens in various bits of the current
+    " line.
+    let closePre = 0
+    let openPre = 0
+    let closePost = 0
+    let openPost = 0
+    let closeString = 0
+    let openString = 0
+
+
+    let last = col('$')
+
+    while parseIdx < last
+        let curr = line[parseIdx]
+        if curr == a:open
+            " Check the hl group
+            " TODO: determine performance impact
+            if (autopairs#Strings#posInGroup(lineNum, parseIdx + 1, 'string'))
+                let openString += 1 
+            else
+                if parseIdx >= cursorIdx
+                    let openPost += 1
+                else
+                    let openPre += 1
+                endif
+            endif
+        elseif curr == a:close
+            if (autopairs#Strings#posInGroup(lineNum, parseIdx + 1, 'string'))
+                let closeString += 1
+            else
+                if parseIdx >= cursorIdx
+                    let closePost += 1
+                else
+                    let closePre += 1
+                endif
+            endif
+            
+        endif
+        
+        let parseIdx += 1
+    endwhile
+
+    return [closePre, openPre, closePost, openPost, closeString, openString]
+endfun
+
+fun! autopairs#Strings#posInGroup(y, x, group)
+
+    return join(map(synstack(y, x), 'synIDattr(v:val, "name")'), ',') =~? group
+endfun
+
+fun! autopairs#Strings#isInString()
+    " Checks whether or not the cursor is in a comment. 
+    return join(map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")'), ',') =~? 'string'
+endfun
 
 " Unicode handling {{{
 " Idea by httpautopairs#Strings#//github.com/fenukautopairs#Strings# httpautopairs#Strings#//github.com/jiangmiao/auto-pairs/issues/251#issuecomment-573901691

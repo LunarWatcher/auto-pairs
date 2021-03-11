@@ -11,6 +11,7 @@
     * The option to map a related or unrelated key to explicitly jump through the pair. 
 * `g:AutoPairsShortcutMultilineClose` ([#19](https://github.com/lunarwatcher/auto-pairs/issues/19), [#21](https://github.com/lunarwatcher/auto-pairs/issues/21))
 * Add `g:AutoPairsExperimentalAutocmd`
+* Add `g:AutoPairsStringHandlingMode`
 
 ## Changed
 * Made `autopairs#AutoPairsDefine` accept a list as well. The list contains a different type of more powerful objects; see the documentation (autopairs-pair-object)
