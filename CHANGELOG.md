@@ -12,6 +12,7 @@
 * `g:AutoPairsShortcutMultilineClose` ([#19](https://github.com/lunarwatcher/auto-pairs/issues/19), [#21](https://github.com/lunarwatcher/auto-pairs/issues/21))
 * Add `g:AutoPairsExperimentalAutocmd`
 * Add `g:AutoPairsStringHandlingMode`
+* Add `:AutoPairsToggle`, `:AutoPairsDisable`, and `:AutoPairsEnable` (upstream [#278](https://github.com/jiangmiao/auto-pairs/issues/278), missed in the initial ticket crunch)
 
 ## Changed
 * Made `autopairs#AutoPairsDefine` accept a list as well. The list contains a different type of more powerful objects; see the documentation (autopairs-pair-object)

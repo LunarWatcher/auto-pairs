@@ -1,5 +1,5 @@
 fun! autopairs#Insert#checkBalance(open, close, opt, before, after, afterline) 
-    
+    let [closePre, openPre, closePost, openPost, strClose, strOpen, totClose, totOpen] = autopairs#Strings#countHighlightMatches(a:open, a:close, 'string') 
     " Krasjet: do not complete the closing pair until pairs are balanced
     if a:open !~# b:autopairs_open_blacklist
         if a:open == a:close || (b:AutoPairsSingleQuoteBalanceCheck && a:close ==# "'")
@@ -13,10 +13,9 @@ fun! autopairs#Insert#checkBalance(open, close, opt, before, after, afterline)
             " imbalance after the cursor (we can disregard anything
             " before the cursor), and make sure there's actually a
             " close character to close after the cursor
-
-            if (autopairs#Strings#regexCount(a:before . a:afterline, a:open) < count(a:before . a:afterline, a:close)
-                        \ && stridx(a:after, a:close) != -1
-                        \ && autopairs#Strings#regexCount(a:after, a:open) < count(a:after, a:close))
+            if (totOpen < totClose
+                        \ && closePost > 0
+                        \ && openPost < closePost)
                 return 0
             end
         end

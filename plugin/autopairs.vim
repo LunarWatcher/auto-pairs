@@ -33,4 +33,8 @@ else
     au BufEnter * :call autopairs#AutoPairsTryInit()
 endif
 
+command! AutoPairsToggle call autopairs#AutoPairsToggle()
+command! AutoPairsDisable let b:autopairs_enabled = 0 | echo "Disabled auto-pairs"
+command! AutoPairsEnable let b:autopairs_enabled = 1 | echo "Enabled auto-pairs"
+
 " vim:sw=4:expandtab

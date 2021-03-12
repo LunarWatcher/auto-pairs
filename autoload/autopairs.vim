@@ -240,7 +240,7 @@ func! autopairs#AutoPairsDefine(pairs, ...)
 endf
 
 func! autopairs#AutoPairsInsert(key, ...)
-    if !b:autopairs_enabled
+    if !b:autopairs_enabled || (b:AutoPairsStringHandlingMode == 2 && autopairs#Strings#isInString())
         return a:key
     end
     let l:multiline = get(a:, '1', 0)
@@ -692,6 +692,7 @@ func! autopairs#AutoPairsInit()
     call autopairs#Strings#define('b:AutoPairsMultilineCloseDeleteSpace', g:AutoPairsMultilineCloseDeleteSpace)
     call autopairs#Strings#define('b:AutoPairsMultibyteFastWrap', g:AutoPairsMultibyteFastWrap)
     call autopairs#Strings#define('b:AutoPairsReturnOnEmptyOnly', g:AutoPairsReturnOnEmptyOnly)
+    call autopairs#Strings#define('b:AutoPairsStringHandlingMode', g:AutoPairsStringHandlingMode)
 
     let b:autopairs_return_pos = 0
     let b:autopairs_saved_pair = [0, 0]

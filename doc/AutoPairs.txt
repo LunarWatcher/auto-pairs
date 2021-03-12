@@ -1058,6 +1058,7 @@ will determine the future of this variable.
 ------------------------------------------------------------------------------
                                                  *g:AutoPairsStringHandlingMode*
                                                                            int
+This variable also exists in a buffer variant.~
 
 Default: 0
 
@@ -1081,6 +1082,18 @@ using Vim even if this bit is broken), and open a bug report on GitHub.
 Also, note that due to me having no idea how to optimally implement this, the
 feature is disabled by default to prevent disruption. This will change in a
 future release.
+
+Warning~
+
+This feature relies heavily on the width of characters to be sane. This is NOT
+the case for unicode characters. As a result, this feature does not work
+accurately with multibyte pairs stacked after each other. There's measures in
+place to prevent a cascading effect, but unicode characters placed close to
+each other WILL NOT work reliably.
+
+The relevant code is in autopairs#Strings#countHighlightMatches() - pull
+requests or just ideas on how to better handle unicode in these cases are
+welcome.
 
 ==============================================================================
 6. Troubleshooting                                   *autopairs-troubleshooting*

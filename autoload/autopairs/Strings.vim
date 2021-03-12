@@ -100,31 +100,35 @@ fun! autopairs#Strings#regexCount(string, pattern)
     return len(matches)
 endfun
 
-" Returns: [int, int, int, int, int, int]
+" {{{ Syngroups
+" Returns: [int, int, int, int, int, int, int, int]
 " Which are, in order:
 " * closes before the cursor
 " * opens before the cursor
 " * closes after the cursor
 " * opens after the cursor
-" The four above groups are all outside strings. The final two are (still in
+" The four above groups are all outside strings. The final four are (still in
 " order):
 " * closes in string
-" * closes outside string
-fun! autopairs#Strings#countHighlightMatches(open, close, highlightGroup, checkInside)
-    if g:AutoPairsStringHandlingMode == 0 || g:AutoPairsStringHandlingMode > 2 || close == ''
-        return [0, 0, 0, 0, 0, 0]
-    endif
+" * opens in string
+" * overall close (before and after, without strings if option != 0)
+" * overall open (before and after, without strings of option != 0)
+fun! autopairs#Strings#countHighlightMatches(open, close, highlightGroup)
     let lineNum = line('.')
     " TODO: Add a counter for some increased multiline stuff
+    if b:AutoPairsStringHandlingMode == 0
+        " This is pretty much the stuff we used to have to check for balance.
+        " TODO: determine the significance of s:getline()
+        let [before, after, afterline] = autopairs#Strings#getline()
+        
+        let openPre = autopairs#Strings#regexCount(before, a:open)
+        let openPost = autopairs#Strings#regexCount(after, a:open)
+        let closePre = count(before, a:close)
+        let closePost = count(after, a:close)
+
+        return [closePre, openPre, closePost, openPost, 0, 0, closePre + closePost, openPre + openPost]
+    endif
     let line = getline(lineNum)
-    " We wanna keep track of the current index as well
-    let cursorIdx = col('.')
-    " This is largely just a tracker to check whether we're inside or outside
-    " a string. This is partly used to keep counts, and partly to separate
-    " string opens from string content. That's actually relatively tricky.
-    let inString = 0
-    " Where we're at in the string parsing
-    let parseIdx = 0
     " The clusterfuck of variables.
     " These keep track of closes and opens in various bits of the current
     " line.
@@ -134,56 +138,86 @@ fun! autopairs#Strings#countHighlightMatches(open, close, highlightGroup, checkI
     let openPost = 0
     let closeString = 0
     let openString = 0
-
+    " We wanna keep track of the current index as well
+    let cursorIdx = col('.')
 
     let last = col('$')
-
-    while parseIdx < last
-        let curr = line[parseIdx]
-        if curr == a:open
-            " Check the hl group
-            " TODO: determine performance impact
-            if (autopairs#Strings#posInGroup(lineNum, parseIdx + 1, 'string'))
-                let openString += 1 
-            else
-                if parseIdx >= cursorIdx
-                    let openPost += 1
-                else
-                    let openPre += 1
-                endif
-            endif
-        elseif curr == a:close
-            if (autopairs#Strings#posInGroup(lineNum, parseIdx + 1, 'string'))
-                let closeString += 1
-            else
-                if parseIdx >= cursorIdx
-                    let closePost += 1
-                else
-                    let closePre += 1
-                endif
-            endif
-            
+    
+    " In order to facilitate multibyte, we need to do a search
+    " First, let's sweep open
+    let offset = 0
+    while  offset < last
+        let pos = match(line, '\V' . a:open, offset)
+        if pos == -1
+            break
         endif
-        
-        let parseIdx += 1
+        " Hack to make it slightly more unicode-friendly.
+        " At least this way we can traverse over the first character, which is
+        " what we wanna do here. 
+        let firstChar = autopairs#Strings#GetFirstUnicodeChar(a:open)
+        let [hlBefore, hlAt, hlAfter] = [autopairs#Strings#posInGroup(lineNum, pos - len(firstChar), a:highlightGroup), 
+                    \ autopairs#Strings#posInGroup(lineNum, pos, a:highlightGroup),
+                    \ autopairs#Strings#posInGroup(lineNum, pos + len(a:open), a:highlightGroup)]
+                                                                                " We check the length of open here to make sure we get _past_ the string.
+                                                                                " Not unicode-friendly wrt. multibyte unicode pairs. Creative ideas welcome
+        if (!hlBefore && !hlAt && !hlAfter) || (hlBefore && hlAt && !hlAfter) || (!hlBefore && hlAt && hlAfter)
+            let {offset >= cursorIdx ? 'openPost' : 'openPre'} += 1
+        else
+            let openString += 1
+        endif
+        " This is NOT unicode multibyte compatible, but it produces very few edge
+        " cases.
+        " To be clear, this only affects unicode characters, not multibyte
+        " pairs of normal single-byte characters. 
+        let offset = pos + len(a:open)
     endwhile
+    if (a:open != a:close)
+        " If open == close, we've already processed everything.
+        " Otherwise, here we go again
 
-    return [closePre, openPre, closePost, openPost, closeString, openString]
+        let offset = 0
+        while  offset < last
+            let pos = match(line, '\V' . a:close, offset)
+            if pos == -1
+                break
+            endif
+            " Optimization (based on an assumption; feel free to prove me
+            " wrong): I've not been able to find a single language with
+            " asymmetric open and close. The obvious exception is if someone
+            " i.e. maps 'f"': '"', but better handling of these in general
+            " makes these pointless. Those pairs still expand on ", meaning
+            " it's not asymmetric.
+            " if there's options I've missed, please open an issue on GitHub
+            let inHl = autopairs#Strings#posInGroup(lineNum, pos, a:highlightGroup)
+            if !inHl 
+                let {offset >= cursorIdx ? 'closePost' : 'closePre'} += 1
+            else
+                let closeString += 1
+            endif
+            let offset = pos + len(a:close)
+        endwhile
+    endif
+    echom "1: " . closePre
+    echom "2: " . closePost
+    echom "3: " . openPre
+    echom "4: " . openPost
+    return [closePre, openPre, closePost, openPost, closeString,
+                \ openString, closePre + closePost, openPre + openPost]
 endfun
 
 fun! autopairs#Strings#posInGroup(y, x, group)
 
-    return join(map(synstack(y, x), 'synIDattr(v:val, "name")'), ',') =~? group
+    return join(map(synstack(a:y, a:x), 'synIDattr(v:val, "name")'), ',') =~? a:group
 endfun
 
 fun! autopairs#Strings#isInString()
     " Checks whether or not the cursor is in a comment. 
     return join(map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")'), ',') =~? 'string'
 endfun
-
+" }}}
 " Unicode handling {{{
-" Idea by httpautopairs#Strings#//github.com/fenukautopairs#Strings# httpautopairs#Strings#//github.com/jiangmiao/auto-pairs/issues/251#issuecomment-573901691
-" Patch for #14 by httpautopairs#Strings#//github.com/j-hui: httpautopairs#Strings#//github.com/LunarWatcher/auto-pairs/issues/14
+" Idea by https://github.com/fenuks: https://github.com/jiangmiao/auto-pairs/issues/251#issuecomment-573901691
+" Patch for #14 by https://github.com/j-hui: https://github.com/LunarWatcher/auto-pairs/issues/14
 fun! autopairs#Strings#GetFirstUnicodeChar(string)
     if a:string == ""
         return ""
