@@ -140,13 +140,11 @@ fun! autopairs#Strings#countHighlightMatches(open, close, highlightGroup)
     let openString = 0
     " We wanna keep track of the current index as well
     let cursorIdx = col('.')
-
     let last = col('$')
-    
     " In order to facilitate multibyte, we need to do a search
     " First, let's sweep open
     let offset = 0
-    while  offset < last
+    while offset < last
         let pos = match(line, '\V' . a:open, offset)
         if pos == -1
             break
@@ -155,13 +153,14 @@ fun! autopairs#Strings#countHighlightMatches(open, close, highlightGroup)
         " At least this way we can traverse over the first character, which is
         " what we wanna do here. 
         let firstChar = autopairs#Strings#GetFirstUnicodeChar(a:open)
+
         let [hlBefore, hlAt, hlAfter] = [autopairs#Strings#posInGroup(lineNum, pos - len(firstChar), a:highlightGroup), 
                     \ autopairs#Strings#posInGroup(lineNum, pos, a:highlightGroup),
                     \ autopairs#Strings#posInGroup(lineNum, pos + len(a:open), a:highlightGroup)]
                                                                                 " We check the length of open here to make sure we get _past_ the string.
                                                                                 " Not unicode-friendly wrt. multibyte unicode pairs. Creative ideas welcome
-        if (!hlBefore && !hlAt && !hlAfter) || (hlBefore && hlAt && !hlAfter) || (!hlBefore && hlAt && hlAfter)
-            let {offset >= cursorIdx ? 'openPost' : 'openPre'} += 1
+        if !hlAt || (hlBefore && !hlAfter && pos != last - len(a:open)) || (!hlBefore && hlAfter)
+            let {offset > cursorIdx ? 'openPost' : 'openPre'} += 1
         else
             let openString += 1
         endif
@@ -176,7 +175,7 @@ fun! autopairs#Strings#countHighlightMatches(open, close, highlightGroup)
         " Otherwise, here we go again
 
         let offset = 0
-        while  offset < last
+        while offset < last
             let pos = match(line, '\V' . a:close, offset)
             if pos == -1
                 break
@@ -190,29 +189,34 @@ fun! autopairs#Strings#countHighlightMatches(open, close, highlightGroup)
             " if there's options I've missed, please open an issue on GitHub
             let inHl = autopairs#Strings#posInGroup(lineNum, pos, a:highlightGroup)
             if !inHl 
-                let {offset >= cursorIdx ? 'closePost' : 'closePre'} += 1
+                let {offset > cursorIdx ? 'closePost' : 'closePre'} += 1
             else
                 let closeString += 1
             endif
             let offset = pos + len(a:close)
         endwhile
     endif
-    echom "1: " . closePre
-    echom "2: " . closePost
-    echom "3: " . openPre
-    echom "4: " . openPost
+    echom closeString . ", " . openString
     return [closePre, openPre, closePost, openPost, closeString,
                 \ openString, closePre + closePost, openPre + openPost]
 endfun
 
 fun! autopairs#Strings#posInGroup(y, x, group)
-
-    return join(map(synstack(a:y, a:x), 'synIDattr(v:val, "name")'), ',') =~? a:group
+    return join(map(synstack(a:y, min([a:x, col('$')])), 'synIDattr(v:val, "name")'), ',') =~? a:group
 endfun
 
 fun! autopairs#Strings#isInString()
-    " Checks whether or not the cursor is in a comment. 
-    return join(map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")'), ',') =~? 'string'
+    " Checks whether or not the cursor is in a string
+    " We have to do a double check to account for the fact taht we don't
+    " actually have the chars yet. We therefore check both the current and the
+    " past char. This results in the edge cases of 'string'|'string', but in a
+    " case like this, a space isn't gonna kill you.
+    " More creative ideas are welcome here, though. A double check is somewhat
+    " heavy, though. Synstack seems to be an overall heavy call.
+    " TODO: revisit
+    return join(map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")'), ',') =~? 'string' && 
+                \ join(map(synstack(line('.'), col('.') - 1), 'synIDattr(v:val, "name")'), ',') =~? 'string'
+
 endfun
 " }}}
 " Unicode handling {{{

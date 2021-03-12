@@ -1,12 +1,26 @@
 fun! autopairs#Insert#checkBalance(open, close, opt, before, after, afterline) 
+    if a:close == ""
+        return 1
+    endif
     let [closePre, openPre, closePost, openPost, strClose, strOpen, totClose, totOpen] = autopairs#Strings#countHighlightMatches(a:open, a:close, 'string') 
     " Krasjet: do not complete the closing pair until pairs are balanced
     if a:open !~# b:autopairs_open_blacklist
-        if a:open == a:close || (b:AutoPairsSingleQuoteBalanceCheck && a:close ==# "'")
-            if count(a:before . a:afterline, a:close) % 2 != 0
-                return 0
-            end
+        if autopairs#Strings#isInString()
+            " We only need to address mode == 1 here
+            echom "In string"
+            return strClose <= strOpen
         else
+            " Olivia: I have no idea what this is for, and it negatively affects
+            " out fancy-pants balancing. It looks like it's just a dumb check for
+            " quote balance, but b:AutoPairsSingleQuoteBalanceCheck looks like
+            " it's completely redundant. open == close for the basic ones, so
+            " iDunno. Might've been meant to be an &&, but it doesn't serve a
+            " purpose as it stands. TODO: remove?
+            "if a:open == a:close || (b:AutoPairsSingleQuoteBalanceCheck && a:close ==# "'")
+                "if count(a:before . a:afterline, a:close) % 2 != 0
+                    "return 0
+                "end
+            "else
 
             " Olivia: aside making sure there's an overall imbalance
             " in the line, only balance the brackets if there's an
@@ -15,10 +29,11 @@ fun! autopairs#Insert#checkBalance(open, close, opt, before, after, afterline)
             " close character to close after the cursor
             if (totOpen < totClose
                         \ && closePost > 0
-                        \ && openPost < closePost)
+                        \ && (a:open != a:close && openPost < closePost))
                 return 0
-            end
-        end
+            endif
+            "end
+        endif
     end
     return 1
 endfun
