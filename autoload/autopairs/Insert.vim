@@ -7,7 +7,6 @@ fun! autopairs#Insert#checkBalance(open, close, opt, before, after, afterline)
     if a:open !~# b:autopairs_open_blacklist
         if autopairs#Strings#isInString()
             " We only need to address mode == 1 here
-            echom "In string"
             return strClose <= strOpen
         else
             " Olivia: I have no idea what this is for, and it negatively affects

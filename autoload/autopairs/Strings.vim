@@ -196,7 +196,6 @@ fun! autopairs#Strings#countHighlightMatches(open, close, highlightGroup)
             let offset = pos + len(a:close)
         endwhile
     endif
-    echom closeString . ", " . openString
     return [closePre, openPre, closePost, openPost, closeString,
                 \ openString, closePre + closePost, openPre + openPost]
 endfun
