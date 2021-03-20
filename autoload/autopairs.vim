@@ -115,6 +115,7 @@ call autopairs#Strings#define('g:AutoPairsShortcutMultilineClose', '<C-p>c')
 
 call autopairs#Strings#define('g:AutoPairsExperimentalAutocmd', 0)
 call autopairs#Strings#define('g:AutoPairsStringHandlingMode', 0)
+call autopairs#Strings#define('g:AutoPairsSingleQuotePrefixGroup', '^|\W')
 
 fun! autopairs#AutoPairsScriptInit()
     echoerr "This method has been deprecated. See the help for further steps"
@@ -693,6 +694,7 @@ func! autopairs#AutoPairsInit()
     call autopairs#Strings#define('b:AutoPairsMultibyteFastWrap', g:AutoPairsMultibyteFastWrap)
     call autopairs#Strings#define('b:AutoPairsReturnOnEmptyOnly', g:AutoPairsReturnOnEmptyOnly)
     call autopairs#Strings#define('b:AutoPairsStringHandlingMode', g:AutoPairsStringHandlingMode)
+    call autopairs#Strings#define('b:AutoPairsSingleQuotePrefixGroup', g:AutoPairsSingleQuotePrefixGroup)
 
     let b:autopairs_return_pos = 0
     let b:autopairs_saved_pair = [0, 0]
@@ -823,15 +825,24 @@ func! autopairs#AutoPairsInit()
         "         quotes, or (ew) decide to use single-quotes when
         "         double-quotes are possible
         if open == "'" && open == close
-            if b:AutoPairsSingleQuoteMode == 0
-                let item[0] = '\v(^|\W)\zs'''
+            if b:AutoPairsSingleQuoteMode == -1
+                let item[0] = '\v\zs'''
+            elseif b:AutoPairsSingleQuoteMode == 0
+                let item[0] = '\v(' . b:AutoPairsSingleQuotePrefixGroup . ')\zs'''
             elseif b:AutoPairsSingleQuoteMode == 1
-                let item[0] = '\v(^|\W)\w?\zs'''
+                let item[0] = '\v(' . b:AutoPairsSingleQuotePrefixGroup . ')\w?\zs'''
             elseif b:AutoPairsSingleQuoteMode == 2
-                let item[0] = '\v(^|\W)[' . b:AutoPairsSingleQuoteExpandFor . ']?\zs'''
+                " Note that g:AutoPairsSingleQuoteExpandFor is a separate
+                " group to make sure prefix conditions still hold. This means
+                " it still works for normal characters, and shouldn't expand
+                " for i.e. blahf'
+                " Largely quality of life; can be worked around with
+                " |b:AutoPairsSingleQuotePrefixGroup| and mode == 0 if other
+                " behavior is desired.
+                let item[0] = '\v(' . b:AutoPairsSingleQuotePrefixGroup . ')[' . b:AutoPairsSingleQuoteExpandFor . ']?\zs'''
             else
                 echoerr 'Invalid b:AutoPairsSingleQuoteMode: ' . b:AutoPairsSingleQuoteMode
-                    \ . ". Only 0, 1, or 2 are allowed."
+                    \ . ". Only -1, 0, 1, and 2 are allowed values."
             endif
         end
     endfor

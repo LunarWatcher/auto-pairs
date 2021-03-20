@@ -19,6 +19,7 @@
 * Made explicit jump keys map themselves if no mappings are defined. The explicit meaning of the map may change, but it's designed not to conflict with other keys (and as such, it's designed to maintain backwards-compatibility, without breaking stuff)
 * Internal: moved open pair balancing to a separate function
 * Prevent an explicit close key from preventing close when it's also desired to close by the normal key
+* Documentation cleanup of the troubleshooting section (copy editing, general updates, remove bad advice)
 
 ## Removed
 * An API that gave some minor customization access to pairs. The API has been replaced with a substantially more flexible API (see `:h autopairs-pair-object` for more details; **potentially breaking**)

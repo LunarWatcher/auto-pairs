@@ -631,7 +631,7 @@ value = 1:
 
 Default: 2
 Default for upstream: 0
-Allowed values: [0, 1, 2]
+Allowed values: [-1, 0, 1, 2]
 This variable also exists in a buffer variant.~
 
 Defines how to handle single-quotes. This is new in the fork and alters
@@ -639,14 +639,17 @@ existing behavior. "Default for upstream" is meant to refer to what upstream
 does, although it doesn't have this option. If you prefer the standard
 behavior of jiangmiao/auto-pairs, `let g.AutoPairsSingleQuoteMode = 0`
 
-If 0: "Standard" behavior, never expand <letter>' to <letter>''. No
-      exceptions.
-If 1: Allow one character in front of the quote to expand. Will trigger on
-      I'm.
-If 2: Allow specific characters in front of the quote to expand. Should not
-      yield false positives. Looks in |g:AutoPairsSingleQuoteExpandFor|.
-      Will not trigger on cases like I'm unless I (case sensitive) is present
-      in |g:AutoPairsSingleQuoteExpandFor|. See the second note.
+If -1: Disable, ALWAYS expand single quotes regardless of context. Not
+       recommended if you use English or any other languages where ' has a
+       central role in the language.
+If 0 : "Standard" behavior, never expand <letter>' to <letter>''. No
+       exceptions.
+If 1 : Allow one character in front of the quote to expand. Will trigger on
+       I'm.
+If 2 : Allow specific characters in front of the quote to expand. Should not
+       yield false positives. Looks in |g:AutoPairsSingleQuoteExpandFor|.
+       Will not trigger on cases like I'm unless I (case sensitive) is present
+       in |g:AutoPairsSingleQuoteExpandFor|. See the second note.
 
 You can also use an
 `autocmd FileType <text files> let b:AutoPairsSingleQuoteMode = 0` if you
@@ -666,6 +669,24 @@ that's why option 0 exists.
 
 You're free to chose whatever mode you want in whatever files you want in
 whatever combination you want based on what works for you.
+
+
+------------------------------------------------------------------------------
+                                             *g:AutoPairsSingleQuotePrefixGroup*
+
+
+Type: Very magic (|\v|) regex string
+Default: '^|\W'
+This variable also exists in a buffer variant.~
+
+For all |g:AutoPairsSingleQuoteMode| except -1 (for obvious reasons), this is
+the regex used to determine when to expand. Essentially, look at the character
+in front of the cursor; if it matches one of these, expand.
+
+Note that for |g:AutoPairsSingleQuoteMode| == 2,
+|g:AutoPairsSingleQuoteExpandFor| is "appended" to the same group. It's not a
+part of the variable itself, however, and can consequentially not be edited as
+a part of this variable.
 
 ------------------------------------------------------------------------------
                                                *g:AutoPairsSingleQuoteExpandFor*
@@ -1095,31 +1116,101 @@ The relevant code is in autopairs#Strings#countHighlightMatches() - pull
 requests or just ideas on how to better handle unicode in these cases are
 welcome.
 
+Performance aspects~
+
+This section does discuss a few non-current aspects to the code. The TL;DR:
+is that option 1 is slower on certain code. For a more "stable" experience,
+use option 0 or 2 instead of 1.
+
+... and there's also a few tech details being discussed.
+
+-----
+
+The options for no differentiation between strings and code and the option for
+disabling auto-pairs inside strings (respectively options 0 and 2) are by far
+the lightest options. These don't cause any noticable lag. Just for reference,
+in a test of inserting over 200 open characters, the method used to check if
+the cursor is in a string was called 200 times; one per insertion, for a total
+of .006623 seconds for 270 calls. At 24 microseconds per (prior to a performance
+patch to avoid the ridiculously slow `join` function - I guess that's a
+side-effect of not using vim9), it's not _fast_, but it's nowhere close enough
+to cause a slowdown.
+
+The simple fact is, getting syngroups and converting them to their name
+equivalents isn't specifically fast. As a consequence, this means option 1
+does come with a few "warnings".
+
+For a line of over 200 open characters, in the original unoptimized pattern,
+11 seconds (!!) were used for processing a single function. Over 100k calls to
+syngroup checking.
+
+The total time consumed was cut down by 5 times by using match(code for
+getting syngroup names resulting in a list, pattern) instead of
+`join(code for getting syngroup names, ',') =~?` -- however, still clocking in
+over 2 seconds with a substantial slowdown of insertion when rapidly inserting
+characters after about 180 characters, it's still not optimal.
+
+With a small optimization for sequential characters, we hit about 400
+characters before a slowdown occurs. This is largely important because it
+means we substantially reduce the number of calls to synstack.
+
+A few thing sto keep in mind here: only the relevant open and close characters
+are indexed, which means a line consisting of thousands of wrapped characters
+isn't on its own a problem. The problem starts showing up when all of those
+are pairs. Of course, if you have hundreds of the open and close pairs on the
+same line, you have bigger problems than auto-pairs struggling.
+
+The optimizations are extremely linear, however. In a case like ( ( ( ( ( (...
+the optimizations do fall apart. Finding pairs is based on match() is done to
+compensate for multibyte pairs and some unicode support, making space
+detection mildly annoying to implement.
+
+Unfortunately, languages are complex. These ideas fall apart:
+
+  Idea                                              Broken by
+  --------------------------------------------------------------------------
+  Check for quotes on line                          raw strings
+  Byte by byte parsing                              Multibyte pairs, unicode
+                                                    pairs
+  Semantic parsing                                  Auto-pairs, not language
+                                                    parser.
+
+The current systems should still reduce calls as much as possible _in real
+code_. I do not give any guarantees for performance in ridiculously complex
+lines. If you need to edit these lines, I highly recommend that you pick
+another string handling mode.
+
+The system also only checks the character set you type (i.e. if you have a
+line of a lot of different unique pairs, but type a [, only [ and ] (assuming
+the standard pair is used) are checked for syngroups. This alone substantially
+reduces the number of calls to synstack(). Again, synstack is slow, so
+reducing calls to that method is the best option for improving performance.
+
 ==============================================================================
 6. Troubleshooting                                   *autopairs-troubleshooting*
 
-This plugin remaps keys `([{'"}]) <BS>`
+This plugin remaps, among others, `([{'"}]) <BS> <CR>` . BS and CR can be
+controlled by options in the plugin, but the rest are mapped based on what
+pairs you're using. See |g:AutoPairs| 
 
-If auto pairs cannot work, use |:imap| to check if the map is corrected.
+If auto pairs doesn't work, use |:verbose| |:imap| to check if the map is correct.
 
-The correct map should be: >
+For i.e. `:verbose imap (`, the correct map is: >
 
-    <C-R>=AutoPairsInsert("\(")<CR>
+    <C-R>=AutoPairsInsert("(")<CR>
 
-Or the plugin conflicts with some other plugins. Use command: >
-    :call AutoPairsInit()
-<
-to remap the keys.
-
---- How to insert parens purely? ---
+--- How do I insert a character registered as a part of a pair without triggering the plugin? ---
 
 There are 3 ways:
 
-    1. Use `Ctrl-V )` to insert paren without trigger the plugin.
+    1. Use `Ctrl-V )` to insert an open or close character (where ) is any
+        open or close character) without trigger the plugin.
 
-    2. Use `Alt-P` to turn off the plugin.
+    2. Use `Alt-P` or `Ctrl-P Ctrl-T` to turn off the plugin. See
+        |g:AutoPairsShortcutToggle|
 
-    3. Use `DEL` or `<C-O>x` to delete the character insert by plugin.
+    3. Use `DEL`, `<C-O>x`, or other "normal" means of deletion to delete the
+        character insert by the plugin.
 
 ------------------------------------------------------------------------------
 6.1. Conflicting keybinds                                 *autopairs-conflicts*

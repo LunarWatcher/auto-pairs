@@ -120,7 +120,7 @@ fun! autopairs#Strings#countHighlightMatches(open, close, highlightGroup)
         " This is pretty much the stuff we used to have to check for balance.
         " TODO: determine the significance of s:getline()
         let [before, after, afterline] = autopairs#Strings#getline()
-        
+
         let openPre = autopairs#Strings#regexCount(before, a:open)
         let openPost = autopairs#Strings#regexCount(after, a:open)
         let closePre = count(before, a:close)
@@ -144,6 +144,9 @@ fun! autopairs#Strings#countHighlightMatches(open, close, highlightGroup)
     " In order to facilitate multibyte, we need to do a search
     " First, let's sweep open
     let offset = 0
+
+    let lastPos = 0
+    let wasLastAString = 0
     while offset < last
         let pos = match(line, '\V' . a:open, offset)
         if pos == -1
@@ -151,25 +154,39 @@ fun! autopairs#Strings#countHighlightMatches(open, close, highlightGroup)
         endif
         " Hack to make it slightly more unicode-friendly.
         " At least this way we can traverse over the first character, which is
-        " what we wanna do here. 
+        " what we wanna do here.
         let firstChar = autopairs#Strings#GetFirstUnicodeChar(a:open)
-
-        let [hlBefore, hlAt, hlAfter] = [autopairs#Strings#posInGroup(lineNum, pos - len(firstChar), a:highlightGroup), 
-                    \ autopairs#Strings#posInGroup(lineNum, pos, a:highlightGroup),
-                    \ autopairs#Strings#posInGroup(lineNum, pos + len(a:open), a:highlightGroup)]
-                                                                                " We check the length of open here to make sure we get _past_ the string.
-                                                                                " Not unicode-friendly wrt. multibyte unicode pairs. Creative ideas welcome
+        if lastPos == pos - 1 && !wasLastAString
+            " Can't use wasLastAString as all three parameters, because it
+            " creates a false positive for "" - this is largely a problem
+            " because it incorrectly reports the second " as an open in a
+            " string.
+            " Might be worth using wasLastAString && a:open != a:close though.
+            " /shrug
+            let [hlBefore, hlAt, hlAfter] = [0, 0, 0]
+        else
+            let [hlBefore, hlAt, hlAfter] = [autopairs#Strings#posInGroup(lineNum, pos - len(firstChar), a:highlightGroup),
+                        \ autopairs#Strings#posInGroup(lineNum, pos, a:highlightGroup),
+                        \ autopairs#Strings#posInGroup(lineNum, pos + len(a:open), a:highlightGroup)]
+                                                                                    " We check the length of open here to make sure we get _past_ the string.
+                                                                                    " Not unicode-friendly wrt. multibyte unicode pairs. Creative ideas welcome
+        endif
+        let lastPos = pos
         if !hlAt || (hlBefore && !hlAfter && pos != last - len(a:open)) || (!hlBefore && hlAfter)
             let {offset >= cursorIdx - 1 ? 'openPost' : 'openPre'} += 1
+            let wasLastAString = 0
         else
+            let wasLastAString = 1
             let openString += 1
         endif
         " This is NOT unicode multibyte compatible, but it produces very few edge
         " cases.
         " To be clear, this only affects unicode characters, not multibyte
-        " pairs of normal single-byte characters. 
+        " pairs of normal single-byte characters.
         let offset = pos + len(a:open)
     endwhile
+    let wasLastAString = 0
+    let lastPos = 0
     if (a:open != a:close)
         " If open == close, we've already processed everything.
         " Otherwise, here we go again
@@ -187,11 +204,14 @@ fun! autopairs#Strings#countHighlightMatches(open, close, highlightGroup)
             " makes these pointless. Those pairs still expand on ", meaning
             " it's not asymmetric.
             " if there's options I've missed, please open an issue on GitHub
-            let inHl = autopairs#Strings#posInGroup(lineNum, pos, a:highlightGroup)
-            if !inHl 
+            let inHl = (lastPos == pos - 1 ? wasLastAString : autopairs#Strings#posInGroup(lineNum, pos, a:highlightGroup))
+            let lastPos = pos
+            if !inHl
                 let {offset >= cursorIdx - 1 ? 'closePost' : 'closePre'} += 1
+                let wasLastAString = 0
             else
                 let closeString += 1
+                let wasLastAString = 1
             endif
             let offset = pos + len(a:close)
         endwhile
@@ -201,20 +221,20 @@ fun! autopairs#Strings#countHighlightMatches(open, close, highlightGroup)
 endfun
 
 fun! autopairs#Strings#posInGroup(y, x, group)
-    return join(map(synstack(a:y, min([a:x, col('$')])), 'synIDattr(v:val, "name")'), ',') =~? a:group
+    return match(map(synstack(a:y, min([a:x, col('$')])), 'synIDattr(v:val, "name")'), '\c' . a:group) != -1
 endfun
 
 fun! autopairs#Strings#isInString()
     " Checks whether or not the cursor is in a string
-    " We have to do a double check to account for the fact taht we don't
+    " We have to do a double check to account for the fact that we don't
     " actually have the chars yet. We therefore check both the current and the
     " past char. This results in the edge cases of 'string'|'string', but in a
     " case like this, a space isn't gonna kill you.
     " More creative ideas are welcome here, though. A double check is somewhat
     " heavy, though. Synstack seems to be an overall heavy call.
     " TODO: revisit
-    return join(map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")'), ',') =~? 'string' && 
-                \ join(map(synstack(line('.'), col('.') - 1), 'synIDattr(v:val, "name")'), ',') =~? 'string'
+    return match(map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")'), '\cstring') != -1 &&
+                \ match(map(synstack(line('.'), col('.') - 1), 'synIDattr(v:val, "name")'), '\cstring') != -1
 
 endfun
 " }}}
