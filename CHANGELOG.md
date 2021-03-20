@@ -21,8 +21,8 @@
 * Prevent an explicit close key from preventing close when it's also desired to close by the normal key
 
 ## Removed
-* An API that gave some minor customization access to pairs. The API has been replaced with a substantially more flexible API (see `:h autopairs-pair-object`)
-* `g:AutoPairsWildClosedPair`
+* An API that gave some minor customization access to pairs. The API has been replaced with a substantially more flexible API (see `:h autopairs-pair-object` for more details; **potentially breaking**)
+* `g:AutoPairsWildClosedPair` (has been unused for a long time)
 
 ## Deprecated
 * `autopairs#AutoPairsScriptInit`
