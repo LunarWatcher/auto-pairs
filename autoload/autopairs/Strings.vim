@@ -160,7 +160,7 @@ fun! autopairs#Strings#countHighlightMatches(open, close, highlightGroup)
                                                                                 " We check the length of open here to make sure we get _past_ the string.
                                                                                 " Not unicode-friendly wrt. multibyte unicode pairs. Creative ideas welcome
         if !hlAt || (hlBefore && !hlAfter && pos != last - len(a:open)) || (!hlBefore && hlAfter)
-            let {offset > cursorIdx ? 'openPost' : 'openPre'} += 1
+            let {offset >= cursorIdx - 1 ? 'openPost' : 'openPre'} += 1
         else
             let openString += 1
         endif
@@ -189,7 +189,7 @@ fun! autopairs#Strings#countHighlightMatches(open, close, highlightGroup)
             " if there's options I've missed, please open an issue on GitHub
             let inHl = autopairs#Strings#posInGroup(lineNum, pos, a:highlightGroup)
             if !inHl 
-                let {offset > cursorIdx ? 'closePost' : 'closePre'} += 1
+                let {offset >= cursorIdx - 1 ? 'closePost' : 'closePre'} += 1
             else
                 let closeString += 1
             endif
