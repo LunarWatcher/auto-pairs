@@ -7,10 +7,6 @@ fun! autopairs#Insert#checkBalance(open, close, opt, before, after, afterline)
     if a:open !~# b:autopairs_open_blacklist
         if g:AutoPairsStringHandlingMode == 1 && autopairs#Strings#isInString()
             " We only need to address mode == 1 here.
-            echom a:open
-            echom strOpen
-            echom strClose
-            echom '...'
             return strClose <= strOpen 
                         \ || ((a:open == a:close || a:close == "'") && (strOpen + strClose) % 2 == 0)
         else
