@@ -165,9 +165,9 @@ fun! autopairs#Strings#countHighlightMatches(open, close, highlightGroup)
             " /shrug
             let [hlBefore, hlAt, hlAfter] = [0, 0, 0]
         else
-            let [hlBefore, hlAt, hlAfter] = [autopairs#Strings#posInGroup(lineNum, pos - len(firstChar), a:highlightGroup),
-                        \ autopairs#Strings#posInGroup(lineNum, pos, a:highlightGroup),
-                        \ autopairs#Strings#posInGroup(lineNum, pos + len(a:open), a:highlightGroup)]
+            let [hlBefore, hlAt, hlAfter] = [autopairs#Strings#posInGroup(lineNum, pos + 1 - len(firstChar), a:highlightGroup),
+                        \ autopairs#Strings#posInGroup(lineNum, pos + 1, a:highlightGroup),
+                        \ autopairs#Strings#posInGroup(lineNum, pos + 1 + len(a:open), a:highlightGroup)]
                                                                                     " We check the length of open here to make sure we get _past_ the string.
                                                                                     " Not unicode-friendly wrt. multibyte unicode pairs. Creative ideas welcome
         endif
@@ -204,7 +204,7 @@ fun! autopairs#Strings#countHighlightMatches(open, close, highlightGroup)
             " makes these pointless. Those pairs still expand on ", meaning
             " it's not asymmetric.
             " if there's options I've missed, please open an issue on GitHub
-            let inHl = (lastPos == pos - 1 ? wasLastAString : autopairs#Strings#posInGroup(lineNum, pos, a:highlightGroup))
+            let inHl = (lastPos == pos - 1 ? wasLastAString : autopairs#Strings#posInGroup(lineNum, pos + 1, a:highlightGroup))
             let lastPos = pos
             if !inHl
                 let {offset >= cursorIdx - 1 ? 'closePost' : 'closePre'} += 1
