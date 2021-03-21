@@ -1191,7 +1191,7 @@ reducing calls to that method is the best option for improving performance.
 
 This plugin remaps, among others, `([{'"}]) <BS> <CR>` . BS and CR can be
 controlled by options in the plugin, but the rest are mapped based on what
-pairs you're using. See |g:AutoPairs| 
+pairs you're using. See |g:AutoPairs|
 
 If auto pairs doesn't work, use |:verbose| |:imap| to check if the map is correct.
 
@@ -1199,7 +1199,8 @@ For i.e. `:verbose imap (`, the correct map is: >
 
     <C-R>=AutoPairsInsert("(")<CR>
 
---- How do I insert a character registered as a part of a pair without triggering the plugin? ---
+How do I insert a character registered as a part of a pair without~
+                        triggering the plugin?~
 
 There are 3 ways:
 

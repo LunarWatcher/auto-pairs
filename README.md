@@ -40,7 +40,11 @@ At this point, there's far too many differences to list all of them. Aside remov
 * Option for entirely disabling jump
 * Option for a pre-init hook
 * Option for disabling in some directories
+* Options for single-quote handling around text
+* QOL improvements for matching
+* Balance checks with advanced modes (See `:h g:AutoPairsStringHandlingMode`)
 * ... Lots of bugfixes and general improvements
+* Support and continued development :)
 
 The entire list is too long to place in its entirety here -- the documentation should cover all the variables, so reading it should give you a complete idea of the changes.
 
@@ -62,6 +66,8 @@ Functionally, however, it's meant to resemble upstream as much as possible, part
 * HTML support: hardcoding HTML tags works, but writing a tag autoinserter requires substantial rewrites to the core engine. Instead, may I introduce you to [Tim Pope](https://github.com/tpope/vim-ragtag)? Or alternatively [alvan](https://github.com/alvan/vim-closetag)?
 
 ## Features
+
+Note that this section is currently out of date.
 
 `|` represents the cursor.
 
