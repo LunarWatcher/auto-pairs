@@ -165,11 +165,20 @@ fun! autopairs#Strings#countHighlightMatches(open, close, highlightGroup)
             " /shrug
             let [hlBefore, hlAt, hlAfter] = [0, 0, 0]
         else
-            let [hlBefore, hlAt, hlAfter] = [autopairs#Strings#posInGroup(lineNum, pos + 1 - len(firstChar), a:highlightGroup),
-                        \ autopairs#Strings#posInGroup(lineNum, pos + 1, a:highlightGroup),
-                        \ autopairs#Strings#posInGroup(lineNum, pos + 1 + len(a:open), a:highlightGroup)]
+            " Optimization: only look for hlAt first
+            let [hlBefore, hlAt, hlAfter] = [0, autopairs#Strings#posInGroup(lineNum, pos + 1, a:highlightGroup), 0]
                                                                                     " We check the length of open here to make sure we get _past_ the string.
                                                                                     " Not unicode-friendly wrt. multibyte unicode pairs. Creative ideas welcome
+            " If the current character is highlighted, _then_ we care about what comes next.
+            " This is largely because if the current character isn't
+            " highlighted, who cares? It's obviously not in a string, so fuck that.
+            " If, however, it is highlighted, then we need to check the next characters as well.
+            " This can be further optimized by detecting string characters,
+            " but that's a job for later.
+            if hlAt
+                let [hlBefore, hlAfter] = [autopairs#Strings#posInGroup(lineNum, pos + 1 - len(firstChar), a:highlightGroup),
+                            \\ autopairs#Strings#posInGroup(lineNum, pos + 1 + len(a:open), a:highlightGroup)]
+            endif
         endif
         let lastPos = pos
         if !hlAt || (hlBefore && !hlAfter && pos != last - len(a:open)) || (!hlBefore && hlAfter)
