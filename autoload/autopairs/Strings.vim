@@ -145,13 +145,14 @@ fun! autopairs#Strings#countHighlightMatches(open, close, highlightGroup)
     " First, let's sweep open
     let offset = 0
 
-    let lastPos = 0
+    let lastPos = 1
     let wasLastAString = 0
     while offset < last
         let pos = match(line, '\V' . a:open, offset)
         if pos == -1
             break
         endif
+        let pos = pos + 1
         " Hack to make it slightly more unicode-friendly.
         " At least this way we can traverse over the first character, which is
         " what we wanna do here.
@@ -166,7 +167,7 @@ fun! autopairs#Strings#countHighlightMatches(open, close, highlightGroup)
             let [hlBefore, hlAt, hlAfter] = [0, 0, 0]
         else
             " Optimization: only look for hlAt first
-            let [hlBefore, hlAt, hlAfter] = [0, autopairs#Strings#posInGroup(lineNum, pos + 1, a:highlightGroup), 0]
+            let [hlBefore, hlAt, hlAfter] = [0, autopairs#Strings#posInGroup(lineNum, pos, a:highlightGroup), 0]
                                                                                     " We check the length of open here to make sure we get _past_ the string.
                                                                                     " Not unicode-friendly wrt. multibyte unicode pairs. Creative ideas welcome
             " If the current character is highlighted, _then_ we care about what comes next.
@@ -176,8 +177,8 @@ fun! autopairs#Strings#countHighlightMatches(open, close, highlightGroup)
             " This can be further optimized by detecting string characters,
             " but that's a job for later.
             if hlAt
-                let [hlBefore, hlAfter] = [autopairs#Strings#posInGroup(lineNum, pos + 1 - len(firstChar), a:highlightGroup),
-                            \\ autopairs#Strings#posInGroup(lineNum, pos + 1 + len(a:open), a:highlightGroup)]
+                let [hlBefore, hlAfter] = [autopairs#Strings#posInGroup(lineNum, pos - len(firstChar), a:highlightGroup),
+                            \ autopairs#Strings#posInGroup(lineNum, pos + len(a:open), a:highlightGroup)]
             endif
         endif
         let lastPos = pos
