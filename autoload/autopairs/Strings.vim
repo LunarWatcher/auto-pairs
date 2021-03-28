@@ -152,6 +152,7 @@ fun! autopairs#Strings#countHighlightMatches(open, close, highlightGroup)
         if pos == -1
             break
         endif
+        let offset = pos + len(a:open)
         let pos = pos + 1
         " Hack to make it slightly more unicode-friendly.
         " At least this way we can traverse over the first character, which is
@@ -193,7 +194,6 @@ fun! autopairs#Strings#countHighlightMatches(open, close, highlightGroup)
         " cases.
         " To be clear, this only affects unicode characters, not multibyte
         " pairs of normal single-byte characters.
-        let offset = pos + len(a:open)
     endwhile
     let wasLastAString = 0
     let lastPos = 0
@@ -207,6 +207,7 @@ fun! autopairs#Strings#countHighlightMatches(open, close, highlightGroup)
             if pos == -1
                 break
             endif
+            let offset = pos + len(a:close)
             " Optimization (based on an assumption; feel free to prove me
             " wrong): I've not been able to find a single language with
             " asymmetric open and close. The obvious exception is if someone
@@ -223,7 +224,6 @@ fun! autopairs#Strings#countHighlightMatches(open, close, highlightGroup)
                 let closeString += 1
                 let wasLastAString = 1
             endif
-            let offset = pos + len(a:close)
         endwhile
     endif
     return [closePre, openPre, closePost, openPost, closeString,
