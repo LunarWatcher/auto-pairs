@@ -68,6 +68,7 @@ call autopairs#Strings#define('g:AutoPairsShortcutToggle', g:AutoPairsCompatible
 call autopairs#Strings#define('g:AutoPairsShortcutFastWrap', g:AutoPairsCompatibleMaps ? '<M-e>' : '<C-f>')
 
 call autopairs#Strings#define('g:AutoPairsMoveCharacter', "()[]{}\"'")
+call autopairs#Strings#define('g:AutoPairsMoveExpression', '<C-p>%key')
 
 " Variable controlling whether or not to require a space or EOL to complete
 " bracket pairs. Extension off Krasjet.
@@ -695,6 +696,8 @@ func! autopairs#AutoPairsInit()
     call autopairs#Strings#define('b:AutoPairsReturnOnEmptyOnly', g:AutoPairsReturnOnEmptyOnly)
     call autopairs#Strings#define('b:AutoPairsStringHandlingMode', g:AutoPairsStringHandlingMode)
     call autopairs#Strings#define('b:AutoPairsSingleQuotePrefixGroup', g:AutoPairsSingleQuotePrefixGroup)
+    call autopairs#Strings#define('b:AutoPairsMoveExpression', g:AutoPairsMoveExpression)
+    " Buffer definitions
 
     let b:autopairs_return_pos = 0
     let b:autopairs_saved_pair = [0, 0]
@@ -847,10 +850,10 @@ func! autopairs#AutoPairsInit()
         end
     endfor
 
-    if g:AutoPairsEnableMove
+    if g:AutoPairsEnableMove && b:AutoPairsMoveExpression != ""
         for key in split(b:AutoPairsMoveCharacter, '\s*')
             let escaped_key = substitute(key, "'", "''", 'g')
-            execute 'inoremap <silent> <buffer> <C-'.key."> <C-R>=autopairs#AutoPairsMoveCharacter('".escaped_key."')<CR>"
+            execute 'inoremap <silent> <buffer> ' . substitute(b:AutoPairsMoveExpression, "%key", key, "") . " <C-R>=autopairs#AutoPairsMoveCharacter('".escaped_key."')<CR>"
         endfor
     endif
 

@@ -1186,6 +1186,22 @@ the standard pair is used) are checked for syngroups. This alone substantially
 reduces the number of calls to synstack(). Again, synstack is slow, so
 reducing calls to that method is the best option for improving performance.
 
+------------------------------------------------------------------------------
+                                                     *g:AutoPairsMoveExpression*
+This variable exists in a buffer variant~
+Type: String
+Default: <C-p>%key
+
+This variable MUST contain %key; it's a placeholder argument for any of the
+characters in |g:AutoPairsMoveCharacter|.
+
+For the same keybinds as jiangmiao/auto-pairs, use "<C-%key>".
+
+Note that this only takes effect if |g:AutoPairsEnableMove|
+
+
+*autopairs-end-of-options* (this tag exists purely for doc editing purposes and
+                            has no meaning for the plugin)
 ==============================================================================
 6. Troubleshooting                                   *autopairs-troubleshooting*
 

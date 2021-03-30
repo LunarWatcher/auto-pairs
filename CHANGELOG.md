@@ -10,9 +10,10 @@
     * The option to disable delete for individual pairs
     * The option to map a related or unrelated key to explicitly jump through the pair. 
 * `g:AutoPairsShortcutMultilineClose` ([#19](https://github.com/lunarwatcher/auto-pairs/issues/19), [#21](https://github.com/lunarwatcher/auto-pairs/issues/21))
-* Add `g:AutoPairsExperimentalAutocmd`
-* Add `g:AutoPairsStringHandlingMode`
-* Add `:AutoPairsToggle`, `:AutoPairsDisable`, and `:AutoPairsEnable` (upstream [#278](https://github.com/jiangmiao/auto-pairs/issues/278), missed in the initial ticket crunch)
+* Added `g:AutoPairsExperimentalAutocmd`
+* Added `g:AutoPairsStringHandlingMode`
+* Added `:AutoPairsToggle`, `:AutoPairsDisable`, and `:AutoPairsEnable` (upstream [#278](https://github.com/jiangmiao/auto-pairs/issues/278), missed in the initial ticket crunch)
+* Added `g:AutoPairsMoveExpression` (fixes [#25](https://github.com/LunarWatcher/auto-pairs/issues/25); an issue introduced by a fix to [#317](https://github.com/jiangmiao/auto-pairs/issues/317) that remapped from `<M-key>` to `<C-key>` (which doesn't work because input processing artifacts)).
 
 ## Changed
 * Made `autopairs#AutoPairsDefine` accept a list as well. The list contains a different type of more powerful objects; see the documentation (autopairs-pair-object)
