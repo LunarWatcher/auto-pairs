@@ -44,11 +44,32 @@ Other installation methods are of course supported, but aren't documented
 because the author of this help document couldn't be bothered to add all of
 them. Most of them should work with a similar syntax anyway, and there's no
 special install instructions aside just installing it. No compiling, no
-external dependencies, just pure Vimscript.
+external dependencies, just pure Vimscript. TL;DR: use your favorite plugin
+management method/plugin
 
 Note that setting |g:AutoPairsCompatibleMaps| to 0 is HIGHLY recommended.
 Future maps, if any are added, will be built around a ctrl-based system rather
 than a meta (alt)-based one.
+
+
+                                                       *autopairs-contributing*
+Contributing~
+
+if you enjoy the plugin, please consider starring it on GitHub: 
+        https://github.com/LunarWatcher/auto-pairs
+
+This fork is maintained (and will continue to be maintained). Issues can
+currently be submitted to: https://github.com/LunarWatcher/auto-pairs/issues
+
+I do, however, keep an eye on the issue tracker in jiangmiao's repo, because
+this fork doesn't have nearly as many users as the original.
+
+Questions about the plugin can be submitted as an issue, but should preferably 
+be submitted on GitHub Discussions, in the repo previously linked (direct
+link: https://github.com/LunarWatcher/auto-pairs/discussions)
+
+Pull requests are also more than welcome, and I'll make sure they don't stick
+around for 6 years without being merged.
 
 ==============================================================================
 2. Features                                                 *autopairs-features*
@@ -1195,7 +1216,7 @@ Default: <C-p>%key
 This variable MUST contain %key; it's a placeholder argument for any of the
 characters in |g:AutoPairsMoveCharacter|.
 
-For the same keybinds as jiangmiao/auto-pairs, use "<C-%key>".
+For the same keybinds as jiangmiao/auto-pairs, use "<M-%key>".
 
 Note that this only takes effect if |g:AutoPairsEnableMove|
 
