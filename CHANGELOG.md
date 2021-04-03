@@ -28,6 +28,7 @@
 
 ## Deprecated
 * `autopairs#AutoPairsScriptInit`
+* `g:AutoPairsEnableMove` (deprecated in favor of `let g:AutoPairsMoveExpression = ""`)
 
 # 3.0.0-beta7
 `g:AutoPairsVersion = 30052`

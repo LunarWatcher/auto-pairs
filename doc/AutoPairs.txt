@@ -55,7 +55,7 @@ than a meta (alt)-based one.
                                                        *autopairs-contributing*
 Contributing~
 
-if you enjoy the plugin, please consider starring it on GitHub: 
+if you enjoy the plugin, please consider starring it on GitHub:
         https://github.com/LunarWatcher/auto-pairs
 
 This fork is maintained (and will continue to be maintained). Issues can
@@ -64,7 +64,7 @@ currently be submitted to: https://github.com/LunarWatcher/auto-pairs/issues
 I do, however, keep an eye on the issue tracker in jiangmiao's repo, because
 this fork doesn't have nearly as many users as the original.
 
-Questions about the plugin can be submitted as an issue, but should preferably 
+Questions about the plugin can be submitted as an issue, but should preferably
 be submitted on GitHub Discussions, in the repo previously linked (direct
 link: https://github.com/LunarWatcher/auto-pairs/discussions)
 
@@ -84,12 +84,19 @@ Delete in pair: >
         input: foo[<BS>]
         output: foo
 
+Delete after pair: >
+        input: foo[]<BS>
+        output: foo
+<
 Insert new indented line after Return: >
 
         input: {|} (press <CR> at |)
         output: {
             |
         }
+
+
+See |autopairs-diagnose-indent| if you're not getting the expected indent.
 
 Insert spaces before closing characters, only for [], (), {}: >
 
@@ -106,10 +113,12 @@ Skip ' when inside a word: >
 
         input: foo| (press ' at |)
         output: foo'
+See |g:AutoPairsSingleQuoteMode|, |g:AutoPairsSingleQuoteExpandFor|,
+    |g:AutoPairsSingleQuotePrefixGroup|
 
 Skip closed bracket: >
 
-        input: []
+        input: [|]
         output: []
 
 Ignore auto pair when previous character is '\': >
@@ -119,14 +128,14 @@ Ignore auto pair when previous character is '\': >
 
 Fast Wrap: >
 
-        input: |'hello' (press (<M-e> at |)
+        input: (|)'hello' (press (<M-e> at |)
         output: ('hello')
 
     Wrap string, only support c style string.
         input: |'h\\el\'lo' (press (<M-e> at |)
         output ('h\\ello\'')
 
-        input: |[foo, bar()] (press (<M-e> at |)
+        input: (|)[foo, bar()] (press (<M-e> at |)
         output: ([foo, bar()])
 
 Quick jump to closed pair: >
@@ -199,6 +208,10 @@ See |autopairs-flymode| section for details
 Only inserting when the next character is a space:
 |g:AutoPairsCompleteOnlyOnSpace|
 
+Note that not all features are documented in this section, because listing and
+previewing all of them isn't feasible. Some of them have implementation
+details that requires an explicit listing.
+
 ------------------------------------------------------------------------------
 2.1. Multibyte pairs                                       *autopairs-multibyte*
 
@@ -227,24 +240,25 @@ eg: >
 
     ")"
 
-Fly Mode is DISABLED by default. To enable Fly Mode add following to your
+Fly Mode is disabled by default. To enable Fly Mode, add following to your
 '.vimrc': >
 
     let g:AutoPairsFlyMode = 1
 
-Default Options: >
+Default options: >
 
     let g:AutoPairsFlyMode = 0
     let g:AutoPairsShortcutBackInsert = '<C-p><C-b>'
 
 Note: Flymode is currently considered buggy and unreliable. It should be avoided
 unless you enjoy spending time on flymode doing weird shit while you're
-typing.
+typing. Creative ideas and/or pull requests for making flymode less bad are
+welcome.
 
 ==============================================================================
 4. Shortcuts                                               *autopairs-shortcuts*
 
-System Shortcuts:
+Shortcuts relying on central keys:
     <CR>    : Insert new indented line after return if cursor in blank brackets
               or quotes. (|g:AutoPairsCRKey|, |g:AutoPairsMapCR|)
     <BS>    : Delete brackets in pair (|g:AutoPairsMapBS|)
@@ -258,12 +272,15 @@ These are also defined, but may be one of two variants. See
     <C-p><C-j> or <M-n>: Jump to next closed pair (|g:AutoPairsShortcutJump|)
     <C-p><C-b> or <M-b>: BackInsert (|g:AutoPairsShortcutBackInsert|)
 
+And finally, other shortcuts defined by auto-pairs:
+    <C-p>%key          : Move to closed pair (where the pair is represented by
+                         %key). For the list of valid `%key`s, see
+                         |g:AutoPairsMoveCharacter|.
+                         Configurable through |g:AutoPairsMoveExpression|
 
-    To rebind the last four, and/or in case of conflicts with
-    other keys: >
-        let g:AutoPairsShortcutToggle = '<another key>'
-<
-    If the key is empty string '', then the shortcut will be disabled.
+All the above can be remapped by using the appropriate configuration variable.
+Setting a configuration variable to "" disables that keybind
+
 
 ------------------------------------------------------------------------------
 4.1. Remapping shortcuts                          *autopairs-shortcut-remapping*
@@ -305,29 +322,70 @@ longer the case.
 The example above will enable matching of `<` with `>`. You can also use: >
     let g:AutoPairs = { '(': ')', ...}
 <
-    TODO: expand with new additions to AutoPairsAddPairs
 ... where the `...` represents additional mappings, but note that this overrides
 all the defaults. If you only do the first mapping in the above example, for
 an instance, the ONLY key bracket/quote/other auto-pairs knows of is ().
 
-Similarly, you can use a the FileType event to
-`let b:AutoPairs = autopairs#AutoPairsDefine({'<': '>'})`, and only have <> for some
-filetypes. Again, dropping AutoPairsDefine and just using the object will
-result in _only_ <> being matched. Newer versions of the plugin additionally
-ship with |g:AutoPairsLanguagePairs|. Please read the docs carefully before
-using it, though; there's currently no way to sanely set it in a way that
-preserves defaults without forcing autopairs to load in an awkward way.
-
-Not using |autopairs#AutoPairsDefine()| will result in the standards being lost. If you
-don't want to use the standards, go ahead and omit this function.
-Additionally, if you want to add new types after loading the file
-(specifically, when BufEnter has been triggered for auto-pairs), you need to
-use |autopairs#AutoPairsMap()| to register the new keybind. Using this function isn't
-necessary for standard |FileType| autocmds, however.
-
 Previous versions of this document supported a type of assignment that doesn't
 work due to plugin sourcing systems.
 
+Modern assignment~
+
+Newer versions of auto-pairs supports a lot more fancy systems for pair
+management, including dealing with languages and filetype matching.
+The full details are available in |autopairs#AutoPairsDefine()| and
+|autopairs-pair-object|, but the gist of it:
+
+>
+    let g:AutoPairs = autopairs#AutoPairsDefine([
+        \ "<": ">",                                 " This is still valid
+        \ {"open": "<", "close": ">"},              " This is a verbose equivalent
+        \ {"open": "<", "close": ">", "filetype": ["html"]} " This is a filetype-specific mapping
+    \ ],
+    \ ["[",     " And the final argument is an optional argument containing pairs to remove
+    \ '"""' ]   " This config removes [] and """"""
+    \ )
+<
+Note that the above block is somewhat undefined behavior due to it containing
+three equivalent pairs. It shouldn't be directly copy-pasted into your config,
+because it might not work. The pair objects are valid, however, and the
+removals are, but the three pair objects together probably aren't.
+
+The old systems are still valid, however, but doesn't support the new fancy
+objects. This means `autopairs#AutoPairsDefine({'<': '>'})` is still valid. It
+does, however, not support the new pair objects entirely. You can add pair
+objects, but it's not going to handle filetypes. This is by design.
+
+The variable g:AutoPairs is still largely identical, but can now hold
+string-string pairs as well as string-object pairs, where the object is,
+again, an |autopairs-pair-object|. Processing is indirectly done through
+helper functions, though, which is why adding a pair object directly to
+|g:AutoPairs| or |b:AutoPairs| doesn't make a difference.
+
+To end the abstract theory, here's one example of usage:
+>
+    let g:AutoPairs = autopairs#AutoPairsDefine([
+                \ {"open": '\w\zs<', "close": '>'},
+                \ {"open": "$", "close": "$", "filetype": "tex"},
+                \ {"open": '\\left(', 'close': '\right)', "filetype": "tex"},
+                \ {"open": '\vclass .{-} (: (.{-}[ ,])+)? ?\{', 'close': '};', 'mapopen': '{', 'filetype': 'cpp'},
+                \ {"open": "*", "close": "*", "filetype": ["help"]},
+                \ {"open": "|", "close": "|", "filetype": "help"}
+        \ ])
+<
+
+This is config from my personal vimrc (as of 03.04.2021). There's lots of ways
+to use the variable, of course, which largely depends on what you work with on
+a day-to-day basis.
+
+It's also possible to add pairs to the default in other ways, using
+|autopairs#AutoPairsAddPair()| and |autopairs#AutoPairsAddPairs()|. This
+bypasses autopairs#AutoPairsDefine(), but still loads defaults.
+
+The methods exist because they're used internally, but have been exposed so
+you can use them however you see fit.
+
+Multibyte~
 `g:AutoPair` additionally supports several types of multibyte pairs. If you're
 frequently coding in an HTML template language, `"{%": "%}"` can be added to
 the buffer variant of this variable (used in combination with an
@@ -344,14 +402,7 @@ There shouldn't be a limit the length (though, for obvious reasons, things
 might go wrong if you decide to input an obnoxiously long mapping), so you
 should be able to map all pairs used by your favorite language or framework.
 
-You can set |b:AutoPairs| before |BufEnter|: >
-
-    au Filetype FILETYPE let b:AutoPairs = {"(": ")"}
-
-This sets |AutoPairs| to only match for parenthesis for 'FILETYPE'. See also
-|g:AutoPairsLanguagePairs|.
                                                      |autopairs-weird-behavior|
-
 
 Open is used in a regex search, and because auto-pairs applies stuff directly,
 there's a minor input escape issue. Most people aren't going to experience it,
@@ -373,6 +424,11 @@ regex in the closing pair.
 Note that all the pairs are run through a \V, so some characters should be
 entirely escaped. Direct use consequentially means you can `\v` and get
 creative with regexes for pairs.
+
+Section changelog~
+    v3.0.0-beta8:
+        - Add updates to |autopairs#AutoPairsDefine| and other functions
+        - Cleanup
 
 ------------------------------------------------------------------------------
                                                 *g:AutoPairsCompleteOnlyOnSpace*
@@ -1006,7 +1062,7 @@ See also: |\v|, |\V|
 ------------------------------------------------------------------------------
                                                          *g:AutoPairsEnableMove*
                                                                            int
-
+This variable is deprecated~
 Default: 0
 
 Whether or not to enable default mappings for g:AutoPairsMoveCharacter, a
@@ -1024,6 +1080,8 @@ Alternatively, if you like the move character feature
 <
 The function can theoretically be used with any characters. For a default
 mapping to <M-key>, add it to g:AutoPairsMoveCharacter.
+
+Please use |g:AutoPairsMoveExpression|
 
 ------------------------------------------------------------------------------
                                                      *g:AutoPairsCompatibleMaps*
@@ -1218,8 +1276,8 @@ characters in |g:AutoPairsMoveCharacter|.
 
 For the same keybinds as jiangmiao/auto-pairs, use "<M-%key>".
 
-Note that this only takes effect if |g:AutoPairsEnableMove|
-
+To disable the move feature, set this variable to ""~
+This detail replaces |g:AutoPairsEnableMove|, which is now deprecated.
 
 *autopairs-end-of-options* (this tag exists purely for doc editing purposes and
                             has no meaning for the plugin)
@@ -1481,6 +1539,7 @@ See also |autopairs#AutoPairsDefine()|
 
 ------------------------------------------------------------------------------
                                                   *autopairs#AutoPairsAddPair()*
+                                                  *autopairs#AutoPairsAddPair*
 
 While functions are normally a part of the API section, this is an exception.
 
@@ -1495,6 +1554,7 @@ Arguments: (pair[, target_variable])
 
 ------------------------------------------------------------------------------
                                                  *autopairs#AutoPairsAddPairs()*
+                                                 *autopairs#AutoPairsAddPair*
 
 |autopairs#AutoPairsAddPair()|, but takes a list of pairs instead of a single
 pair.

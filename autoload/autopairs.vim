@@ -108,8 +108,6 @@ call autopairs#Strings#define('g:AutoPairsJumpBlacklist', [])
 
 call autopairs#Strings#define('g:AutoPairsMultibyteFastWrap', 1)
 
-call autopairs#Strings#define('g:AutoPairsEnableMove', 0)
-
 call autopairs#Strings#define('g:AutoPairsReturnOnEmptyOnly', 1)
 
 call autopairs#Strings#define('g:AutoPairsShortcutMultilineClose', '<C-p>c')
@@ -117,6 +115,12 @@ call autopairs#Strings#define('g:AutoPairsShortcutMultilineClose', '<C-p>c')
 call autopairs#Strings#define('g:AutoPairsExperimentalAutocmd', 0)
 call autopairs#Strings#define('g:AutoPairsStringHandlingMode', 0)
 call autopairs#Strings#define('g:AutoPairsSingleQuotePrefixGroup', '^|\W')
+
+if exists('g:AutoPairsEnableMove')
+    echom "g:AutoPairsEnableMove has been deprecated. If you set it to 1, you may remove it."
+                \ . " If you set it to 0, let g:AutoPairsMoveExpression = '' to disable move again."
+                \ . "  See the documentation for both variables for more details."
+endif
 
 fun! autopairs#AutoPairsScriptInit()
     echoerr "This method has been deprecated. See the help for further steps"
@@ -850,7 +854,7 @@ func! autopairs#AutoPairsInit()
         end
     endfor
 
-    if g:AutoPairsEnableMove && b:AutoPairsMoveExpression != ""
+    if b:AutoPairsMoveExpression != ""
         for key in split(b:AutoPairsMoveCharacter, '\s*')
             let escaped_key = substitute(key, "'", "''", 'g')
             execute 'inoremap <silent> <buffer> ' . substitute(b:AutoPairsMoveExpression, "%key", key, "") . " <C-R>=autopairs#AutoPairsMoveCharacter('".escaped_key."')<CR>"
