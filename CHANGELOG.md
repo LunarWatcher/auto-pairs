@@ -14,6 +14,7 @@
 * Added `g:AutoPairsStringHandlingMode`
 * Added `:AutoPairsToggle`, `:AutoPairsDisable`, and `:AutoPairsEnable` (upstream [#278](https://github.com/jiangmiao/auto-pairs/issues/278), missed in the initial ticket crunch)
 * Added `g:AutoPairsMoveExpression` (fixes [#25](https://github.com/LunarWatcher/auto-pairs/issues/25); an issue introduced by a fix to [#317](https://github.com/jiangmiao/auto-pairs/issues/317) that remapped from `<M-key>` to `<C-key>` (which doesn't work because input processing artifacts)).
+* Explicit support for vim-visual-multi (Completely fixes [#12](https://github.com/LunarWatcher/auto-pairs/issues/12))
 
 ## Changed
 * Made `autopairs#AutoPairsDefine` accept a list as well. The list contains a different type of more powerful objects; see the documentation (autopairs-pair-object)
@@ -21,6 +22,7 @@
 * Internal: moved open pair balancing to a separate function
 * Prevent an explicit close key from preventing close when it's also desired to close by the normal key
 * Documentation cleanup of the troubleshooting section (copy editing, general updates, remove bad advice)
+* Made `g:AutoPairsBackwardsCompat` default to 0 instead of a conditional
 
 ## Removed
 * An API that gave some minor customization access to pairs. The API has been replaced with a substantially more flexible API (see `:h autopairs-pair-object` for more details; **potentially breaking**)

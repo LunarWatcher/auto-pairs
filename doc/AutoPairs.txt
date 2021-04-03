@@ -913,7 +913,7 @@ jiangmiao/auto-pairs.
                                                     *g:AutoPairsBackwardsCompat*
                                                                            int
 
-Default: 1 if mg979/vim-visual-multi is detected, 0 otherwise
+Default: 0
 
 Whether or not to expose the backwards compat API. This MUST be set before
 plugin/ is sourced. It cannot be toggled at runtime.
@@ -921,6 +921,11 @@ plugin/ is sourced. It cannot be toggled at runtime.
 This should not be used unless absolutely necessary. DO NOT build your
 keybinds or anything else around the legacy API. Please see
 |autopairs-backwards-compat| for the full discussion.
+
+Section changelog~
+    v3.0.0-beta8: Default to 0. The addition of `g:VM_plugins_compatibilty`
+                  lets us fix this without having to set backwards-compatible
+                  functions.
 
 ------------------------------------------------------------------------------
                                                             *g:AutoPairsVersion*
