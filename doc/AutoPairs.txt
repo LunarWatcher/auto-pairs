@@ -88,6 +88,9 @@ Delete after pair: >
         input: foo[]<BS>
         output: foo
 <
+Note: This feature is disabled by default, and must be explicitly enabled.
+See |g:AutoPairsMapBS|
+
 Insert new indented line after Return: >
 
         input: {|} (press <CR> at |)
@@ -128,15 +131,18 @@ Ignore auto pair when previous character is '\': >
 
 Fast Wrap: >
 
-        input: (|)'hello' (press (<M-e> at |)
+        input: |'hello' (press (<M-e> at |)
         output: ('hello')
 
     Wrap string, only support c style string.
         input: |'h\\el\'lo' (press (<M-e> at |)
         output ('h\\ello\'')
 
-        input: (|)[foo, bar()] (press (<M-e> at |)
+        input: |[foo, bar()] (press (<M-e> at |)
         output: ([foo, bar()])
+Note: if |g:AutoPairsCompleteOnlyOnSpace| is 1, this example does not play out
+in the same way, purely because the ( will not expand, leaving you with
+`([foo, var())]` .
 
 Quick jump to closed pair: >
 
@@ -300,6 +306,111 @@ variant (`b:variableName`), where `variableName` refers to some defined
 variable. The documentation should contain a notice when a buffer variable
 exists, but as it's still being added, it may be incomplete. See
 autopairs#AutoPairsInit()'s source if in doubt.
+
+------------------------------------------------------------------------------
+                                                    *autopairs-options-contents*
+
+Note that this list isn't entirely in order at the time of writing, but tries
+to link associateed entries as close as possible.
+
+- |g:AutoPairs| (has buffer variant) (default: see the entry)
+    Defines what pairs AutoPairs will complete
+- |g:AutoPairsCompleteOnlyOnSpace| (has a buffer variant) (default: 0)
+    Defines whether or not there has to be a space (or EOL) to insert a pair
+- |g:AutoPairsShortcutToggle| (default: see the entry)
+    Defines the shortcut for toggling auto-pairs
+- |g:AutoPairsShortcutFastWrap| (default: see the entry)
+    Defines the shortcut for fast wrap
+- |g:AutoPairsShortcutJump| (default: see the entry)
+    Defines thte shortcut for jumping to the first closed pair, regardless of
+    what that pair is
+- |g:AutoPairsShortcutBackInsert| (default: see the entry)
+    Defines the shortcut for undoing a flymode jump.
+- |g:AutoPairsMapBS| (default: 0)
+    Whether or not to map backspace
+- |g:AutoPairsMapCR| (default: 1)
+    Whether or not to map enter (/return)
+- |g:AutoPairsCRKey| (default: '<CR>')
+    Which key to use for the return action if |g:AutoPairsMapCR| is 1
+- |g:AutoPairsJumpBlacklist| (has buffer variant) (default: [])
+    Defines a set of close keybinds that don't trigger close skipping.
+- |g:AutoPairsNoJump| (has buffer variant) (default: 0)
+    Whether or not to allow skipping close pairs by typing the close character
+    for a given pair.
+- |g:AutoPairsCenterLine| (default: 1)
+    If |g:AutoPairsMapCR| is 1 and this option is 1, wheter or not to center
+    the current line if it was relatively far down on the screen
+- |g:AutoPairsMapSpace| (default: 1)
+    Whether or not to map space
+- |g:AutoPairsFlyMode| (default: 0)
+    Whether or not to enable flymode. Please read |autopairs-flymode| before
+    enabling.
+- |g:AutoPairsShortcutMultilineClose| (default: <C-p>c)
+    Calls getchar() to get a close character. Either closes a pair, or jumps
+    to the nearest match.
+- |g:AutoPairsDirectoryBlacklist| (default: [])
+    Directories to disable auto-pairs in
+- |b:autopairs_enabled| ("default": 1)
+    Whether or not auto-pairs is enabled in the buffer. Can also be used to
+    toggle auto-pairs
+- |g:AutoPairsInitHook| (default: 0 (= null))
+    A pre-init hook for auto-pairs.
+- |g:AutoPairsSearchCloseAfterSpace| (has buffer variant) (default: 1)
+    Whether or not to check if the nearest close is after a space
+- |g:AutoPairsSingleQuoteMode| (has buffer variant) (default: 2)
+    How auto-pairs handles single quotes. Reading the documentation is highly
+    recommended
+- |g:AutoPairsSingleQuotePrefixGroup| (has a buffer variant) (default: '^|\W')
+    A regex that lets you customize how auto-pairs handles single quote
+    expansion
+- |g:AutoPairsSingleQuoteExpandFor| (has a buffer variant) (default: 'fbr')
+    Character group defining characters that are exempt to auto-pairs ignoring
+    letters while expanding.
+- |g:AutoPairsLanguagePairs| (default: see entry)
+    A set of pairs for different languages - useful for avoiding autocmds and
+    explicit definition of |b:AutoPairs|
+- |g:AutoPairsAutoLineBreak| (has a buffer variant) (default: [])
+    A set of opening characters that trigger an instant line break (as in
+    auto-pairs does the line break after the open character automagically)
+- |g:AutoPairsCarefulStringExpansion| (has a buffer variant) (default: 0)
+    Whether or not to be careful when running CR on strings. See the entry for
+    a full explanation
+- |g:AutoPairsQuotes| (has a buffer variant) (default: ["'", '"'])
+    Defines which characters are considered quotes by
+    |g:AutoPairsCarefulStringExpansion|
+- |g:AutoPairsOpenBalanceBlacklist| (has a buffer variant) (default: [])
+    Contains a list of characters that don't trigger opening balance checks
+- |g:AutoPairsMultilineFastWrap| (default: 0)
+    Whether or not to let fast wraop work across lines intentionally
+- |g:AutoPairsBackwardsCompat| (default: 0)
+    Exposes a function for other plugins that haven't been made compatible
+    with this fork, but that actively access it
+- |g:AutoPairsVersion|
+    This is not directly an option, but it defines the current version of
+    auto-pairs. Can be used for compatibility checks
+- |g:AutoPairsFlyModeList| (has a buffer variant) (default: '}\])')
+    Defines what close pairs trigger fly mode if |g:AutoPairsFlyMode| is 1
+- |g:AutoPairsMultibyteFastWrap| (has a buffer variant) (default: 1)
+    Whether or not to allow moving multibyte pairs with fast wrap
+- |g:AutoPairsFiletypeBlacklist| (default: [])
+    Contains filetypes in which |b:autopairs_enabled| is 0 when entering the
+    file.
+- |b:AutoPairsJumpRegex| (default: generated on-demand based on |b:AutoPairs|)
+    Largely for internal use, but defines how jumps are done when
+    |g:AutoPairsShortcutJump| is used.
+- |g:AutoPairsCompatibleMaps| (default: 1)
+    Whether or not to use legacy keybinds (from jiangmiao/auto-pairs), or to
+    use new ones designed not to conflict with other maps, or with characters
+    in various languages.
+- |g:AutoPairsReturnOnEmptyOnly| (default: 1)
+    Whether or not the pair has to be empty to trigger the return action
+- |g:AutoPairsExperimentalAutocmd| (default: 0)
+    Whether or not to use BufWinEnter instead of BufEnter
+- |g:AutoPairsStringHandlingMode| (default: 0)
+    How auto-pairs handles strings. HIGHLY EXPERIMENTAL!
+- |g:AutoPairsMoveExpression| (default: <C-p>%key)
+    Defines an expression that triggers the move feature. Please read the
+    entry before using.
 
 ------------------------------------------------------------------------------
                                                        *g:AutoPairs* *b:AutoPairs*
@@ -598,7 +709,9 @@ Additional note: this doesn't make assumptions on what you wanna close. When
 you press the keybind, getchar() is called. If you then type }, it'll perform
 a multiline close for }.
 
-There's currently no way to enable this by default, as the behavior
+There's currently no way to enable this by default, as the behavior of normal
+closing. This is largely for implementation reasons surrounding the ability to
+override a bad auto-pairs decision
 
 ------------------------------------------------------------------------------
                                                  *g:AutoPairsDirectoryBlacklist*
@@ -659,6 +772,8 @@ Note~
 While the example uses function(), and the type listed is function(), its
 underlaying |type()| is a funcref. There's many ways to Rome on this one, so
 you don't _have_ to use a |function()| to get the funcref.
+
+Note: this may be replaced with a user autocmd in the future.
 
 ------------------------------------------------------------------------------
                                                              *g:AutoPairsNoJump*
@@ -774,6 +889,10 @@ Default: 'fbr'
 Type clarification: the string is parsed in as a part of a regex character
 group. It's only meant to contain pure characters, though it can obviously be
 used to inject stuff into the regex that isn't meant to be there.
+
+The default is largely intended for Python. As far as I know, there aren't
+words in the English language that conflict with these. That does, however,
+mean some other languages might. If it does, this is the option to change.
 
 Used with |g:AutoPairsSingleQuoteMode| = 2
 
