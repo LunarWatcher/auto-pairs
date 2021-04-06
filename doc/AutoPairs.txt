@@ -1482,6 +1482,29 @@ less inconvenience for the users.
 ==============================================================================
 7. Diagnose indent                                   *autopairs-diagnose-indent*
                                                      *autopairs-indent-problems*
+------------------------------------------------------------------------------
+No indentation~
+
+This is usually triggered by missing indentation options. For normal files,
+this has to be set: >
+    set autoindent
+<
+Other options include |smartindent| and |cindent|.
+
+Note that buffers without a filetype set (such as those created with |:new|)
+do not cause indent unless |cindent| is set, and it applies C-style
+indentation to such buffers. Incorrect indentation, however, is a separate
+category.
+
+Indentation, except the generic cindent, is on a per-filetype basis, which is
+why the filetype really does matter. Different filetypes supply |indentexpr|,
+but an empty buffer gets none unless cindent is set. And yes, this is
+confusing because Vim's entire indentation system is confusing.
+
+------------------------------------------------------------------------------
+Incorrect indentation~
+
+Filetypes with cino support~
 If you've been using the plugin for a while, or if you by chance happen to
 read this section before using it, you might've noticed that if you do this:
 >
@@ -1509,36 +1532,51 @@ this is going.
 cino is essentially your friend here. Dealing with the problem listed above
 can be done with `set cino+=m1`
 
-There's no real solution to this aside reading the cino documentation.
-(|indent|) Vim determines how to handle indentation. Any weird intentation
-is, with very few exceptions, gonna be Vim's fault.
+Filetypes without cino support~
 
-That being said, feel free to look around
-[GitHub Discussions](https://github.com/LunarWatcher/auto-pairs/discussions)
-for the plugin, and see if anyone else has asked whatever it is you have. If
-you can't find anything, feel free to open a discussion to ask for help -
-while it may not be the plugin's fault, that doesn't mean we're gonna leave
-all the debugging and testing to you, especially when the cino documentation
-is as huge as it is.
+Unfortunately, however, not all languages use `cino`. This is the bit of the
+help document where the answer goes downhill (sorry!)
 
-Note also that there's a whole lot of other ways to indent. Aside cino, some
-languages have their own, additional variables for indentation. Some
-languages, notably Python, also have plugins that add indent settings.
-|indent| covers the vast majority of the built-in ones, and for the rest,
-there's probably plugins
+Some languages, including Python's out of the box config, use different
+indentation systems that don't listen to `cino`. While `cino+=m1` works for
+certain languages, Python (and potentially others) don't look at cino.
 
-As far as I can tell though, cino applies to all the different files, though
-some languages have additional configuration types. All I have left to say now
-is to repeat: look at |indent|. If you can't find a cino setting to cover it,
-or cino doesn't work for your language, look for language-specific options, or
-possibly plugins to better handle indentation. If you're stuck, you can ask on
-GitHub Discussions.
+There's no easy fix for this, and it's really Vim's fault.
 
-Alternatively, some languages can have plugins that deal with indentation
-based on some language standard, or just adding it in general (depending on
-how niche the language is). Here's a short and incomplete list of such
-plugins:
-* https://github.com/Vimjas/vim-python-pep8-indent
+Language definitions come with their own |indentexpr|s in most cases, and
+these may behave differently from cino. It's mildly annoying that there isn't
+a unified system, but this is what we're dealing with here.
+
+In Python, you may end up with this: >
+    (
+            |
+            )
+<
+... and I've personally tried but can't for the life of me figure out what
+combination of the Python indent options result in: >
+    (
+        |
+    )
+<
+
+Some of the options align, but don't put the cursor at an indented position or
+cause weirdness for nested brackets... it's a mess, basically.
+
+Unfortunately, this isn't a problem auto-pairs can easily fix. Because there's
+so many languages and because there's so many individual preferences, trying
+to write a custom indentation engine for indent-sensitive operations would
+probably be more extensive than the plugin in its entirety as it stands at the
+time of writing, including future unimplemented changes.
+
+There's a lot of |indent| options for other languages, but if you can't figure
+out how to configure yours, there may be a plugin out there that does it
+slightly smarter than vim.
+
+I personally recommend https://github.com/sheerun/vim-polyglot, which contains
+a bunch of bundled plugins, several of which come with predefined
+|indentexpr|s so you don't have to write them. There's therefore
+unfortunately no better answer to this than "see if someone else has already
+done it", because indentation is complex.
 
 ==============================================================================
 8. Functions                                               *autopairs-functions*
@@ -1606,6 +1644,7 @@ You don't need to call this manually, unless you're doing something that adds
 additional pairs after the plugin is loaded. This shouldn't normally be a
 problem, at least if you stick to |FileType|, but if you have some fancy code
 relying on this ability, you'll have to use this function.
+
 ------------------------------------------------------------------------------
 AutoPairsFastWrap()                              *autopairs#AutoPairsFastWrap()*
 Arguments: ([movement])
@@ -1681,7 +1720,8 @@ Arguments: (pair[, target_variable])
                                                  *autopairs#AutoPairsAddPair*
 
 |autopairs#AutoPairsAddPair()|, but takes a list of pairs instead of a single
-pair.
+pair. This is basically a fancy wrapper around a for loop calling AddPair on
+each object in the list.
 
 ------------------------------------------------------------------------------
                                                          *autopairs-pair-object*
@@ -1692,7 +1732,7 @@ While undefined keys have no effect, missing required will throw errors.
 
 *autopairs-open* *autopairs-close* *autopairs-passiveopen*
 *autopairs-passiveclose* *autopairs-mapclose* *autopairs-mapopen*
-*autopairs-close* *autopairs-alwaysmapdefault* *autopairs-
+*autopairs-close* *autopairs-alwaysmapdefault*
 
 Essentially: >
     {
