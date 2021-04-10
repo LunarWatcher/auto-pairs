@@ -356,7 +356,7 @@ func! autopairs#AutoPairsDelete()
     let [before, after, ig] = autopairs#Strings#getline()
 
     for [open, close, opt] in b:AutoPairsList
-        if !opt["delete"]
+        if !opt["delete"] || close == ''
             " Non-deletable pairs? Skip 'em
             continue
         endif
@@ -388,7 +388,7 @@ func! autopairs#AutoPairsDelete()
 
         if len(m) > 0
             return autopairs#Strings#backspace(m[2])
-        else
+        elseif opt["multiline"]
             let m = matchstr(before, '^\v\s*\V' . close)
             if m != ''
                 let b = ""
