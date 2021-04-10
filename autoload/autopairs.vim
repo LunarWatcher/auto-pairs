@@ -742,10 +742,8 @@ func! autopairs#AutoPairsInit()
 
         if o == c || len(c) == 0
             let opt['multiline'] = 0
-        else
-            if type(close) == v:t_dict && has_key(close, 'multiline')
-                let opt['multiline'] = close['multiline']
-            endif
+        elseif type(close) == v:t_dict && has_key(close, 'multiline')
+            let opt['multiline'] = close['multiline']
         endif
 
         if type(close) == v:t_dict
