@@ -32,6 +32,9 @@
 * `autopairs#AutoPairsScriptInit`
 * `g:AutoPairsEnableMove` (deprecated in favor of `let g:AutoPairsMoveExpression = ""`)
 
+## Fixed
+* Multibyte fast wrap around vim pairs (`%`-able built-in (and manually specified) pairs)
+
 # 3.0.0-beta7
 `g:AutoPairsVersion = 30052`
 

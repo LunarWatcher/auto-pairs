@@ -431,6 +431,7 @@ endfun
 func! autopairs#AutoPairsFastWrap(...)
     let movement = get(a:, 1, 'e')
     let c = @"
+
     if b:AutoPairsMultibyteFastWrap
         let [before, after, ig] = autopairs#Strings#getline()
         " At this point, after refers to the bit after the cursor.
@@ -463,8 +464,8 @@ func! autopairs#AutoPairsFastWrap(...)
     else
         let cursorOffset = 0
         normal! x
-    endif
-
+    endi
+    
     " Note regarding the previous note: an after == "" check doesn't make
     " sense here, because we've already cut at this point. We may want
     " multiline wrapping.
@@ -472,6 +473,7 @@ func! autopairs#AutoPairsFastWrap(...)
     " outsource the above check to outside the if-check to prevent weird
     " moves
     let [before, after, ig] = autopairs#Strings#getline()
+
 
     if after[0] =~ '\v[{[(<]'
         normal! %
@@ -495,8 +497,9 @@ func! autopairs#AutoPairsFastWrap(...)
                     call search(close, 'We')
                 endif
                 normal! p
+                echoerr "here"
                 if cursorOffset > 0
-                    exec "normal! " . repeat('h', cursorOffset)
+                    exec "normal! " . cursorOffset . 'h'
                 endif
                 let @" = c
                 return ""
@@ -510,10 +513,10 @@ func! autopairs#AutoPairsFastWrap(...)
         else
             normal! p
         endif
-        if cursorOffset > 0
-            exec "normal! " . repeat('h', cursorOffset)
-        endif
 
+    endif
+    if cursorOffset > 0
+        exec "normal! " cursorOffset . 'h'
     endif
     let @" = c
     return ""
