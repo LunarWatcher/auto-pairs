@@ -1492,6 +1492,10 @@ less inconvenience for the users.
 ==============================================================================
 7. Diagnose indent                                   *autopairs-diagnose-indent*
                                                      *autopairs-indent-problems*
+Before reading the rest of this, I strongly urge you to read
+https://stackoverflow.com/q/59700770/6296561 - it explains Vim's indentation
+system, and indirectly covers why certain bits of indent is broken.
+
 ------------------------------------------------------------------------------
 No indentation~
 
