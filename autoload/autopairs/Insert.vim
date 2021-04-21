@@ -11,7 +11,7 @@ fun! autopairs#Insert#checkBalance(open, close, opt, before, after, afterline)
                         \ || ((a:open == a:close || a:close == "'") && (strOpen + strClose) % 2 == 0)
         else
             if a:open == a:close || (b:AutoPairsSingleQuoteBalanceCheck && a:close ==# "'")
-                if (totOpen % 2 != 0)
+                if ((a:close != "'" && totOpen % 2 != 0) || (a:close == "'" && totClose % 2 != 0))
                     return 0
                 end
             else
