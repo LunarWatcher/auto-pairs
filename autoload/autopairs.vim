@@ -55,6 +55,7 @@ call autopairs#Strings#define('g:AutoPairsCompatibleMaps', 1)
 
 " Olivia: set to 0 based on my own personal biases
 call autopairs#Strings#define('g:AutoPairsMapBS', 0)
+call autopairs#Strings#define('g:AutoPairsMultilineBackspace', 0)
 
 call autopairs#Strings#define('g:AutoPairsMapCR', 1)
 
@@ -353,7 +354,7 @@ func! autopairs#AutoPairsDelete()
         return "\<BS>"
     end
 
-    let [before, after, ig] = autopairs#Strings#getline()
+    let [before, after, ig] = autopairs#Strings#getline(b:AutoPairsMultilineBackspace)
 
     for [open, close, opt] in b:AutoPairsList
         if !opt["delete"] || close == ''
@@ -361,8 +362,8 @@ func! autopairs#AutoPairsDelete()
             continue
         endif
         let rest_of_line = opt['multiline'] ? after : ig
-        let b = matchstr(before, '\V'.open.'\v\s?$')
-        let a = matchstr(rest_of_line, '^\v\s*\V'.close)
+        let b = matchstr(before, '\V' . open . '\v\s?$')
+        let a = matchstr(rest_of_line, '^\v\s*\V' . close)
 
         if b != '' && a != ''
             if b[-1:-1] == ' '
@@ -372,7 +373,7 @@ func! autopairs#AutoPairsDelete()
                     return "\<BS>"
                 end
             end
-            return autopairs#Strings#backspace(b).autopairs#Strings#delete(a)
+            return autopairs#Strings#backspace(b) . autopairs#Strings#delete(a)
         end
     endfor
 
@@ -384,11 +385,11 @@ func! autopairs#AutoPairsDelete()
         if (close == '')
             continue
         endif
-        let m = autopairs#Strings#matchend(before, '\V'.open.'\v\s*'.'\V'.close.'\v$')
+        let m = autopairs#Strings#matchend(before, '\V' . open . '\v\s*' . '\V' . close . '\v$')
 
         if len(m) > 0
             return autopairs#Strings#backspace(m[2])
-        elseif opt["multiline"]
+        elseif opt["multiline"] && b:AutoPairsMultilineBackspace
             let m = matchstr(before, '^\v\s*\V' . close)
             if m != ''
                 let b = ""
@@ -704,6 +705,8 @@ func! autopairs#AutoPairsInit()
     call autopairs#Strings#define('b:AutoPairsStringHandlingMode', g:AutoPairsStringHandlingMode)
     call autopairs#Strings#define('b:AutoPairsSingleQuotePrefixGroup', g:AutoPairsSingleQuotePrefixGroup)
     call autopairs#Strings#define('b:AutoPairsMoveExpression', g:AutoPairsMoveExpression)
+    call autopairs#Strings#define('b:AutoPairsMultilineBackspace', g:AutoPairsMultilineBackspace)
+
     " Buffer definitions
 
     let b:autopairs_return_pos = 0

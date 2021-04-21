@@ -15,6 +15,7 @@
 * Added `:AutoPairsToggle`, `:AutoPairsDisable`, and `:AutoPairsEnable` (upstream [#278](https://github.com/jiangmiao/auto-pairs/issues/278), missed in the initial ticket crunch)
 * Added `g:AutoPairsMoveExpression` (fixes [#25](https://github.com/LunarWatcher/auto-pairs/issues/25); an issue introduced by a fix to [#317](https://github.com/jiangmiao/auto-pairs/issues/317) that remapped from `<M-key>` to `<C-key>` (which doesn't work because input processing artifacts)).
 * Explicit support for vim-visual-multi (Completely fixes [#12](https://github.com/LunarWatcher/auto-pairs/issues/12))
+* Added `g:AutoPairsMultilineBackspace` ([#29](https://github.com/LunarWatcher/auto-pairs/issues/29))
 
 ## Changed
 * Made `autopairs#AutoPairsDefine` accept a list as well. The list contains a different type of more powerful objects; see the documentation (autopairs-pair-object)
@@ -34,6 +35,7 @@
 
 ## Fixed
 * Multibyte fast wrap around vim pairs (`%`-able built-in (and manually specified) pairs)
+* Make multiline reverse pair deletion opt-in (`g:AutoPairsMultilineBackspace`)
 
 # 3.0.0-beta7
 `g:AutoPairsVersion = 30052`

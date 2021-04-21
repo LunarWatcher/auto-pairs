@@ -328,6 +328,8 @@ to link associateed entries as close as possible.
     Defines the shortcut for undoing a flymode jump.
 - |g:AutoPairsMapBS| (default: 0)
     Whether or not to map backspace
+- |g:AutoPairsMultilineBackspace| (has a buffer variant) (default: 0)
+    Whether or not to use multiline deletion
 - |g:AutoPairsMapCR| (default: 1)
     Whether or not to map enter (/return)
 - |g:AutoPairsCRKey| (default: '<CR>')
@@ -646,6 +648,14 @@ Default: 0
 Map <BS> to delete brackets and quotes in pair, executes:
 
     inoremap <buffer> <silent> <BS> <C-R>=AutoPairsDelete()<CR>
+
+------------------------------------------------------------------------------
+                                                 *g:AutoPairsMultilineBackspace*
+                                                                           int
+This variable exists in a buffer variant~
+Default: 0
+
+Whether or not to use multiline deletion on supported pairs
 
 ------------------------------------------------------------------------------
                                                               *g:AutoPairsMapCR*
