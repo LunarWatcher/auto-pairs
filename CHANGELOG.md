@@ -1,5 +1,5 @@
 # 3.0.0-beta8
-`let :AutoPairsVersion = 30053`
+`let g:AutoPairsVersion = 30053`
 
 ## Added
 * [Meta] Testing
