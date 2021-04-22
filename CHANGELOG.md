@@ -5,6 +5,7 @@
 * Broken open == close balance check ([#30](https://github.com/LunarWatcher/auto-pairs/issues/30))
 * Fix single-quote edge case for balance checks
 * Fix no ft edge-case for syntax checking
+* Accidental debug logging
 
 # 3.0.0-beta8
 `let g:AutoPairsVersion = 30053`

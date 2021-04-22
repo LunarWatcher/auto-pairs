@@ -71,6 +71,26 @@ link: https://github.com/LunarWatcher/auto-pairs/discussions)
 Pull requests are also more than welcome, and I'll make sure they don't stick
 around for 6 years without being merged.
 
+                                                           *autopairs-migrating*
+Migrating from jiangmiao~
+
+Migrating is largely straight-forward. There's some differences to custom
+pairs - see |autopairs-migrating-pairs| for migration to the new system, as
+well as |autopairs#AutoPairsDefine()|. The gist of it is: there's new pair
+objects that allow some more customization of pairs. The addition of these are
+entirely backwards-compatible, but they also support specifying languages.
+These rely on |g:AutoPairsLanguagePairs|. While the variables can be modified
+directly, it's recommended that you use the autoload methods, if you want the
+standards to stay intact.
+
+A few notes on config:
+* Backspace isn't mapped by default. |g:AutoPairsMapBS|
+* Multiline backspace is opt-in. |g:AutoPairsMultilineBackspace|
+* Several varaibles have been removed. It's hard to list all the internal
+  changes, but if you expect something to work that doesn't, check the
+  documentation. If the documentation is gone, it's been removed. If you're in
+  doubt, open an issue - it helps me expand this list.
+
 ==============================================================================
 2. Features                                                 *autopairs-features*
 

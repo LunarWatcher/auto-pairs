@@ -498,7 +498,6 @@ func! autopairs#AutoPairsFastWrap(...)
                     call search(close, 'We')
                 endif
                 normal! p
-                echoerr "here"
                 if cursorOffset > 0
                     exec "normal! " . cursorOffset . 'h'
                 endif
