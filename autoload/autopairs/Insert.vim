@@ -65,15 +65,9 @@ fun! autopairs#Insert#checkClose(key, before, after, afterline)
             let m = matchstr(a:afterline, searchRegex . close)
             if m != ''
                 " Krasjet: only jump across the closing pair if pairs are balanced
-
-                if open == close || (b:AutoPairsSingleQuoteBalanceCheck && close ==# "'")
-                    if count(a:before . a:afterline, close) % 2 != 0
-                        return a:key
-                    endif
-                else
-                    if autopairs#Strings#regexCount(a:before . a:afterline, open) > count(a:before . a:afterline, close)
-                        return a:key
-                    endif
+                let balance = autopairs#Insert#checkBalance(open, close, opt, a:before, a:after, a:afterline)
+                if !balance
+                    return a:key
                 endif
 
                 " Olivia: return the key if we aren't jumping.
