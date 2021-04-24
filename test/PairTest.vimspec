@@ -1,6 +1,5 @@
 Describe Basic tests of pair functionality
     Before each
-        unlet g:_AutoPairsVarInit
         call autopairs#Variables#_InitVariables()
     End
     It should do basic insertion

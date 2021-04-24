@@ -1,6 +1,5 @@
 Describe Make sure upgrades work,
     Before each
-        unlet g:_AutoPairsVarInit
         call autopairs#Variables#_InitVariables()
     End
     It because it should blatantly ignore //n

@@ -569,6 +569,7 @@ func! autopairs#AutoPairsInit()
     " Why can't we be consistent about capitalization? Ugh
     let b:autopairs_loaded = 1
 
+    call autopairs#Variables#_InitBufferVariables()
     " Buffer definitions
 
     let b:autopairs_return_pos = 0

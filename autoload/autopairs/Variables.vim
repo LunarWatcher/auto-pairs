@@ -1,4 +1,4 @@
-fun! autopairs#Variables#_InitVariables(...)
+fun! autopairs#Variables#_InitVariables()
     " Default autopairs
     call autopairs#Strings#define("g:AutoPairs", {'(': ')', '[': ']', '{': '}', "'": "'", '"': '"',
                 \ '```': '```', '"""':'"""', "'''":"'''", "`":"`"})

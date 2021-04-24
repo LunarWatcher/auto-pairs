@@ -1,6 +1,5 @@
 Describe <BS> tests
     Before each
-        unlet g:_AutoPairsVarInit
         call autopairs#Variables#_InitVariables()
         let g:AutoPairsMapBS = 1
     End

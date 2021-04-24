@@ -1,6 +1,5 @@
 Describe Complex use of maps
     Before each
-        unlet g:_AutoPairsVarInit
         call autopairs#Variables#_InitVariables()
     End
     It should ignore invalid keys

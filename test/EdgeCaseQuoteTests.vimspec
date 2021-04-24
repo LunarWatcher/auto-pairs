@@ -1,6 +1,5 @@
 Describe Quote balance bagic should work
     Before each
-        unlet g:_AutoPairsVarInit
         call autopairs#Variables#_InitVariables()
     End
     It should do basic balancing
