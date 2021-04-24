@@ -1,10 +1,19 @@
 # 3.0.0-beta11
 `let g:AutoPairsVersion = 30056`
 
-## Changed
-* Cleaned up the implementation of the beta9 hotpatch
-* Moved variable declaration to a separate file to reduce clutter in `autoload/autopairs.vim`
+## Fixed
+* Close pair balance checks weren't up to date with new balance systems
 
+## Changed
+* Cleaned up the implementation of the beta9 hotpatch (AKA properly fix #30)
+* Moved variable (global + buffer) declaration to a separate file to reduce clutter in `autoload/autopairs.vim`
+
+## Added
+* Tests to reduce the chances [#30](https://github.com/LunarWatcher/auto-pairs/issues/30) occurs again
+* `balancebyclose` added to pair objects ([#31](https://github.com/LunarWatcher/auto-pairs/issues/31)) to aid balancing. Also helps towards #30
+
+## Removed
+* `autopairs#AutoPairsScriptInit()`
 
 # 3.0.0-beta10
 `let g:AutoPairsVersion = 30055`
