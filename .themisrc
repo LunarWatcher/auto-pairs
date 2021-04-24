@@ -1,5 +1,6 @@
 let s:expect = themis#helper('expect')
 let g:CachePairs = autopairs#AutoPairsDefine({})
+let g:AutoPairsForceDefine = 1337
 
 syntax on
 filetype plugin indent on

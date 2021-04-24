@@ -1,6 +1,7 @@
 Describe Complex use of maps
     Before each
-        let g:AutoPairs = copy(g:CachePairs)
+        unlet g:_AutoPairsVarInit
+        call autopairs#Variables#_InitVariables()
     End
     It should ignore invalid keys
         call autopairs#AutoPairsAddPair({"open": "<", "close": ">", "fuckin' key mate": "crash and burn"})

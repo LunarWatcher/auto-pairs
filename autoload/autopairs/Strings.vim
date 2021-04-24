@@ -1,6 +1,6 @@
 " 7.4.849 support <C-G>U to avoid breaking '.'
-" Issue talk: httpautopairs#Strings#//github.com/jiangmiao/auto-pairs/issues/3
-" Vim note: httpautopairs#Strings#//github.com/vim/vim/releases/tag/v7.4.849
+" Issue talk: https://github.com/jiangmiao/auto-pairs/issues/3
+" Vim note: https://github.com/vim/vim/releases/tag/v7.4.849
 if v:version > 704 || v:version == 704 && has("patch849")
     let g:autopairs#Strings#Go = "\<C-G>U"
 else
@@ -11,7 +11,10 @@ let g:autopairs#Strings#Left = g:autopairs#Strings#Go."\<LEFT>"
 let g:autopairs#Strings#Right = g:autopairs#Strings#Go."\<RIGHT>"
 
 fun! autopairs#Strings#define(name, default)
-    if !exists(a:name)
+    " g:AutoPairsForceDefine is a variable meant for tests.
+    " It's undocumented because it shouldn't be used outside testing,
+    " as this will hard reset any options defined by the user.
+    if !exists(a:name) || exists('g:AutoPairsForceDefine')
         let {a:name} = a:default
     endif
 endfun
@@ -113,24 +116,27 @@ endfun
 " * opens in string
 " * overall close (before and after, without strings if option != 0)
 " * overall open (before and after, without strings of option != 0)
-fun! autopairs#Strings#countHighlightMatches(open, close, highlightGroup)
+fun! autopairs#Strings#countHighlightMatches(open, close, opt, highlightGroup)
+    let close = a:close
+    let open = a:opt["balancebyclose"] ? close : a:open
+
     let lineNum = line('.')
     " TODO: Add a counter for some increased multiline stuff
     if b:AutoPairsStringHandlingMode == 0 || &ft == ""
         " This is pretty much the stuff we used to have to check for balance.
         " TODO: determine the significance of s:getline()
         let [before, after, afterline] = autopairs#Strings#getline()
-        
-        if a:close == "'" || a:open == a:close
-            let openPre = count(before, a:close)
-            let openPost = count(after, a:close)
+
+        if open == close
+            let openPre = count(before, open)
+            let openPost = count(after, open)
             let closePre = 0
             let closePost = 0
         else
-            let openPre = autopairs#Strings#regexCount(before, a:open)
-            let openPost = autopairs#Strings#regexCount(after, a:open)
-            let closePre = count(before, a:close)
-            let closePost = count(after, a:close)
+            let openPre = autopairs#Strings#regexCount(before, open)
+            let openPost = autopairs#Strings#regexCount(after, open)
+            let closePre = count(before, close)
+            let closePost = count(after, close)
         endif
 
         return [closePre, openPre, closePost, openPost, 0, 0, closePre + closePost, openPre + openPost]
@@ -154,59 +160,59 @@ fun! autopairs#Strings#countHighlightMatches(open, close, highlightGroup)
 
     let lastPos = 1
     let wasLastAString = 0
-    if a:close != "'"
-        while offset < last
-            let pos = match(line, '\V' . a:open, offset)
-            if pos == -1
-                break
+
+    while offset < last
+        let pos = match(line, '\V' . open, offset)
+        if pos == -1
+            break
+        endif
+        let offset = pos + len(open)
+        let pos = pos + 1
+        " Hack to make it slightly more unicode-friendly.
+        " At least this way we can traverse over the first character, which is
+        " what we wanna do here.
+        let firstChar = autopairs#Strings#GetFirstUnicodeChar(open)
+        if lastPos == pos - 1 && !wasLastAString
+            " Can't use wasLastAString as all three parameters, because it
+            " creates a false positive for "" - this is largely a problem
+            " because it incorrectly reports the second " as an open in a
+            " string.
+            " Might be worth using wasLastAString && a:open != a:close though.
+            " /shrug
+            let [hlBefore, hlAt, hlAfter] = [0, 0, 0]
+        else
+            " Optimization: only look for hlAt first
+            let [hlBefore, hlAt, hlAfter] = [0, autopairs#Strings#posInGroup(lineNum, pos, a:highlightGroup), 0]
+                                                                                    " We check the length of open here to make sure we get _past_ the string.
+                                                                                    " Not unicode-friendly wrt. multibyte unicode pairs. Creative ideas welcome
+            " If the current character is highlighted, _then_ we care about what comes next.
+            " This is largely because if the current character isn't
+            " highlighted, who cares? It's obviously not in a string, so fuck that.
+            " If, however, it is highlighted, then we need to check the next characters as well.
+            " This can be further optimized by detecting string characters,
+            " but that's a job for later.
+            if hlAt
+                let [hlBefore, hlAfter] = [autopairs#Strings#posInGroup(lineNum, pos - len(firstChar), a:highlightGroup),
+                            \ autopairs#Strings#posInGroup(lineNum, pos + len(open), a:highlightGroup)]
             endif
-            let offset = pos + len(a:open)
-            let pos = pos + 1
-            " Hack to make it slightly more unicode-friendly.
-            " At least this way we can traverse over the first character, which is
-            " what we wanna do here.
-            let firstChar = autopairs#Strings#GetFirstUnicodeChar(a:open)
-            if lastPos == pos - 1 && !wasLastAString
-                " Can't use wasLastAString as all three parameters, because it
-                " creates a false positive for "" - this is largely a problem
-                " because it incorrectly reports the second " as an open in a
-                " string.
-                " Might be worth using wasLastAString && a:open != a:close though.
-                " /shrug
-                let [hlBefore, hlAt, hlAfter] = [0, 0, 0]
-            else
-                " Optimization: only look for hlAt first
-                let [hlBefore, hlAt, hlAfter] = [0, autopairs#Strings#posInGroup(lineNum, pos, a:highlightGroup), 0]
-                                                                                        " We check the length of open here to make sure we get _past_ the string.
-                                                                                        " Not unicode-friendly wrt. multibyte unicode pairs. Creative ideas welcome
-                " If the current character is highlighted, _then_ we care about what comes next.
-                " This is largely because if the current character isn't
-                " highlighted, who cares? It's obviously not in a string, so fuck that.
-                " If, however, it is highlighted, then we need to check the next characters as well.
-                " This can be further optimized by detecting string characters,
-                " but that's a job for later.
-                if hlAt
-                    let [hlBefore, hlAfter] = [autopairs#Strings#posInGroup(lineNum, pos - len(firstChar), a:highlightGroup),
-                                \ autopairs#Strings#posInGroup(lineNum, pos + len(a:open), a:highlightGroup)]
-                endif
-            endif
-            let lastPos = pos
-            if !hlAt || (hlBefore && !hlAfter && pos != last - len(a:open)) || (!hlBefore && hlAfter)
-                let {offset >= cursorIdx - 1 ? 'openPost' : 'openPre'} += 1
-                let wasLastAString = 0
-            else
-                let wasLastAString = 1
-                let openString += 1
-            endif
-            " This is NOT unicode multibyte compatible, but it produces very few edge
-            " cases.
-            " To be clear, this only affects unicode characters, not multibyte
-            " pairs of normal single-byte characters.
-        endwhile
-    endif
+        endif
+        let lastPos = pos
+        if !hlAt || (hlBefore && !hlAfter && pos != last - len(open)) || (!hlBefore && hlAfter)
+            let {offset >= cursorIdx - 1 ? 'openPost' : 'openPre'} += 1
+            let wasLastAString = 0
+        else
+            let wasLastAString = 1
+            let openString += 1
+        endif
+        " This is NOT unicode multibyte compatible, but it produces very few edge
+        " cases.
+        " To be clear, this only affects unicode characters, not multibyte
+        " pairs of normal single-byte characters.
+    endwhile
+
     let wasLastAString = 0
     let lastPos = 0
-    if (a:open != a:close || a:close == "'")
+    if (open != close)
         " If open == close, we've already processed everything.
         " Otherwise, here we go again
 

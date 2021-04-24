@@ -1,3 +1,11 @@
+# 3.0.0-beta11
+`let g:AutoPairsVersion = 30056`
+
+## Changed
+* Cleaned up the implementation of the beta9 hotpatch
+* Moved variable declaration to a separate file to reduce clutter in `autoload/autopairs.vim`
+
+
 # 3.0.0-beta10
 `let g:AutoPairsVersion = 30055`
 
@@ -20,9 +28,9 @@
 * `autopairs#AutoPairsAddPair()`
 * `autopairs#AutoPairsAddPairs()`
 * Lots of customization functionality through `:h autopairs-pair-object`. Highlights:
-    * `g:AutoPairs` and `autopairs#AutoPairsAddPair` (+ `autopairs#AutoPairsAddPairs` by extension) support a `language` tag, meaning there's now a way to make all your pairs work by modifying a single variable. The language tag also takes a single language as well as a list of languages, meaning it's easy to apply a single pair to several languages. 
+    * `g:AutoPairs` and `autopairs#AutoPairsAddPair` (+ `autopairs#AutoPairsAddPairs` by extension) support a `language` tag, meaning there's now a way to make all your pairs work by modifying a single variable. The language tag also takes a single language as well as a list of languages, meaning it's easy to apply a single pair to several languages.
     * The option to disable delete for individual pairs
-    * The option to map a related or unrelated key to explicitly jump through the pair. 
+    * The option to map a related or unrelated key to explicitly jump through the pair.
 * `g:AutoPairsShortcutMultilineClose` ([#19](https://github.com/lunarwatcher/auto-pairs/issues/19), [#21](https://github.com/lunarwatcher/auto-pairs/issues/21))
 * Added `g:AutoPairsExperimentalAutocmd`
 * Added `g:AutoPairsStringHandlingMode`
@@ -202,4 +210,3 @@
 # 3.0.0-alpha1
 
 Initial release of this fork; primarily fixes a few bugs, contains documentation updates, and merges a few pull requests of varying sizes. The changelog wasn't added until 3.0.0-alpha2, which means the changes here weren't properly tracked.
-

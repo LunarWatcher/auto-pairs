@@ -1,10 +1,8 @@
 Describe <BS> tests
-
-    Before all
-        let g:AutoPairsMapBS = 1
-    End
     Before each
-        let g:AutoPairs = copy(g:CachePairs)
+        unlet g:_AutoPairsVarInit
+        call autopairs#Variables#_InitVariables()
+        let g:AutoPairsMapBS = 1
     End
     It isn't explicitly made to handle balanced deletion
         new | only!

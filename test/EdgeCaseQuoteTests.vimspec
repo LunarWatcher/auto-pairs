@@ -1,0 +1,23 @@
+Describe Quote balance bagic should work
+    Before each
+        unlet g:_AutoPairsVarInit
+        call autopairs#Variables#_InitVariables()
+    End
+    It should do basic balancing
+        let g:AutoPairsMapBS = 0
+        new | only!
+        call autopairs#AutoPairsTryInit()
+
+        call Expect("'").ToMatch("''")
+        call Expect("''").ToMatch("''")
+        call Expect("''\<BS>").ToMatch('''')
+        call Expect("''\<BS>'").ToMatch("''")
+    End
+    It should be able to deal with strings
+        let g:AutoPairsStringHandlingMode = 1
+        new | only!
+        set ft=cpp
+        call Expect('func("Don''t acknowledge strings").then(''a'')').ToMatch('func("Don''t acknowledge strings").then(''a'')')
+        let g:AutoPairsStringHandlingMode = 0
+    End
+End

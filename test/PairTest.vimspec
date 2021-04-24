@@ -1,6 +1,7 @@
 Describe Basic tests of pair functionality
     Before each
-        let g:AutoPairs = copy(g:CachePairs)
+        unlet g:_AutoPairsVarInit
+        call autopairs#Variables#_InitVariables()
     End
     It should do basic insertion
         new | only!

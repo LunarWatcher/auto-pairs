@@ -1788,6 +1788,10 @@ Essentially: >
             in the closing pair) Optional; defaults to 1.",
         "passiveclose": "Whether or not an explicit mapclose should override
             other maps, or just ride the wave",
+        "balancebyclose": "0/1, whether or not to balance relative to close
+            rather than open. This is largely useful for edge-cases like '',
+            where certain characters become invalid after text is typed
+            inside the quotes.",
     }
 <
 

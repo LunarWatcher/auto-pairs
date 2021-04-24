@@ -1,17 +1,17 @@
-fun! autopairs#Insert#checkBalance(open, close, opt, before, after, afterline) 
+fun! autopairs#Insert#checkBalance(open, close, opt, before, after, afterline)
     if a:close == ""
         return 1
     endif
-    let [closePre, openPre, closePost, openPost, strClose, strOpen, totClose, totOpen] = autopairs#Strings#countHighlightMatches(a:open, a:close, 'string') 
+    let [closePre, openPre, closePost, openPost, strClose, strOpen, totClose, totOpen] = autopairs#Strings#countHighlightMatches(a:open, a:close, a:opt, 'string')
     " Krasjet: do not complete the closing pair until pairs are balanced
     if a:open !~# b:autopairs_open_blacklist
         if g:AutoPairsStringHandlingMode == 1 && autopairs#Strings#isInString()
             " We only need to address mode == 1 here.
-            return strClose <= strOpen 
+            return strClose <= strOpen
                         \ || ((a:open == a:close || a:close == "'") && (strOpen + strClose) % 2 == 0)
         else
-            if a:open == a:close || (b:AutoPairsSingleQuoteBalanceCheck && a:close ==# "'")
-                if ((a:close != "'" && totOpen % 2 != 0) || (a:close == "'" && totClose % 2 != 0))
+            if a:open == a:close || (b:AutoPairsSingleQuoteBalanceCheck && a:close ==# "'") || a:opt["balancebyclose"]
+                if (totOpen % 2 != 0)
                     return 0
                 end
             else
@@ -56,7 +56,7 @@ fun! autopairs#Insert#checkClose(key, before, after, afterline)
         " both are enabled.
         if opt['mapclose'] && opt['key'] == a:key || opt["alwaysmapdefaultclose"] == 1 && a:key == autopairs#Strings#GetFirstUnicodeChar(close)
             " the close pair is in the same line
-            " ... but it's possible to enable only looking for the close pair 
+            " ... but it's possible to enable only looking for the close pair
             let searchRegex = b:AutoPairsSearchCloseAfterSpace == 1 ?  '^\v\s*\V' : '^\V'
 
             " Krasjet: do not search for the closing pair if spaces are in between
@@ -111,4 +111,3 @@ fun! autopairs#Insert#checkClose(key, before, after, afterline)
     endfor
     return ""
 endfun
-

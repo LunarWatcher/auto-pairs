@@ -1,6 +1,7 @@
 Describe Make sure upgrades work,
     Before each
-        let g:AutoPairs = copy(g:CachePairs)
+        unlet g:_AutoPairsVarInit
+        call autopairs#Variables#_InitVariables()
     End
     It because it should blatantly ignore //n
         let g:AutoPairs = {'{': '}//n'}
