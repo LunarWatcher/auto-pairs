@@ -15,12 +15,36 @@ jobs:
         run: |
           python3 -m pip install pre-commit
           pre-commit run --all-files
-  test:
+  test-ubuntu:
     if: "!contains(github.event.head_commit.message, '[skip-ci]')"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Versions
+        run: vim --version
       - name: Run tests
         run: |
           git clone https://github.com/thinca/vim-themis
           ./vim-themis/bin/themis
+  test-mac:
+    if: "!contains(github.event.head_commit.message, '[skip-ci]')"
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Versions
+        run: vim --version
+      - name: Run tests
+        run: |
+          git clone https://github.com/thinca/vim-themis
+          ./vim-themis/bin/themis
+  test-windows:
+    if: "!contains(github.event.head_commit.message, '[skip-ci]')"
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Versions
+        run: vim --version
+      - name: Run tests
+        run: |
+          git clone https://github.com/thinca/vim-themis
+          ./vim-themis/bin/themis.bat
