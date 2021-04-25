@@ -34,6 +34,3 @@ or steps to reproduce, or other important context, the issue may be closed until
 <!-- How did you trigger the bug? Before posting the issue, we ask that you go through the steps
      you write down *exactly* as you write them down to make sure your steps can be used to
      verify the existence of the problem. -->
-
-
-

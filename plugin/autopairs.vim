@@ -1,6 +1,6 @@
 " Insert or delete brackets, parens, quotes in pairs.
 " Fork Maintainer: Olivia
-" Version: See g:AutoPairsVersion, or the git tag 
+" Version: See g:AutoPairsVersion, or the git tag
 " Fork Repository: https://github.com/LunarWatcher/auto-pairs
 " License: MIT
 
