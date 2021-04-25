@@ -1,11 +1,10 @@
-Describe Quote balance bagic should work
+Describe Quote balance magic should work
     Before each
         call autopairs#Variables#_InitVariables()
     End
     It should do basic balancing
         let g:AutoPairsMapBS = 0
         new | only!
-        call autopairs#AutoPairsTryInit()
 
         call Expect("'").ToMatch("''")
         call Expect("''").ToMatch("''")
@@ -17,6 +16,20 @@ Describe Quote balance bagic should work
         new | only!
         set ft=cpp
         call Expect('func("Don''t acknowledge strings").then(''a'')').ToMatch('func("Don''t acknowledge strings").then(''a'')')
-        let g:AutoPairsStringHandlingMode = 0
+    End
+    It shouldn't balance in a word
+        new | only!
+        " This is an edge case because balancing has to ignore things in words.
+        call Expect("Don't, shan't, isn't, '").ToMatch("Don't, shan't, isn't, '")
+    End
+    It should deal with non-hl strings that call for exclusion by ' regex
+        new | only!
+        call Expect("func('This is text").ToMatch("func('This is text')")
+        call Expect("func('This is text').func('More text").ToMatch("func('This is text').func('More text')")
+    End
+    It should handle edge cases better when there's strings involved
+        new | only!
+        call Expect("func(\"Don't, shan't, isn't, ain't\").func('yay")
+                    \.ToMatch("func(\"Don't, shan't, isn't, ain't\").func('yay')")
     End
 End
