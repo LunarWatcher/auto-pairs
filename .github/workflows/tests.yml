@@ -48,4 +48,4 @@ jobs:
         shell: cmd
         run: |
           git clone https://github.com/thinca/vim-themis
-          ./vim-themis/bin/themis.bat
+          bash -c "./vim-themis/bin/themis"
