@@ -1,4 +1,5 @@
 # Auto Pairs
+[![Tests](https://github.com/LunarWatcher/auto-pairs/actions/workflows/tests.yml/badge.svg)](https://github.com/LunarWatcher/auto-pairs/actions/workflows/tests.yml)
 
 Insert or delete brackets, parens, and quotes in pair.
 
