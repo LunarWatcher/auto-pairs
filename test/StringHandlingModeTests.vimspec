@@ -22,18 +22,4 @@ Describe String handling modes should be different
                     \ .to_be_true("There should be syngroups")
         call Expect("func(\"don't\<Esc>A.chain('").ToMatch('func("don''t").chain('''')')
     End
-    " TODO: get this test to work
-    " It works in the actual editor, but themis can't simulate it for some
-    " reason. Seems to be a problem with syntax groups.
-    "It is never going to expand in option == 2
-        "let g:AutoPairsStringHandlingMode = 2
-        "e test.py | only!
-
-        "exec "normal ifunc('String"
-        "exec "normal a ("
-        "call Expect("").CheckBuff("func(\"String (\")")
-        "%d
-        "exec "normal ifunc(\"String '" . "\<ESC>"
-        "call Expect("").CheckBuff("func(\"String '\")")
-    "End
 End
