@@ -3,6 +3,7 @@
 
 ## Fixed
 * Close pair balance checks weren't up to date with new balance systems
+* `g:AutoPairsStringHandlingMode` shouldn't prevent skipping characters
 
 ## Changed
 * Cleaned up the implementation of the beta9 hotpatch (AKA properly fix #30)
@@ -11,6 +12,7 @@
 ## Added
 * Tests to reduce the chances [#30](https://github.com/LunarWatcher/auto-pairs/issues/30) occurs again
 * `balancebyclose` added to pair objects ([#31](https://github.com/LunarWatcher/auto-pairs/issues/31)) to aid balancing. Also helps towards #30
+* CI to auto-run tests on the three major operating systems (doesn't affect the plugin itself; only the dev process)
 
 ## Removed
 * `autopairs#AutoPairsScriptInit()`

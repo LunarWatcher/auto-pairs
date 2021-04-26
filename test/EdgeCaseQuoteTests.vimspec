@@ -15,7 +15,7 @@ Describe Quote balance magic should work
         let g:AutoPairsStringHandlingMode = 1
         new | only!
         set ft=cpp
-        call Expect('func("Don''t acknowledge strings").then(''a'')').ToMatch('func("Don''t acknowledge strings").then(''a'')')
+        call Expect('func("Don''t acknowledge strings").then(''a').ToMatch('func("Don''t acknowledge strings").then(''a'')')
     End
     It shouldn't balance in a word
         new | only!
@@ -29,6 +29,16 @@ Describe Quote balance magic should work
     End
     It should handle edge cases better when there's strings involved
         new | only!
+        call Expect("func(\"Don't, shan't, isn't, ain't\").func('yay")
+                    \.ToMatch("func(\"Don't, shan't, isn't, ain't\").func('yay')")
+    End
+    It should also handle edge cases better when there's string sinvolved for other balance modes
+        new | only!
+        set ft=cpp
+        let b:AutoPairsStringHandlingMode = 1
+        call Expect("func(\"Don't, shan't, isn't, ain't\").func('yay")
+                    \.ToMatch("func(\"Don't, shan't, isn't, ain't\").func('yay')")
+        let b:AutoPairsStringHandlingMode = 2
         call Expect("func(\"Don't, shan't, isn't, ain't\").func('yay")
                     \.ToMatch("func(\"Don't, shan't, isn't, ain't\").func('yay')")
     End

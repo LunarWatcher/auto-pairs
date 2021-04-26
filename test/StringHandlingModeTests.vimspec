@@ -1,0 +1,39 @@
+Describe String handling modes should be different
+    Before each
+        call autopairs#Variables#_InitVariables()
+        new | only!
+    End
+    It should default to 0
+        call Expect(g:AutoPairsStringHandlingMode).to_equal(0)
+    End
+    It should expand in strings for option == 0
+        call Expect('func("String ''').ToMatch('func("String ''''")')
+        call Expect("func('String \"").ToMatch("func('String \"\"')")
+    End
+    It is going to handle in and out of strings poorly for option == 0
+        call Expect('func("don''t").chain(''').ToMatch('func("don''t").chain('')')
+    End
+    It is going to handle in and out of strings better for option == 1
+        set ft=cpp
+        let b:AutoPairsStringHandlingMode = 1
+        call Expect('func("don''t').ToMatch("func(\"don't\")")
+        " sanity check tests
+        call Expect(join(map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")'), ',') =~ '\cstring')
+                    \ .to_be_true("There should be syngroups")
+        call Expect("func(\"don't\<Esc>A.chain('").ToMatch('func("don''t").chain('''')')
+    End
+    " TODO: get this test to work
+    " It works in the actual editor, but themis can't simulate it for some
+    " reason. Seems to be a problem with syntax groups.
+    "It is never going to expand in option == 2
+        "let g:AutoPairsStringHandlingMode = 2
+        "e test.py | only!
+
+        "exec "normal ifunc('String"
+        "exec "normal a ("
+        "call Expect("").CheckBuff("func(\"String (\")")
+        "%d
+        "exec "normal ifunc(\"String '" . "\<ESC>"
+        "call Expect("").CheckBuff("func(\"String '\")")
+    "End
+End

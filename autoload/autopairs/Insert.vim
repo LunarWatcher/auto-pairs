@@ -1,14 +1,24 @@
+" Checks whether or not the open-close pair is balanced
+" Returns:
+"   1 if balanced
+"   0 if not
+"   -1 if not balanced, but b:AutoPairsStringHandlingMode indicates this is
+"      fine in this context, and should jump if possible
 fun! autopairs#Insert#checkBalance(open, close, opt, before, after, afterline)
     if a:close == ""
         return 1
     endif
+    if b:AutoPairsStringHandlingMode == 2 && autopairs#Strings#isInString()
+        return autopairs#Strings#GetFirstUnicodeChar(getline('.')[col('.') - 1:])
+                    \ != autopairs#Strings#GetFirstUnicodeChar(a:close) ? 0 : -1
+    endif
     let [closePre, openPre, closePost, openPost, strClose, strOpen, totClose, totOpen] = autopairs#Strings#countHighlightMatches(a:open, a:close, a:opt, 'string')
     " Krasjet: do not complete the closing pair until pairs are balanced
     if a:open !~# b:autopairs_open_blacklist
-        if g:AutoPairsStringHandlingMode == 1 && autopairs#Strings#isInString()
+        if autopairs#Strings#isInString() && b:AutoPairsStringHandlingMode == 1
             " We only need to address mode == 1 here.
             return strClose <= strOpen
-                        \ || ((a:open == a:close || a:close == "'") && (strOpen + strClose) % 2 == 0)
+                        \ || ((a:open == a:close || a:opt["balancebyclose"]) && (strOpen + strClose) % 2 == 0)
         else
             if a:open == a:close || (b:AutoPairsSingleQuoteBalanceCheck && a:close ==# "'") || a:opt["balancebyclose"]
                 if (totOpen % 2 != 0)
@@ -66,7 +76,7 @@ fun! autopairs#Insert#checkClose(key, before, after, afterline)
             if m != ''
                 " Krasjet: only jump across the closing pair if pairs are balanced
                 let balance = autopairs#Insert#checkBalance(open, close, opt, a:before, a:after, a:afterline)
-                if !balance
+                if balance == 0
                     return a:key
                 endif
 

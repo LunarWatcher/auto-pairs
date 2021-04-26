@@ -136,9 +136,10 @@ func! autopairs#AutoPairsDefine(pairs, ...)
 endf
 
 func! autopairs#AutoPairsInsert(key, ...)
-    if !b:autopairs_enabled || (b:AutoPairsStringHandlingMode == 2 && autopairs#Strings#isInString())
+    if !b:autopairs_enabled
         return a:key
     end
+
     let l:multiline = get(a:, '1', 0)
 
     let b:autopairs_saved_pair = [a:key, getpos('.')]
@@ -166,7 +167,7 @@ func! autopairs#AutoPairsInsert(key, ...)
                 break
             end
 
-            if !autopairs#Insert#checkBalance(open, close, opt, before, after, afterline)
+            if autopairs#Insert#checkBalance(open, close, opt, before, after, afterline) <= 0
                 break
             endif
 
@@ -205,7 +206,7 @@ func! autopairs#AutoPairsInsert(key, ...)
                     " delete character
                     let ms = autopairs#Strings#matchend(before, '\v.')
                     if len(ms)
-                        let before = ms[1]|
+                        let before = ms[1]
                         let bs = bs.autopairs#Strings#backspace(ms[2])
                     end
                 end
