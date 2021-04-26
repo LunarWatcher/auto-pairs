@@ -18,8 +18,7 @@ Describe String handling modes should be different
         let b:AutoPairsStringHandlingMode = 1
         call Expect('func("don''t').ToMatch("func(\"don't\")")
         " sanity check tests
-        call Expect(join(map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")'), ',') =~ '\cstring')
-                    \ .to_be_true("There should be syngroups")
+        call Expect(join(map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")'), ',') =~ '\cstring').to_be_true("There should be syngroups")
         call Expect("func(\"don't\<Esc>A.chain('").ToMatch('func("don''t").chain('''')')
     End
 End
