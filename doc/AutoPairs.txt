@@ -23,6 +23,7 @@ CONTENTS                                                    *autopairs-contents*
     5.  Options ...................................... |autopairs-options|
     6.  Troubleshooting ...................... |autopairs-troubleshooting|
          6.1. Conflicting keybinds ................. |autopairs-conflicts|
+         6.2. Uninstalling ...................... |autopairs-uninstalling|
     7.  Diagnosing indentation ............... |autopairs-diagnose-indent|
     8.  Functions (API) ............................ |autopairs-functions|
     9.  Declaring custom pairs ...................|autopairs-custom-pairs|
@@ -1508,6 +1509,43 @@ If you read any of this and you can tell me I'm wrong, and offer a solution or
 a start, either as a pull request or as an issue, please do let me know. I'm
 more than willing to hear alternative solutions to this problem that cause
 less inconvenience for the users.
+
+------------------------------------------------------------------------------
+                                                        *autopairs-uninstalling*
+
+Views~
+
+If you use |:mkview| to save folds or other data, you may have trouble
+uninstalling. See:
+* https://github.com/jiangmiao/auto-pairs/issues/192
+* https://github.com/LunarWatcher/auto-pairs/issues/33
+
+Views, with the default settings for |viewoptions|, saves maps for buffers.
+Since auto-pairs maps several central keys, this becomes painfully obvious the
+second a pair character (or even just space, enter, or backspace) is pressed
+after uninstalling.
+
+There's no way for the plugin to "ask" for certain keybinds to be excluded
+from saving, which means there's only hackish workarounds.
+
+The general idea is, you need to clean out your view files. The "easiest"
+option, if you don't mind losing your data, is deleting |'viewdir'|.
+(`:echo &viewdir` to see which directory to delete). Alternatively, you can
+manually edit the files, or apply a bit of `sed`/`grep`-magic to get rid of
+the offending maps.
+
+If you're looking to just save folds, you can alternatively
+`set viewoptions-=options`, which excludes mappings from being saved.
+Unfortunately, this won't help you load the view files - they're still going
+to be in a broken state. However, it'll prevent the same type of problems from
+happening with this or other plugins, as well as from happening on view files
+updated after the option is set.
+
+TL;DR:~
+Won't fix, but remove the folder defined by |'viewdir'|, or remove the
+auto-pairs maps from the files in said directory. `set viewoptions-=options`
+helps prevent this problem from occuring, but won't fix any existing view
+files.
 
 ==============================================================================
 7. Diagnose indent                                   *autopairs-diagnose-indent*
