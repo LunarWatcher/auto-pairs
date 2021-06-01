@@ -102,6 +102,8 @@ fun! autopairs#Variables#_InitVariables()
     call autopairs#Strings#define('g:AutoPairsStringHandlingMode', 0)
     call autopairs#Strings#define('g:AutoPairsSingleQuotePrefixGroup', '^|\W')
 
+    call autopairs#Strings#define('g:AutoPairsPreferClose', 1)
+
     if exists('g:AutoPairsEnableMove')
         echom "g:AutoPairsEnableMove has been deprecated. If you set it to 1, you may remove it."
                     \ . " If you set it to 0, let g:AutoPairsMoveExpression = '' to disable move again."

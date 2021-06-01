@@ -1,0 +1,15 @@
+Describe Various edge-cases around balancing when preferring to close
+    Before each
+        call autopairs#Variables#_InitVariables()
+        let g:AutoPairsPreferClose = 0
+    End
+    It should jump )(|) sanely
+        new | only!
+        call Expect(")()").ToMatch(")()")
+    End
+    It should close )(| sanely
+        new | only!
+        call Expect("()").ToMatch("()")
+        call Expect(")(").ToMatch(")()")
+    End
+End

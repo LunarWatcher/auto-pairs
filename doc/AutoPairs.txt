@@ -92,6 +92,26 @@ A few notes on config:
   documentation. If the documentation is gone, it's been removed. If you're in
   doubt, open an issue - it helps me expand this list.
 
+Overall caveats~
+
+Auto-pairs relies on relatively dumb metrics to guesstimate when to insert,
+when to skip, when to balance, etc.
+
+This is a side-effect of full-on language parsing being a huge undertaking,
+and one that substantially exceeds the project's limitations.
+
+Since the fork from jiangmiao (and merging in PRs and fixing bugs), there's
+been a lot of work put into making these metrics less dumb. At the time of
+writing, there's support for string handling, settings for how inclined
+auto-pairs is to jump, etc. While these do make auto-pairs better, there are
+still going to be edge-cases, and especially surrounding multiline operation.
+
+I'm sure there are ways to work around that, but for the times it fails,
+there's a keyboard shortcut to toggle auto-pairs.
+
+TL;DR:  auto-pairs isn't perfect by design, but it can be disabled when it
+makes a bad judgement
+
 ==============================================================================
 2. Features                                                 *autopairs-features*
 
@@ -1433,6 +1453,27 @@ For the same keybinds as jiangmiao/auto-pairs, use "<M-%key>".
 
 To disable the move feature, set this variable to ""~
 This detail replaces |g:AutoPairsEnableMove|, which is now deprecated.
+
+------------------------------------------------------------------------------
+                                                        *g:AutoPairsPreferClose*
+
+Type: int
+Default: 1
+
+Whether or not to prefer closing over jumping.
+If this is 1, )(|)     ) at )
+results in )())
+due to how the balancing engine works.
+If set to 0, it'll yield )(), which may or may not be desirable depending on
+your level and type of multiline operations.
+
+Note that setting it to 0 has the side-effect if making
+
+ |)         ) at |
+
+jump instead of insert, which again, may or may not be desirable. If the
+preceeding line contains an opening (, the closure would be correct.
+Otherwise, it's not.
 
 *autopairs-end-of-options* (this tag exists purely for doc editing purposes and
                             has no meaning for the plugin)

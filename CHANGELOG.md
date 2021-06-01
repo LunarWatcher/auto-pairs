@@ -8,6 +8,8 @@
 ## Changed
 * Cleaned up the implementation of the beta9 hotpatch (AKA properly fix #30)
 * Moved variable (global + buffer) declaration to a separate file to reduce clutter in `autoload/autopairs.vim`
+* Tweaks to the close balance logic making it more jump-happy than previously
+* Reordered method calls to reduce unnecessary synstack calls for people who don't want it
 
 ## Added
 * Tests to reduce the chances [#30](https://github.com/LunarWatcher/auto-pairs/issues/30) occurs again

@@ -4,10 +4,12 @@
 "   0 if not
 "   -1 if not balanced, but b:AutoPairsStringHandlingMode indicates this is
 "      fine in this context, and should jump if possible
-fun! autopairs#Insert#checkBalance(open, close, opt, before, after, afterline)
+fun! autopairs#Insert#checkBalance(open, close, opt, before, after, afterline, ...)
     if a:close == ""
         return 1
     endif
+    let checkingClose = get(a:, "0", 0)
+
     if b:AutoPairsStringHandlingMode == 2 && autopairs#Strings#isInString()
         return autopairs#Strings#GetFirstUnicodeChar(getline('.')[col('.') - 1:])
                     \ != autopairs#Strings#GetFirstUnicodeChar(a:close) ? 0 : -1
@@ -29,8 +31,10 @@ fun! autopairs#Insert#checkBalance(open, close, opt, before, after, afterline)
             " an imbalance
             " The second check is if there are any close characters after the
             " cursor
-            " The third check
-            elseif (totOpen < totClose
+            " The third check checks if everything is balanced after the
+            " cursor.
+            elseif (!checkingClose
+                        \ && totOpen < totClose
                         \ && closePost > 0
                         \ && openPost < closePost
                         \ )
@@ -40,6 +44,12 @@ fun! autopairs#Insert#checkBalance(open, close, opt, before, after, afterline)
                 " imbalance after the cursor (we can disregard anything
                 " before the cursor), and make sure there's actually a
                 " close character to close after the cursor
+                return 0
+            elseif checkingClose
+                        \ && totOpen > totClose
+                        \ && (!g:AutoPairsPreferClose && openPre > closePost
+                        \     || openPost < closePost
+                        \ )
                 return 0
             endif
         endif
@@ -81,7 +91,7 @@ fun! autopairs#Insert#checkClose(key, before, after, afterline)
             let m = matchstr(a:afterline, searchRegex . close)
             if m != ''
                 " Krasjet: only jump across the closing pair if pairs are balanced
-                let balance = autopairs#Insert#checkBalance(open, close, opt, a:before, a:after, a:afterline)
+                let balance = autopairs#Insert#checkBalance(open, close, opt, a:before, a:after, a:afterline, 1)
                 if balance == 0
                     return a:key
                 endif

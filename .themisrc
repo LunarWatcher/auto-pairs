@@ -22,7 +22,7 @@ endfun
 
 fun! ToMatchImpl(input, output)
     %d " Clear the file
-    execute 'normal i' . a:input . "\<Esc>"
+    execute 'normal i' . a:input
     return join(getline(1, '$'), '\n') ==# a:output
 endfun
 
