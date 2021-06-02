@@ -109,8 +109,8 @@ still going to be edge-cases, and especially surrounding multiline operation.
 I'm sure there are ways to work around that, but for the times it fails,
 there's a keyboard shortcut to toggle auto-pairs.
 
-TL;DR:  auto-pairs isn't perfect by design, but it can be disabled when it
-makes a bad judgement
+TL;DR: auto-pairs isn't perfect by design, but it can be disabled when it
+makes a bad call on completion or balancing.
 
 ==============================================================================
 2. Features                                                 *autopairs-features*
