@@ -33,7 +33,7 @@ fun! autopairs#Insert#checkBalance(open, close, opt, before, after, afterline, .
             " cursor
             " The third check checks if everything is balanced after the
             " cursor.
-            elseif (!checkingClose
+            elseif ((!checkingClose || g:AutoPairsPreferClose)
                         \ && totOpen < totClose
                         \ && closePost > 0
                         \ && openPost < closePost
