@@ -601,6 +601,7 @@ you try: `{|word`, you'll get `{|word`, rather than `{|}word` if this is 0.
                                                      *g:AutoPairsShortcutToggle*
                                                                         string
 
+This variable also exists in a buffer variant.~
 Default: <C-p><C-t> if |g:AutoPairsCompatibleMaps| is 0, <M-p> otherwise
 
 The shortcut to toggle autopairs.
@@ -612,6 +613,7 @@ keybinds are pressed, or similar.
                                                    *g:AutoPairsShortcutFastWrap*
                                                                         string
 
+This variable also exists in a buffer variant.~
 Default: <C-f> if |g:AutoPairsCompatibleMaps| is 0, <M-e> otherwise
 
 Fast wrap the word. All pairs will be considered as a block (including <>).
@@ -631,6 +633,7 @@ See also:~
                                                        *g:AutoPairsShortcutJump*
                                                                         string
 
+This variable also exists in a buffer variant.~
 Default: <C-p><C-s> if |g:AutoPairsCompatibleMaps| is 0, <M-n> otherwise
 
 Jump to the first close pair after the cursor, regardless of which it is.
@@ -675,6 +678,7 @@ After: >
                                                  *g:AutoPairsShortcutBackInsert*
                                                                         string
 
+This variable also exists in a buffer variant.~
 Default: <C-p><C-b> if |g:AutoPairsCompatibleMaps| is 0, <M-b> otherwise
 
 When |autopairs-flymode| does a jump you don't want it to do, you can use this
@@ -684,6 +688,7 @@ shortcut to jump back, and automatically do a normal insert.
                                                               *g:AutoPairsMapBS*
                                                                            int
 
+This variable also exists in a buffer variant.~
 Default: 0
 
 Map <BS> to delete brackets and quotes in pair, executes:
@@ -702,6 +707,7 @@ Whether or not to use multiline deletion on supported pairs
                                                               *g:AutoPairsMapCR*
                                                                            int
 
+This variable also exists in a buffer variant.~
 Default: 1
 
 Map <CR> to insert a new indented line if cursor in (|), {|} [|], '|', "|".
@@ -721,6 +727,7 @@ is at the bottom 1/3 of the window.
                                                            *g:AutoPairsMapSpace*
                                                                            int
 
+This variable also exists in a buffer variant.~
 Default: 1
 
 Map <space> to insert a space after the opening character and before the
@@ -754,6 +761,7 @@ This feature is now available as an explicit keybind; see
 ------------------------------------------------------------------------------
                                              *g:AutoPairsShortcutMultilineClose*
 
+This variable also exists in a buffer variant.~
 Default: <C-p>c
 
 Additional note: this doesn't make assumptions on what you wanna close. When
@@ -1123,6 +1131,7 @@ compat fuckups, such as the one caused by moving functions into the
 ------------------------------------------------------------------------------
                                                               *g:AutoPairsCRKey*
                                                                        keybind
+This variable also exists in a buffer variant.~
 
 Default: '<CR>'
 

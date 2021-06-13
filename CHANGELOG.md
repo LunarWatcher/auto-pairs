@@ -4,6 +4,7 @@
 ## Fixed
 * Close pair balance checks weren't up to date with new balance systems
 * `g:AutoPairsStringHandlingMode` shouldn't prevent skipping characters
+* Add buffer variables for keybinds ([#35](https://github.com/LunarWatcher/auto-pairs/issues/35))
 
 ## Changed
 * Cleaned up the implementation of the beta9 hotpatch (AKA properly fix #30)

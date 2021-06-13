@@ -570,7 +570,6 @@ func! autopairs#AutoPairsInit()
     " Why can't we be consistent about capitalization? Ugh
     let b:autopairs_loaded = 1
 
-    call autopairs#Variables#_InitBufferVariables()
     " Buffer definitions
 
     let b:autopairs_return_pos = 0
@@ -737,12 +736,12 @@ func! autopairs#AutoPairsInit()
     endif
 
     " Still use <buffer> level mapping for <BS> <SPACE>
-    if g:AutoPairsMapBS
+    if b:AutoPairsMapBS
         " Use <C-R> instead of <expr> for issue #14 sometimes press BS output strange words
         execute 'inoremap <buffer> <silent> <BS> <C-R>=autopairs#AutoPairsDelete()<CR>'
     end
 
-    if g:AutoPairsMapSpace
+    if b:AutoPairsMapSpace
         " Try to respect abbreviations on a <SPACE>
         let do_abbrev = ""
         " neovim appears to set v:version to 800, so it should be compatible
@@ -755,25 +754,26 @@ func! autopairs#AutoPairsInit()
         execute 'inoremap <buffer> <silent> <SPACE> '.do_abbrev.'<C-R>=autopairs#AutoPairsSpace()<CR>'
     end
 
-    if g:AutoPairsShortcutFastWrap != ''
+    if b:AutoPairsShortcutFastWrap != ''
         execute 'inoremap <buffer> <silent> '.g:AutoPairsShortcutFastWrap.' <C-R>=autopairs#AutoPairsFastWrap()<CR>'
     end
 
-    if b:AutoPairsFlyMode && g:AutoPairsShortcutBackInsert != ''
+    if b:AutoPairsFlyMode && b:AutoPairsShortcutBackInsert != ''
         execute 'inoremap <buffer> <silent> '.g:AutoPairsShortcutBackInsert.' <C-R>=autopairs#AutoPairsBackInsert()<CR>'
     end
 
-    if g:AutoPairsShortcutToggle != ''
+    if b:AutoPairsShortcutToggle != ''
         " use <expr> to ensure showing the status when toggle
         execute 'inoremap <buffer> <silent> <expr> '.g:AutoPairsShortcutToggle.' autopairs#AutoPairsToggle()'
         execute 'noremap <buffer> <silent> '.g:AutoPairsShortcutToggle.' :call autopairs#AutoPairsToggle()<CR>'
     end
 
-    if g:AutoPairsShortcutJump != ''
+    if b:AutoPairsShortcutJump != ''
         execute 'inoremap <buffer> <silent> ' . g:AutoPairsShortcutJump. ' <ESC>:call autopairs#AutoPairsJump()<CR>a'
         execute 'noremap <buffer> <silent> ' . g:AutoPairsShortcutJump. ' :call autopairs#AutoPairsJump()<CR>'
     end
 
+    " TODO: Is this really necessary?
     if &keymap != ''
         let l:imsearch = &imsearch
         let l:iminsert = &iminsert
@@ -806,8 +806,11 @@ func! autopairs#AutoPairsTryInit()
         call g:AutoPairsInitHook()
     endif
     if index(g:AutoPairsDirectoryBlacklist, getcwd()) >= 0 || index(g:AutoPairsFiletypeBlacklist, &ft) != -1
+        " TODO: return and make an explicit enable possible
         let b:autopairs_enabled = 0
     endif
+
+    call autopairs#Variables#_InitBufferVariables()
 
     " TODO: decode this comment
     " for auto-pairs starts with 'a', so the priority is higher than supertab and vim-endwise
@@ -823,7 +826,7 @@ func! autopairs#AutoPairsTryInit()
 
     " Buffer level keys mapping
     " comptible with other plugin
-    if g:AutoPairsMapCR
+    if b:AutoPairsMapCR
         if v:version == 703 && has('patch32') || v:version > 703
             " VIM 7.3 supports advancer maparg which could get <expr> info
             " then auto-pairs could remap <CR> in any case.
@@ -844,7 +847,7 @@ func! autopairs#AutoPairsTryInit()
             " VIM version less than 7.3
             " the mapping's <expr> info is lost, so guess it is expr or not, it's
             " not accurate.
-            let old_cr = maparg(g:AutoPairsCRKey, 'i')
+            let old_cr = maparg(b:AutoPairsCRKey, 'i')
             if old_cr == ''
                 let old_cr = '<CR>'
                 let is_expr = 0
@@ -866,7 +869,7 @@ func! autopairs#AutoPairsTryInit()
                 let old_cr = wrapper_name
             end
             " Always silent mapping
-            execute 'inoremap <script> <buffer> <silent> ' .g:AutoPairsCRKey. ' ' .old_cr.'<SID>autopairs#AutoPairsReturn'
+            execute 'inoremap <script> <buffer> <silent> ' . b:AutoPairsCRKey . ' ' .old_cr.'<SID>autopairs#AutoPairsReturn'
         endif
     endif
     call autopairs#AutoPairsInit()

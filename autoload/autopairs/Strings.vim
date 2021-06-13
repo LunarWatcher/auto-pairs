@@ -10,15 +10,6 @@ endif
 let g:autopairs#Strings#Left = g:autopairs#Strings#Go."\<LEFT>"
 let g:autopairs#Strings#Right = g:autopairs#Strings#Go."\<RIGHT>"
 
-fun! autopairs#Strings#define(name, default)
-    " g:AutoPairsForceDefine is a variable meant for tests.
-    " It's undocumented because it shouldn't be used outside testing,
-    " as this will hard reset any options defined by the user.
-    if !exists(a:name) || exists('g:AutoPairsForceDefine')
-        let {a:name} = a:default
-    endif
-endfun
-
 " unicode len
 func! autopairs#Strings#ulen(s)
     return len(split(a:s, '\zs'))
