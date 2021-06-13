@@ -1741,16 +1741,6 @@ files are loaded when `autopair#` functions are called. This means using, for
 an instance, `autopairs#AutoPairsDefine` loads the file and makes the function
 valid.
 
-                                               *autopairs#AutoPairsScriptInit()*
-This function has been deprecated with the improvement of
-|autopairs#AutoPairsDefine()| and the addition of |autopairs-pair-object| and
-|autopairs#AutoPairsAdd()|.
-
-To add language pairs, use the substantially better language key in
-|autopairs-pair-object|. The key has semantic meaning with the use of either a
-list of pair objects for |autopairs#AutoPairsDefine()|, or explicit use of
-|autopairs#AutoPairsAdd()|
-
 ------------------------------------------------------------------------------
 AutoPairsMap()                     *autopairs#AutoPairsMap()* *auto-pairs-map-key*
 Arguments: (key)

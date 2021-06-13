@@ -22,6 +22,8 @@
 
 ## Removed
 * `autopairs#AutoPairsScriptInit()`
+
+# Deprecated
 * `g:AutoPairsShortcutMultilineClose`
 
 # 3.0.0-beta10

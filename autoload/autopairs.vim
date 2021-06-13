@@ -386,10 +386,8 @@ func! autopairs#AutoPairsFastWrap(...)
         let g:AutoPairsDebug = after
         if after[1:1] =~ '\v' . (g:AutoPairsMultilineFastWrap ? '(\w|$)' : '\w')
             exec "normal! " . movement
-            normal! p
-        else
-            normal! p
         endif
+        normal! p
 
     endif
     if cursorOffset > 0
@@ -536,7 +534,7 @@ func! autopairs#AutoPairsMap(key, ...)
     end
     let escaped_key = substitute(key, "'", "''", 'g')
     " use expr will cause search() doesn't work
-    if explicit && len(maparg(key, "i")) != 0
+    if l:explicit && len(maparg(key, "i")) != 0
         return
     endif
     execute 'inoremap <buffer> <silent> '.key." <C-R>=autopairs#AutoPairsInsert('". escaped_key."')<cr>"
@@ -665,7 +663,7 @@ func! autopairs#AutoPairsInit()
     if empty(b:autopairs_next_char_whitelist)
         let b:autopairs_next_char_whitelist = '^$'
     else
-        let b:autopairs_next_char_whitelist = '^\V\('.join(b:autopairs_next_char_whitelist, '\|').'\)'
+        let b:autopairs_next_char_whitelist = '^\V\(' . join(b:autopairs_next_char_whitelist, '\|') . '\)'
     endif
 
     " Krasjet: add blacklisted open strings to the list
@@ -676,7 +674,7 @@ func! autopairs#AutoPairsInit()
     if empty(b:autopairs_open_blacklist)
         let b:autopairs_open_blacklist = '^$'
     else
-        let b:autopairs_open_blacklist = '\V\('.join(b:autopairs_open_blacklist, '\|').'\)'
+        let b:autopairs_open_blacklist = '\V\('.join(b:autopairs_open_blacklist, '\|') . '\)'
     endif
 
     for item in b:AutoPairsList
