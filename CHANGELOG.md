@@ -19,6 +19,7 @@
 * `balancebyclose` added to pair objects ([#31](https://github.com/LunarWatcher/auto-pairs/issues/31)) to aid balancing. Also helps towards #30
 * CI to auto-run tests on the three major operating systems (doesn't affect the plugin itself; only the dev process)
 * `g:AutoPairsShortcutToggleMultilineClose`
+* `g:AutoPairsPreferClose`
 
 ## Removed
 * `autopairs#AutoPairsScriptInit()`
