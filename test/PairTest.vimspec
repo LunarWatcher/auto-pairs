@@ -55,7 +55,8 @@ Describe Basic tests of pair functionality
     It should allow explicit multiline close
         new | only!
         call autopairs#AutoPairsTryInit()
-        call Expect("[\<CR>\<C-p>c]").ToMatch('[\n]')
+        let b:AutoPairsMultilineClose = 1
+        call Expect("[\<CR>]").ToMatch('[\n]')
     End
     It should work with spaces
         new | only!

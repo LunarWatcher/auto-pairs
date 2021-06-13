@@ -11,14 +11,18 @@
 * Moved variable (global + buffer) declaration to a separate file to reduce clutter in `autoload/autopairs.vim`
 * Tweaks to the close balance logic making it more jump-happy than previously
 * Reordered method calls to reduce unnecessary synstack calls for people who don't want it
+* Rolled back the change to multiline close ([#32](https://github.com/LunarWatcher/auto-pairs/issues/32))
+    * `g:AutoPairsMultilineClose` is back
 
 ## Added
 * Tests to reduce the chances [#30](https://github.com/LunarWatcher/auto-pairs/issues/30) occurs again
 * `balancebyclose` added to pair objects ([#31](https://github.com/LunarWatcher/auto-pairs/issues/31)) to aid balancing. Also helps towards #30
 * CI to auto-run tests on the three major operating systems (doesn't affect the plugin itself; only the dev process)
+* `g:AutoPairsShortcutToggleMultilineClose`
 
 ## Removed
 * `autopairs#AutoPairsScriptInit()`
+* `g:AutoPairsShortcutMultilineClose`
 
 # 3.0.0-beta10
 `let g:AutoPairsVersion = 30055`

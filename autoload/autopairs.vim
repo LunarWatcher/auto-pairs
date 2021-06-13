@@ -140,7 +140,7 @@ func! autopairs#AutoPairsInsert(key, ...)
         return a:key
     end
 
-    let l:multiline = get(a:, '1', 0)
+    let l:multiline = get(a:, '1', b:AutoPairsMultilineClose)
 
     let b:autopairs_saved_pair = [a:key, getpos('.')]
 
@@ -233,7 +233,6 @@ func! autopairs#AutoPairsInsert(key, ...)
             return "\<Right>"
         endif
     endif
-
     " As a final fallback, if we end up at the end, just return the key to
     " minimize distruption.
     return a:key
@@ -301,18 +300,6 @@ func! autopairs#AutoPairsDelete()
     endfor
     return "\<BS>"
 endf
-
-fun! autopairs#AutoPairsMultilineClose()
-    " We get a char
-    let char = getchar()
-    " If the char is empty or esc (or CR), we skip and assume the user
-    " aborted.
-    if char == "" || char == "\<ESC>" || char == "\<CR>"
-        return ""
-    endif
-
-    return autopairs#AutoPairsInsert(nr2char(char), 1)
-endfun
 
 " Fast wrap the word in brackets
 " Note to self: default arguments aren't supported until
@@ -556,15 +543,16 @@ func! autopairs#AutoPairsMap(key, ...)
 endf
 
 func! autopairs#AutoPairsToggle()
-    if b:autopairs_enabled
-        let b:autopairs_enabled = 0
-        echo 'AutoPairs Disabled.'
-    else
-        let b:autopairs_enabled = 1
-        echo 'AutoPairs Enabled.'
-    end
+    let b:autopairs_enabled = !b:autopairs_enabled
+    echo 'AutoPairs ' . (b:autopairs_enabled ? 'enabled' : 'disabled')
     return ''
 endf
+
+fun! autopairs#AutoPairsToggleMultilineClose()
+    let b:AutoPairsMultilineClose = !b:AutoPairsMultilineClose
+    echo (b:AutoPairsMultilineClose ? "Enabled" : "Disabled") . " multiline close"
+    return ''
+endfun
 
 func! autopairs#AutoPairsInit()
     " Why can't we be consistent about capitalization? Ugh
@@ -731,8 +719,9 @@ func! autopairs#AutoPairsInit()
         endfor
     endif
 
-    if g:AutoPairsShortcutMultilineClose != ""
-        execute 'inoremap <buffer> <silent> ' . g:AutoPairsShortcutMultilineClose . " <C-r>=autopairs#AutoPairsMultilineClose()<CR>"
+    " TODO: remove
+    if exists("g:AutoPairsShortcutMultilineClose") && g:AutoPairsShortcutMultilineClose != ''
+        execute 'inoremap <buffer> <silent> ' . g:AutoPairsShortcutMultilineClose . " <C-o>:unsilent echoerr 'This function is a no-op. See :h g:AutoPairsShortcutMultilineClose'<CR>"
     endif
 
     " Still use <buffer> level mapping for <BS> <SPACE>
@@ -751,26 +740,32 @@ func! autopairs#AutoPairsInit()
         if v:version == 703 && has("patch489") || v:version > 703
             let do_abbrev = "<C-]>"
         endif
-        execute 'inoremap <buffer> <silent> <SPACE> '.do_abbrev.'<C-R>=autopairs#AutoPairsSpace()<CR>'
+        execute 'inoremap <buffer> <silent> <SPACE> ' . do_abbrev . '<C-R>=autopairs#AutoPairsSpace()<CR>'
     end
 
     if b:AutoPairsShortcutFastWrap != ''
-        execute 'inoremap <buffer> <silent> '.g:AutoPairsShortcutFastWrap.' <C-R>=autopairs#AutoPairsFastWrap()<CR>'
+        execute 'inoremap <buffer> <silent> ' . b:AutoPairsShortcutFastWrap . ' <C-R>=autopairs#AutoPairsFastWrap()<CR>'
     end
 
     if b:AutoPairsFlyMode && b:AutoPairsShortcutBackInsert != ''
-        execute 'inoremap <buffer> <silent> '.g:AutoPairsShortcutBackInsert.' <C-R>=autopairs#AutoPairsBackInsert()<CR>'
+        execute 'inoremap <buffer> <silent> ' . b:AutoPairsShortcutBackInsert . ' <C-R>=autopairs#AutoPairsBackInsert()<CR>'
     end
 
     if b:AutoPairsShortcutToggle != ''
         " use <expr> to ensure showing the status when toggle
-        execute 'inoremap <buffer> <silent> <expr> '.g:AutoPairsShortcutToggle.' autopairs#AutoPairsToggle()'
-        execute 'noremap <buffer> <silent> '.g:AutoPairsShortcutToggle.' :call autopairs#AutoPairsToggle()<CR>'
+        execute 'inoremap <buffer> <silent> <expr> ' . b:AutoPairsShortcutToggle . ' autopairs#AutoPairsToggle()'
+        execute 'noremap <buffer> <silent> ' . b:AutoPairsShortcutToggle . ' :call autopairs#AutoPairsToggle()<CR>'
     end
 
+    if b:AutoPairsShortcutToggleMultilineClose != ''
+
+        execute 'inoremap <buffer> <silent> <expr> ' . b:AutoPairsShortcutToggleMultilineClose . ' autopairs#AutoPairsToggleMultilineClose()'
+        execute 'noremap <buffer> <silent> ' . b:AutoPairsShortcutToggleMultilineClose . ' :call autopairs#AutoPairsToggleMultilineClose()<CR>'
+    endif
+
     if b:AutoPairsShortcutJump != ''
-        execute 'inoremap <buffer> <silent> ' . g:AutoPairsShortcutJump. ' <ESC>:call autopairs#AutoPairsJump()<CR>a'
-        execute 'noremap <buffer> <silent> ' . g:AutoPairsShortcutJump. ' :call autopairs#AutoPairsJump()<CR>'
+        execute 'inoremap <buffer> <silent> ' . b:AutoPairsShortcutJump . ' <ESC>:call autopairs#AutoPairsJump()<CR>a'
+        execute 'noremap <buffer> <silent> ' . b:AutoPairsShortcutJump . ' :call autopairs#AutoPairsJump()<CR>'
     end
 
     " TODO: Is this really necessary?

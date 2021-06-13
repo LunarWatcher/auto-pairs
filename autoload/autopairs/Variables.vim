@@ -7,6 +7,7 @@ fun! s:define(name, default)
     endif
 endfun
 
+" TODO: sort this garbage
 fun! autopairs#Variables#_InitVariables()
     " Default autopairs
     call s:define("g:AutoPairs", {'(': ')', '[': ']', '{': '}', "'": "'", '"': '"',
@@ -105,13 +106,14 @@ fun! autopairs#Variables#_InitVariables()
 
     call s:define('g:AutoPairsReturnOnEmptyOnly', 1)
 
-    call s:define('g:AutoPairsShortcutMultilineClose', '<C-p>c')
-
     call s:define('g:AutoPairsExperimentalAutocmd', 0)
     call s:define('g:AutoPairsStringHandlingMode', 0)
     call s:define('g:AutoPairsSingleQuotePrefixGroup', '^|\W')
 
     call s:define('g:AutoPairsPreferClose', 1)
+
+    call s:define('g:AutoPairsMultilineClose', 0)
+    call s:define('g:AutoPairsShortcutToggleMultilineClose', '<C-p><C-m>')
 
     if exists('g:AutoPairsEnableMove')
         echom "g:AutoPairsEnableMove has been deprecated. If you set it to 1, you may remove it."
@@ -148,6 +150,8 @@ fun! autopairs#Variables#_InitBufferVariables()
     call s:define('b:AutoPairsMoveExpression', g:AutoPairsMoveExpression)
     call s:define('b:AutoPairsMultilineBackspace', g:AutoPairsMultilineBackspace)
 
+    call s:define('b:AutoPairsMultilineClose', g:AutoPairsMultilineClose)
+
     " Keybinds
     call s:define('b:AutoPairsMapCR', g:AutoPairsMapCR)
     call s:define('b:AutoPairsCRKey', g:AutoPairsCRKey)
@@ -157,4 +161,5 @@ fun! autopairs#Variables#_InitBufferVariables()
     call s:define('b:AutoPairsShortcutBackInsert', g:AutoPairsShortcutBackInsert)
     call s:define('b:AutoPairsShortcutToggle', g:AutoPairsShortcutBackInsert)
     call s:define('b:AutoPairsShortcutJump', g:AutoPairsShortcutJump)
+    call s:define('b:AutoPairsShortcutToggleMultilineClose', g:AutoPairsShortcutToggleMultilineClose)
 endfun

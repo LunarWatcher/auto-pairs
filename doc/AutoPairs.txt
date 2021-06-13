@@ -743,34 +743,38 @@ Executes: >
                                                             *g:AutoPairsFlyMode*
                                                                            int
 
-Default: 0
 This variable also exists in a buffer variant.~
+Default: 0
 
 Set it to 1 to enable |autopairs-flymode|.
 
 ------------------------------------------------------------------------------
                                                      *g:AutoPairsMultilineClose*
                                                                            int
+This variable also exists in a buffer variant~
+Default: 0
 
-This variable has been removed, largely for the reasons outlined in #21:
-    https://github.com/LunarWatcher/auto-pairs/issues/21
+Whether or not to use multiline closing. See also
+|g:AutoPairsShortcutToggleMultilineClose|.
 
-This feature is now available as an explicit keybind; see
-|g:AutoPairsShortcutMultilineClose|
+Note that there's no way to override a bad jump, aside disabling multiline
+close and re-inserting the character.
 
 ------------------------------------------------------------------------------
                                              *g:AutoPairsShortcutMultilineClose*
 
-This variable also exists in a buffer variant.~
-Default: <C-p>c
+This variable has been deprecated. See:
+https://github.com/LunarWatcher/auto-pairs/issues/32
 
-Additional note: this doesn't make assumptions on what you wanna close. When
-you press the keybind, getchar() is called. If you then type }, it'll perform
-a multiline close for }.
 
-There's currently no way to enable this by default, as the behavior of normal
-closing. This is largely for implementation reasons surrounding the ability to
-override a bad auto-pairs decision
+------------------------------------------------------------------------------
+                                       *g:AutoPairsShortcutToggleMultilineClose*
+                                                                     type: int
+
+This variable also exists in a buffer variant~
+Default: <C-p><C-m>
+
+The shortcut to toggle |g:AutoPairsMultilineClose|
 
 ------------------------------------------------------------------------------
                                                  *g:AutoPairsDirectoryBlacklist*
