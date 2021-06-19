@@ -114,6 +114,7 @@ fun! autopairs#Variables#_InitVariables()
 
     call s:define('g:AutoPairsMultilineClose', 0)
     call s:define('g:AutoPairsShortcutToggleMultilineClose', '<C-p><C-m>')
+    call s:define('g:AutoPairsSearchEscape', 1)
 
     if exists('g:AutoPairsEnableMove')
         echom "g:AutoPairsEnableMove has been deprecated. If you set it to 1, you may remove it."
@@ -151,6 +152,7 @@ fun! autopairs#Variables#_InitBufferVariables()
     call s:define('b:AutoPairsMultilineBackspace', g:AutoPairsMultilineBackspace)
 
     call s:define('b:AutoPairsMultilineClose', g:AutoPairsMultilineClose)
+    call s:define('b:AutoPairsSearchEscape', g:AutoPairsSearchEscape)
 
     " Keybinds
     call s:define('b:AutoPairsMapCR', g:AutoPairsMapCR)

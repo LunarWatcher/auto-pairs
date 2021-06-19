@@ -352,28 +352,28 @@ autopairs#AutoPairsInit()'s source if in doubt.
                                                     *autopairs-options-contents*
 
 Note that this list isn't entirely in order at the time of writing, but tries
-to link associateed entries as close as possible.
+to link associated entries as close as possible.
 
 - |g:AutoPairs| (has buffer variant) (default: see the entry)
     Defines what pairs AutoPairs will complete
 - |g:AutoPairsCompleteOnlyOnSpace| (has a buffer variant) (default: 0)
     Defines whether or not there has to be a space (or EOL) to insert a pair
-- |g:AutoPairsShortcutToggle| (default: see the entry)
+- |g:AutoPairsShortcutToggle| (has a buffer variant) (default: see the entry)
     Defines the shortcut for toggling auto-pairs
-- |g:AutoPairsShortcutFastWrap| (default: see the entry)
+- |g:AutoPairsShortcutFastWrap| (has a buffer variant) (default: see the entry)
     Defines the shortcut for fast wrap
-- |g:AutoPairsShortcutJump| (default: see the entry)
+- |g:AutoPairsShortcutJump| (has a buffer variant) (default: see the entry)
     Defines thte shortcut for jumping to the first closed pair, regardless of
     what that pair is
 - |g:AutoPairsShortcutBackInsert| (default: see the entry)
     Defines the shortcut for undoing a flymode jump.
-- |g:AutoPairsMapBS| (default: 0)
+- |g:AutoPairsMapBS| (has a buffer variant) (default: 0)
     Whether or not to map backspace
 - |g:AutoPairsMultilineBackspace| (has a buffer variant) (default: 0)
     Whether or not to use multiline deletion
-- |g:AutoPairsMapCR| (default: 1)
-    Whether or not to map enter (/return)
-- |g:AutoPairsCRKey| (default: '<CR>')
+- |g:AutoPairsMapCR| (has a buffer variant) (default: 1)
+    Whether or not to map enter
+- |g:AutoPairsCRKey| (has a buffer variant) (default: '<CR>')
     Which key to use for the return action if |g:AutoPairsMapCR| is 1
 - |g:AutoPairsJumpBlacklist| (has buffer variant) (default: [])
     Defines a set of close keybinds that don't trigger close skipping.
@@ -424,7 +424,7 @@ to link associateed entries as close as possible.
 - |g:AutoPairsOpenBalanceBlacklist| (has a buffer variant) (default: [])
     Contains a list of characters that don't trigger opening balance checks
 - |g:AutoPairsMultilineFastWrap| (default: 0)
-    Whether or not to let fast wraop work across lines intentionally
+    Whether or not to let fast wrap work across lines intentionally
 - |g:AutoPairsBackwardsCompat| (default: 0)
     Exposes a function for other plugins that haven't been made compatible
     with this fork, but that actively access it
@@ -445,15 +445,23 @@ to link associateed entries as close as possible.
     Whether or not to use legacy keybinds (from jiangmiao/auto-pairs), or to
     use new ones designed not to conflict with other maps, or with characters
     in various languages.
-- |g:AutoPairsReturnOnEmptyOnly| (default: 1)
+- |g:AutoPairsReturnOnEmptyOnly| (has a buffer variant) (default: 1)
     Whether or not the pair has to be empty to trigger the return action
 - |g:AutoPairsExperimentalAutocmd| (default: 0)
     Whether or not to use BufWinEnter instead of BufEnter
-- |g:AutoPairsStringHandlingMode| (default: 0)
+- |g:AutoPairsStringHandlingMode| (has a buffer variant) (default: 0)
     How auto-pairs handles strings. HIGHLY EXPERIMENTAL!
-- |g:AutoPairsMoveExpression| (default: <C-p>%key)
+- |g:AutoPairsMoveExpression| (has a buffer variant) (default: <C-p>%key)
     Defines an expression that triggers the move feature. Please read the
     entry before using.
+- |g:AutoPairsMultilineClose| (has a buffer variant) (default: 0)
+    Whether or not to search across lines when looking for close pairs.
+- |g:AutoPairsShortcutToggleMultilineClose| (has a buffer variant) (default: <C-p><C-m>)
+    What keybind to use for toggling |g:AutoPairsMultilineClose|
+- |g:AutoPairsPreferClose| (default: 1)
+    Whether to prefer closing over jumping.
+- |g:AutoPairsSearchEscape| (has a buffer variant) (default: 1)
+    Whether or not to take backslashes into account when inserting pairs
 
 ------------------------------------------------------------------------------
                                                        *g:AutoPairs* *b:AutoPairs*
@@ -556,19 +564,22 @@ There shouldn't be a limit the length (though, for obvious reasons, things
 might go wrong if you decide to input an obnoxiously long mapping), so you
 should be able to map all pairs used by your favorite language or framework.
 
-                                                     |autopairs-weird-behavior|
+                                                      *autopairs-regex-escaping*
 
 Open is used in a regex search, and because auto-pairs applies stuff directly,
 there's a minor input escape issue. Most people aren't going to experience it,
 but if you i.e. wanna add `'\left(': '\right)'`, there is actually a "right
-way" to add it. `\left` may cause `\l` to be interpreted as a group; |\l|
+way" to add it. `\left` may cause `\l` to be interpreted as regex; |\l|
 to be specific.
 
 Consequentially, the pair has to be declared as `'\\left(': '\right)'` . The
 close pair is also used as a regex in some places, but shouldn't cause any
 problems. Additional escaping will be added soon to mitigate problems, but
 it's fairly niche. TL;DR: if you use backslash in an open pair, you _need_ to
-escape it with `\\` for it to work properly
+escape it with `\\` for it to work properly.
+
+Note: due to how strings work, you'll need \\\\ if you use a double quote
+string, or \\ is interpreted as \ in the string.
 
 This is a bit of a double-sided blade, though; forcing escape of the close
 pair in certain places means regex cannot be used. Regex groups for replace
@@ -1488,6 +1499,23 @@ jump instead of insert, which again, may or may not be desirable. If the
 preceeding line contains an opening (, the closure would be correct.
 Otherwise, it's not.
 
+------------------------------------------------------------------------------
+                                                       *g:AutoPairsSearchEscape*
+
+Type: int
+Default: 1
+
+Whether or not to check if there's backslashes indicating that the
+character(s) may have been escaped. The internal check is for \<pair> and
+not \\<pair>: this means \[ doesn't insert the close pair, but \\[ does insert
+].
+
+Modified multibyte functionality in 3.0.0-beta12 means that if '\\[': '\]' is
+defined as a pair, \\[ counts as escaping and \\\[ counts as the backslash
+being escaped. The backslash before the [ is considered a part of the pair.
+See |autopairs-regex-escaping| for an explanation on the double escaping in
+the pair itself.
+
 *autopairs-end-of-options* (this tag exists purely for doc editing purposes and
                             has no meaning for the plugin)
 ==============================================================================
@@ -1975,6 +2003,6 @@ new one.
 To aid with backwards compat in the future, |g:AutoPairsVersion| has been
 added to identify versions to give an easy way to detect API changes for
 plugin compatibility. Unfortunately, it's introduced so late it's not really
-useful for a few years.
+useful for at least a few years.
 
 vim:ft=help

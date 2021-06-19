@@ -1,3 +1,14 @@
+# 3.0.0-beta12
+`let g:AutoPairsVersion = 30057`
+
+## Fixed
+* Better escape handing ([jiangmiao/#325](https://github.com/jiangmiao/auto-pairs/issues/325))
+* Typos in the help document
+* Update variable list in the help document
+
+## Added
+* `g:AutoPairsSearchEscape`
+
 # 3.0.0-beta11
 `let g:AutoPairsVersion = 30056`
 

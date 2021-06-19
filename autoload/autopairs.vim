@@ -9,7 +9,7 @@ scriptencoding utf-8
 " Current version; not representative of tags or real versions, but purely
 " meant as a number associated with the version. Semantic meaning on the first
 " digit will take place. See the documentation for more details.
-let g:AutoPairsVersion = 30056
+let g:AutoPairsVersion = 30057
 
 let s:save_cpo = &cpoptions
 set cpoptions&vim
@@ -145,19 +145,55 @@ func! autopairs#AutoPairsInsert(key, ...)
     let b:autopairs_saved_pair = [a:key, getpos('.')]
 
     let [before, after, afterline] = autopairs#Strings#getline(l:multiline)
-
-    " Ignore auto close if prev character is \
-    " And skip if it's double-escaped
-    if before[-1:-1] == '\' && before[-2:-1] != "\\\\"
-        return a:key
-    end
-
-    " check open pairs
+    " Check open pairs {{{
+    " TODO: maybe move this to another file?
     for [open, close, opt] in b:AutoPairsList
         let ms = autopairs#Strings#matchend(before . a:key, open)
         let m = matchstr(afterline, '^\v\s*\zs\V'.close)
 
         if len(ms) > 0
+            let target = ms[1]
+            let openPair = ms[2]
+
+
+            " To compensate for multibyte pairs,
+            " we need to search for escaping after we find a match.
+            " Since b:AutoPairsList is sorted by pair size, we can assume that
+            " if we find \[ and it's matched, it's because there's a pair that
+            " matches \[, and not that we have [ escaped.
+            if b:AutoPairsSearchEscape
+                " Intermediate length
+                let pLen = len(openPair)
+                " First check the character prior to the character of the
+                " current pair. Take \[ in LaTeX:
+                "  0 0 \ [
+                " -1 0 1 2
+                "      ^ pair match found starting here -- that's why we're
+                "        referencing the length of the found pair.
+                "        Because of potentially varying width, we need to figure
+                "        out how long the match we wanna search is.
+                "    ^ Look for backslash here. If one is found,
+                "  ^ Look for one here. Essentially, this is to make sure we
+                "    don't trigger a false positive on, among other things,
+                "    '\\|', type ' at |. Essentially, if the backslash is
+                "    escaped, we assume that the pair character isn't.
+                "    This doesn't take into account '\\\|', ' at |,
+                "    because it only checks the last two backslashes.
+                "    There's no good way to check for correct escaping without
+                "    doing an obnoxious amount of checks, which is overkill
+                "    for a case like this.
+                " (0 is a reference to null, meaning there's no string at that
+                " position)
+                "
+                " TL;DR: if we find a backslash in front of the pair, we then know
+                " it's escaped, and we don't want to insert the close.
+                " If there's another backslash in front of the backslash in
+                " front of the pair, we assume the backslash is escaped and
+                " insert the pair anyway.
+                if before[-pLen:-pLen] == '\' && before[-pLen - 1:-pLen - 1] != '\'
+                    return a:key
+                endif
+            endif
 
             " Krasjet: only insert the closing pair if the next character is a space
             " or a non-quote closing pair, or a whitelisted character (string)
@@ -175,8 +211,6 @@ func! autopairs#AutoPairsInsert(key, ...)
             " eg: if the pairs include < > and  <!-- -->
             " when <!-- is detected the inserted pair < > should be clean up
             "
-            let target = ms[1]
-            let openPair = ms[2]
 
             if (len(openPair) == 1 && m == openPair) || (close == '')
                 break
@@ -197,8 +231,8 @@ func! autopairs#AutoPairsInsert(key, ...)
                         let found = 1
                         let before = os[1]
                         let afterline = cs[2]
-                        let bs = bs.autopairs#Strings#backspace(os[2])
-                        let del = del.autopairs#Strings#delete(cs[1])
+                        let bs = bs . autopairs#Strings#backspace(os[2])
+                        let del = del . autopairs#Strings#delete(cs[1])
                         break
                     end
                 endfor
@@ -211,14 +245,15 @@ func! autopairs#AutoPairsInsert(key, ...)
                     end
                 end
             endwhile
-
-            return bs.del.openPair.close.autopairs#Strings#left(close)
+            return bs . del . openPair
+                        \ . close . autopairs#Strings#left(close)
                         \ . (index(b:AutoPairsAutoLineBreak, open) != -1 ?
                         \     "\<cr>".autopairs#AutoPairsDetermineCRMovement()
                         \     : '')
 
         end
     endfor
+    " }}}
 
     let checkClose = autopairs#Insert#checkClose(a:key, before, after, afterline)
     if checkClose != ""
