@@ -1,0 +1,36 @@
+Describe Backslashes are trash, but
+    Before each
+        call autopairs#Variables#_InitVariables()
+    End
+    It should escape correctly
+        new | only!
+        call Expect('\[').ToMatch('\[')
+        call Expect('\{').ToMatch('\{')
+        call Expect('\(').ToMatch('\(')
+        call Expect('\"').ToMatch('\"')
+    End
+    It the option to not enable escaping should work
+        let g:AutoPairsSearchEscape = 0
+        new | only!
+        call Expect('\[').ToMatch('\[]')
+        call Expect('\"').ToMatch('\""')
+        call Expect('\(').ToMatch('\()')
+        call Expect('\{').ToMatch('\{}')
+
+    End
+    It should handle double escaping
+        new | only!
+        call Expect('\\[').ToMatch('\\[]')
+        call Expect('\\(').ToMatch('\\()')
+        call Expect('\\"').ToMatch('\\""')
+        call Expect('\\{').ToMatch('\\{}')
+    End
+    It should work with pairs starting with a backslash
+        let g:AutoPairs = autopairs#AutoPairsDefine({'\\[': '\]'})
+        new | only!
+        call Expect('[').ToMatch('[]')
+        call Expect('\[').ToMatch('\[\]')
+        call Expect('\\[').ToMatch('\\[')
+        call Expect('\\\[').ToMatch('\\\[\]')
+    End
+End
