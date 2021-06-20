@@ -11,6 +11,10 @@ Fork URL: https://github.com/LunarWatcher/auto-pairs (bugs, feature requests,
                                                       here)
 Changelog: https://github.com/LunarWatcher/auto-pairs/blob/master/CHANGELOG.md
 
+Table of help documents
+    |AutoPairs.txt| (you are here)
+    |AutoPairsCompatibility|
+
 ==============================================================================
 CONTENTS                                                    *autopairs-contents*
 
@@ -1515,6 +1519,22 @@ defined as a pair, \\[ counts as escaping and \\\[ counts as the backslash
 being escaped. The backslash before the [ is considered a part of the pair.
 See |autopairs-regex-escaping| for an explanation on the double escaping in
 the pair itself.
+
+------------------------------------------------------------------------------
+                                                    *g:AutoPairsVMCompatibility*
+
+Type: int
+Required plugin: |visual-multi.txt| (https://github.com/mg979/vim-visual-multi)
+Default: 0
+This flag is a no-op if vim-visual-multi isn't detected~
+
+See also |autopairs-visual-multi| for more compatibility information.
+
+Whether or not to reinstate auto-pairs mappings, and by extension, to
+disregard the call to disable auto-pairs when VM is enabled.
+
+Also note that Vim must be restarted for changes to this flag to take effect
+-- it can't be set on-demand, and must be declared in your vimrc.
 
 *autopairs-end-of-options* (this tag exists purely for doc editing purposes and
                             has no meaning for the plugin)

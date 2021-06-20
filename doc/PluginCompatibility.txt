@@ -1,0 +1,39 @@
+*AutoPairsCompatibility* *autopairs-compatbility* *auto-pairs-compat*
+
+Table of help documents
+    |AutoPairs.txt|
+    |AutoPairsCompatibility| (you are here)
+
+================================================================================
+Table of Contents                               *autopairs-compatibility-contents*
+
+    1. vim-visual-multi ............... |vm-autopairs| |autopairs-visual-multi|
+
+================================================================================
+1. vim-visual-multi                          *vm-autopairs* *autopairs-visual-multi*
+
+Auto-pairs is mostly compatible with vim-visual-multi (VM). This fork also
+sets up config to make sure the plugin is correctly disabled and respects the
+plugin as far as it can. However, that's also the problem.
+
+VM overrides keybinds, and doesn't try to map them in a way that's compatible
+with other maps. While there are keys like that in auto-pairs wrt. other
+plugins (and some times vice versa), VM gives plugins a way out.
+
+Using |g:VM_plugins_compatibilty| (see also |vm-compatibility|), plugins are
+granted an enable and a disable function, which are respectively called when
+VM is exited and when it's enabled. (I.e. plugins are disabled when VM is
+enabled, and vice versa).
+This is all good, but it also means auto-pairs' only way to be compatible is
+to offer a way to disable itself. This is also a consequence of maps being
+overwritten by force.
+
+Auto-pairs may be instructed to use |vm-functions| to reinstate certain
+mappings, but this on its own doesn't disable warnings that occur when the
+mappings are overwritten in the first place. To silence these,
+let |g:VM_show_warnings| = 0. While potentially not optimal, it does silence
+the error output.
+
+See |g:AutoPairsVMCompatibility| for more details on the compatibility tool.
+
+vim:ft=help
