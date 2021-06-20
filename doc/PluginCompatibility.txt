@@ -76,8 +76,6 @@ at this point set, which may have unintended consequences. >
     autocmd FileType TelescopePrompt let b:autopairs_enabled = 0
 <
 
-
-
 [1]: https://github.com/neovim/neovim/issues/14798
 [2]: https://github.com/LunarWatcher/auto-pairs/issues/34
 
