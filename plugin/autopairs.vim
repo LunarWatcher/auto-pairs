@@ -53,7 +53,7 @@ if exists('g:VM_plugins_compatibilty') || exists('*vm#maps#init')
     " No need for those checks when it's set like this.
     let g:VM_plugins_compatibilty = extend(get(g:, 'VM_plugins_compatibilty', {}), {
         \'AutoPairs': {
-                \   'test': { -> b:autopairs_enabled },
+                \   'test': { -> 1 },
                 \   'enable': 'unlet b:autopairs_loaded | call autopairs#AutoPairsTryInit() | let b:autopairs_enabled = 1',
                 \   'disable': 'let b:autopairs_enabled = 0',
                 \}

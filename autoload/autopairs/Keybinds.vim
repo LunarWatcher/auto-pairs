@@ -226,11 +226,6 @@ fun! autopairs#Keybinds#mapKeys()
         endfor
     endif
 
-    " TODO: remove
-    if exists("g:AutoPairsShortcutMultilineClose") && g:AutoPairsShortcutMultilineClose != ''
-        execute 'inoremap <buffer> <silent> ' . g:AutoPairsShortcutMultilineClose . " <C-o>:unsilent echoerr 'This function is a no-op. See :h g:AutoPairsShortcutMultilineClose'<CR>"
-    endif
-
     " Still use <buffer> level mapping for <BS> <SPACE>
     if b:AutoPairsMapBS
         " Use <C-R> instead of <expr> for issue #14 sometimes press BS output strange words

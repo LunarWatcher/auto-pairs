@@ -25,21 +25,20 @@ VM overrides keybinds, and doesn't try to map them in a way that's compatible
 with other maps. While there are keys like that in auto-pairs wrt. other
 plugins (and some times vice versa), VM gives plugins a way out.
 
-Using |g:VM_plugins_compatibilty| (see also |vm-compatibility|), plugins are
-granted an enable and a disable function, which are respectively called when
-VM is exited and when it's enabled. (I.e. plugins are disabled when VM is
-enabled, and vice versa).
-This is all good, but it also means auto-pairs' only way to be compatible is
-to offer a way to disable itself. This is also a consequence of maps being
-overwritten by force.
+There are, admittedly, ways to retain compatibility by re-enabling keybinds in
+a compatible way after the fact, but this breaks jumping, at least wrt. the
+cursor position. With the specifics of what's required for compatibility being
+vague, the implementation details are unclear and therefore not implemented.
 
-Auto-pairs may be instructed to use |vm-functions| to reinstate certain
-mappings, but this on its own doesn't disable warnings that occur when the
-mappings are overwritten in the first place. To silence these,
-let |g:VM_show_warnings| = 0. While potentially not optimal, it does silence
-the error output.
+That being said, due to the use of keybinds that do conflict with the plugin,
+such as |<cr>| and potentially others, depending on various mapping details,
+VM may produce warnings. It's adviced that you suppress these, as they're
+unavoidable at the time of writing. The warnings may be suppressed with: >
+    let g:VM_show_warnings = 0
+<
 
-See |g:AutoPairsVMCompatibility| for more details on the compatibility tool.
+Note, however, that VM only outputs warnings (at the time of writing), meaning
+it makes no practical difference.
 
 ================================================================================
 2. Telescope                                                 *autopairs-telescope*
