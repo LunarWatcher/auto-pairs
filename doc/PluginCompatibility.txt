@@ -8,10 +8,15 @@ Table of help documents
 Table of Contents                               *autopairs-compatibility-contents*
 
     1. vim-visual-multi ............... |vm-autopairs| |autopairs-visual-multi|
+    2. Telescope ...................... |autopairs-telescope|
 
 ================================================================================
 1. vim-visual-multi                          *vm-autopairs* *autopairs-visual-multi*
 
+COMPATIBILITY STATUS
+Poor (requires hacks)
+
+Description~
 Auto-pairs is mostly compatible with vim-visual-multi (VM). This fork also
 sets up config to make sure the plugin is correctly disabled and respects the
 plugin as far as it can. However, that's also the problem.
@@ -35,5 +40,45 @@ let |g:VM_show_warnings| = 0. While potentially not optimal, it does silence
 the error output.
 
 See |g:AutoPairsVMCompatibility| for more details on the compatibility tool.
+
+================================================================================
+2. Telescope                                                 *autopairs-telescope*
+                                                             *telescope-autopairs*
+
+COMPATIBILITY STATUS
+Poor (bug in nvim; requires hacks)
+
+Description~
+Auto-pairs doesn't work in Telescope, by design. The same goes for terminal
+buffers in Vim and Neovim.
+
+This is largely down to these buffers not triggering the autocmd, but also
+because these types of buffers often end up being inappropriate to run in.
+There's different keybinds from regular insert mode, and there's often another
+use where automatic pair insertion can end up being detrimental rather than
+useful.
+
+While explicitly enabling in terminal buffers is potentially a matter for
+later discussion (and a togglable feature), newer versions of Nvim 0.5.0 don't
+give you a choice with Telescope. Due to a bug related to autocmds[1],
+BufEnter and BufWinEnter are triggered before the filetype can be correctly
+set[2]. The consequence of this is that there's also no way to disable
+auto-pairs in Telescope using the filetype blacklist[2], as the filetype
+blacklist actually requires the filetype to be set.
+
+This behavior isn't present in 0.4.3 and up to (and including) commit 03b3ff8
+in neovim 0.5.0. After that commit, Telescope misbehaves due to the
+aformentioned bug, which means that auto-pairs is started long before it
+should. Again, the consequences of this is that auto-pairs ends up in a state
+it's not meant to be in. The workaround hack is to set an autocmd that
+disables auto-pairs when the filetype is set. Note, however, that keybinds are
+at this point set, which may have unintended consequences. >
+    autocmd FileType TelescopePrompt let b:autopairs_enabled = 0
+<
+
+
+
+[1]: https://github.com/neovim/neovim/issues/14798
+[2]: https://github.com/LunarWatcher/auto-pairs/issues/34
 
 vim:ft=help
