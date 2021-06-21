@@ -161,7 +161,7 @@ fun! autopairs#Variables#_InitBufferVariables()
     call s:define('b:AutoPairsMapSpace', g:AutoPairsMapSpace)
     call s:define('b:AutoPairsShortcutFastWrap', g:AutoPairsShortcutFastWrap)
     call s:define('b:AutoPairsShortcutBackInsert', g:AutoPairsShortcutBackInsert)
-    call s:define('b:AutoPairsShortcutToggle', g:AutoPairsShortcutBackInsert)
+    call s:define('b:AutoPairsShortcutToggle', g:AutoPairsShortcutToggle)
     call s:define('b:AutoPairsShortcutJump', g:AutoPairsShortcutJump)
     call s:define('b:AutoPairsShortcutToggleMultilineClose', g:AutoPairsShortcutToggleMultilineClose)
 endfun

@@ -5,7 +5,8 @@
 * Better escape handing ([jiangmiao#325](https://github.com/jiangmiao/auto-pairs/issues/325))
 * Typos in the help document
 * Update variable list in the help document
-* Add a hepl document covering plugin interop for specific plugins
+* Add a help document covering plugin interop for specific plugins
+* Bug from beta11 breaking the autopairs toggle shortcut
 
 ## Added
 * `g:AutoPairsSearchEscape`
