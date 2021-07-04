@@ -1,3 +1,9 @@
+# 3.0.0-beta13
+`let g:AutoPairsVersion = 30058`
+
+* Code cleanup
+* Vimscript standard update #1
+
 # 3.0.0-beta12
 `let g:AutoPairsVersion = 30057`
 

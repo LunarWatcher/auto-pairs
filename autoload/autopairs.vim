@@ -6,10 +6,17 @@
 
 scriptencoding utf-8
 
+if !has('nvim') && has('vimscript-4')
+    " We'll enforce the new version for versions of Vim that support the
+    " fantastic |scriptversion|. The rest are gonna have to sort themselves
+    " out.
+    scriptversion 4
+endif
+
 " Current version; not representative of tags or real versions, but purely
 " meant as a number associated with the version. Semantic meaning on the first
 " digit will take place. See the documentation for more details.
-let g:AutoPairsVersion = 30057
+let g:AutoPairsVersion = 30058
 
 let s:save_cpo = &cpoptions
 set cpoptions&vim
@@ -86,7 +93,7 @@ fun! autopairs#AutoPairsAddPair(pair, ...)
                 endfor
                 return
             else
-                echoerr "Invalid filetype: " . filetypes . " - must be string or list. Discarding pair"
+                echoerr "Invalid filetype: " .. filetypes .. " - must be string or list. Discarding pair"
                 return
             endif
         endif
@@ -148,8 +155,8 @@ func! autopairs#AutoPairsInsert(key, ...)
     " Check open pairs {{{
     " TODO: maybe move this to another file?
     for [open, close, opt] in b:AutoPairsList
-        let ms = autopairs#Strings#matchend(before . a:key, open)
-        let m = matchstr(afterline, '^\v\s*\zs\V'.close)
+        let ms = autopairs#Strings#matchend(before .. a:key, open)
+        let m = matchstr(afterline, '^\v\s*\zs\V' .. close)
 
         if len(ms) > 0
             let target = ms[1]
@@ -231,8 +238,8 @@ func! autopairs#AutoPairsInsert(key, ...)
                         let found = 1
                         let before = os[1]
                         let afterline = cs[2]
-                        let bs = bs . autopairs#Strings#backspace(os[2])
-                        let del = del . autopairs#Strings#delete(cs[1])
+                        let bs = bs .. autopairs#Strings#backspace(os[2])
+                        let del = del .. autopairs#Strings#delete(cs[1])
                         break
                     end
                 endfor
@@ -241,14 +248,14 @@ func! autopairs#AutoPairsInsert(key, ...)
                     let ms = autopairs#Strings#matchend(before, '\v.')
                     if len(ms)
                         let before = ms[1]
-                        let bs = bs.autopairs#Strings#backspace(ms[2])
+                        let bs = bs .. autopairs#Strings#backspace(ms[2])
                     end
                 end
             endwhile
-            return bs . del . openPair
-                        \ . close . autopairs#Strings#left(close)
-                        \ . (index(b:AutoPairsAutoLineBreak, open) != -1 ?
-                        \     "\<cr>".autopairs#AutoPairsDetermineCRMovement()
+            return bs .. del .. openPair
+                        \ .. close .. autopairs#Strings#left(close)
+                        \ .. (index(b:AutoPairsAutoLineBreak, open) != -1 ?
+                        \     "\<cr>" .. autopairs#AutoPairsDetermineCRMovement()
                         \     : '')
 
         end
@@ -263,7 +270,7 @@ func! autopairs#AutoPairsInsert(key, ...)
         return checkClose
     endif
     " Fly Mode, and the key is closed-pairs, search closed-pair and jump
-    if g:AutoPairsFlyMode &&  a:key =~ '\v[' . b:AutoPairsFlyModeList . ']'
+    if g:AutoPairsFlyMode &&  a:key =~ '\v[' .. b:AutoPairsFlyModeList .. ']'
         if search(a:key, 'We')
             return "\<Right>"
         endif
@@ -286,8 +293,8 @@ func! autopairs#AutoPairsDelete()
             continue
         endif
         let rest_of_line = opt['multiline'] ? after : ig
-        let b = matchstr(before, '\V' . open . '\v\s?$')
-        let a = matchstr(rest_of_line, '^\v\s*\V' . close)
+        let b = matchstr(before, '\V' .. open .. '\v\s?$')
+        let a = matchstr(rest_of_line, '^\v\s*\V' .. close)
 
         if b != '' && a != ''
             if b[-1:-1] == ' '
@@ -297,7 +304,7 @@ func! autopairs#AutoPairsDelete()
                     return "\<BS>"
                 end
             end
-            return autopairs#Strings#backspace(b) . autopairs#Strings#delete(a)
+            return autopairs#Strings#backspace(b) .. autopairs#Strings#delete(a)
         end
     endfor
 
@@ -309,26 +316,26 @@ func! autopairs#AutoPairsDelete()
         if (close == '')
             continue
         endif
-        let m = autopairs#Strings#matchend(before, '\V' . open . '\v\s*' . '\V' . close . '\v$')
+        let m = autopairs#Strings#matchend(before, '\V' .. open .. '\v\s*' .. '\V' .. close .. '\v$')
 
         if len(m) > 0
             return autopairs#Strings#backspace(m[2])
         elseif opt["multiline"] && b:AutoPairsMultilineBackspace
-            let m = matchstr(before, '^\v\s*\V' . close)
+            let m = matchstr(before, '^\v\s*\V' .. close)
             if m != ''
                 let b = ""
                 let offset = 1
                 " a = m
                 while getline(line('.') - offset) =~ "^\s*$"
-                    let b .= getline(line('.') - offset) . ' '
+                    let b ..= getline(line('.') - offset) .. ' '
                     let offset += 1
                     if (line('.') - offset <= 0)
                         return "\<BS>"
                     endif
                 endwhile
-                let a = matchstr(getline(line('.') - offset), '\V' . open . '\v\s*$') . ' '
+                let a = matchstr(getline(line('.') - offset), '\V' .. open .. '\v\s*$') .. ' '
                 if a != ' '
-                    return autopairs#Strings#backspace(a) . autopairs#Strings#backspace(b) . autopairs#Strings#backspace(m)
+                    return autopairs#Strings#backspace(a) .. autopairs#Strings#backspace(b) .. autopairs#Strings#backspace(m)
                 endif
             endif
         end
@@ -364,7 +371,7 @@ func! autopairs#AutoPairsFastWrap(...)
             let esc = substitute(close, "'", "''", "g")
             let esc = substitute(esc, '\', '\\\\', "g")
 
-            let res = substitute(after, '^\V' . esc, '\=add(match, submatch(0))', '')
+            let res = substitute(after, '^\V' .. esc, '\=add(match, submatch(0))', '')
 
             if len(match) > 0 && len(match[0]) > length
 
@@ -372,7 +379,7 @@ func! autopairs#AutoPairsFastWrap(...)
             endif
         endfor
 
-        exec "normal! " . length . "x"
+        exec "normal!" length .. "x"
         let cursorOffset = length - 1
     else
         let cursorOffset = 0
@@ -396,9 +403,9 @@ func! autopairs#AutoPairsFastWrap(...)
             if close == ''
                 continue
             end
-            if after =~ '^\s*\V'.open
+            if after =~ '^\s*\V' .. open
                 if open == close && count(before, open) % 2 != 0
-                            \ && before =~ '\V' . open . '\v.*$' && after =~ '^\V' . close
+                            \ && before =~ '\V' .. open .. '\v.*$' && after =~ '^\V' .. close
                     break
                 endif
 
@@ -406,12 +413,12 @@ func! autopairs#AutoPairsFastWrap(...)
                 " Search goes for the first one rather than the logical option
                 " -- the last one. This is only a problem when open == close,
                 "  which means in the case of quotes.
-                if open == close && after =~ '^\v\s+\V' . close
+                if open == close && after =~ '^\v\s+\V' .. close
                     call search(close, 'We')
                 endif
                 normal! p
                 if cursorOffset > 0
-                    exec "normal! " . cursorOffset . 'h'
+                    exec "normal!" cursorOffset .. 'h'
                 endif
                 let @" = c
                 return ""
@@ -419,14 +426,14 @@ func! autopairs#AutoPairsFastWrap(...)
             endif
         endfor
         let g:AutoPairsDebug = after
-        if after[1:1] =~ '\v' . (g:AutoPairsMultilineFastWrap ? '(\w|$)' : '\w')
-            exec "normal! " . movement
+        if after[1:1] =~ '\v' .. (g:AutoPairsMultilineFastWrap ? '(\w|$)' : '\w')
+            exec "normal! " .. movement
         endif
         normal! p
 
     endif
     if cursorOffset > 0
-        exec "normal! " cursorOffset . 'h'
+        exec "normal!" cursorOffset .. 'h'
     endif
     let @" = c
     return ""
@@ -451,14 +458,14 @@ func! autopairs#AutoPairsJump()
             let res = substitute(close, "'", "''", 'g')
             let res = substitute(res, '\', '\\\\', 'g')
             " Append the element
-            let b:AutoPairsJumpRegex .= (len(b:AutoPairsJumpRegex) > 2 ? '\|' : '') . res
+            let b:AutoPairsJumpRegex ..= (len(b:AutoPairsJumpRegex) > 2 ? '\|' : '') .. res
         endfor
         " End the regex group and finalize the variable
-        let b:AutoPairsJumpRegex .= '\)'
+        let b:AutoPairsJumpRegex ..= '\)'
     endif
 
     " Use the variable (either freshly generated or cached)
-    call search('\V' . b:AutoPairsJumpRegex, 'W')
+    call search('\V' .. b:AutoPairsJumpRegex, 'W')
 endf
 
 " Handles the move feature -- note that the move feature has been disabled by
@@ -466,7 +473,7 @@ endf
 func! autopairs#AutoPairsMoveCharacter(key)
     let c = getline(".")[col(".")-1]
     let escaped_key = substitute(a:key, "'", "''", 'g')
-    return "\<DEL>\<ESC>:call search("."'".escaped_key."'".")\<CR>a".c."\<LEFT>"
+    return "\<DEL>\<ESC>:call search("."'" .. escaped_key .. "'" .. ")\<CR>a" .. c .. "\<LEFT>"
 endf
 
 " Back insert for flymode.
@@ -493,7 +500,7 @@ fun! autopairs#AutoPairsDetermineCRMovement()
     " https://github.com/jiangmiao/auto-pairs/issues/24
     " This is essentially custom balancing beyond what Vim does.
     if &equalprg != ''
-        return "\<ESC>".cmd."O"
+        return "\<ESC>" .. cmd .. "O"
     endif
 
     " Note: for indent issues, see :h autopairs-diagnose-indent
@@ -501,9 +508,9 @@ fun! autopairs#AutoPairsDetermineCRMovement()
     " javascript   need   indent new line
     " coffeescript forbid indent new line
     if &filetype == 'coffeescript' || &filetype == 'coffee'
-        return "\<ESC>".cmd."k==o"
+        return "\<ESC>" .. cmd .. "k==o"
     else
-        return "\<ESC>".cmd."=ko"
+        return "\<ESC>" .. cmd .. "=ko"
     endif
 endfun
 
@@ -524,7 +531,7 @@ func! autopairs#AutoPairsReturn()
         " \V<open>\v is basically escaping. Makes sure ( isn't considered the
         " start of a group, which would yield incorrect results.
         " Used to prevent fuckups
-        if before =~ '\V'.open.'\v' . (b:AutoPairsReturnOnEmptyOnly ? '\s*' : '.*') . '$' && afterline =~ '^\s*\V'.close
+        if before =~ '\V' .. open .. '\v' .. (b:AutoPairsReturnOnEmptyOnly ? '\s*' : '.*') .. '$' && afterline =~ '^\s*\V' .. close
             if b:AutoPairsCarefulStringExpansion && index(b:AutoPairsQuotes, open) != -1 && count(before, open) % 2 == 0
                 return ""
             endif
@@ -549,11 +556,11 @@ func! autopairs#AutoPairsSpace()
         if close == ''
             continue
         end
-        if before =~ '\V'.open.'\v$' && after =~ '^\V'.close
+        if before =~ '\V' .. open .. '\v$' && after =~ '^\V' .. close
             if close =~ '\v^[''"`]$'
                 return "\<SPACE>"
             else
-                return "\<SPACE>\<SPACE>" . g:autopairs#Strings#Left
+                return "\<SPACE>\<SPACE>" .. g:autopairs#Strings#Left
             end
         end
     endfor
@@ -572,18 +579,18 @@ func! autopairs#AutoPairsMap(key, ...)
     if l:explicit && len(maparg(key, "i")) != 0
         return
     endif
-    execute 'inoremap <buffer> <silent> '.key." <C-R>=autopairs#AutoPairsInsert('". escaped_key."')<cr>"
+    execute 'inoremap <buffer> <silent>' key "<C-R>=autopairs#AutoPairsInsert('" .. escaped_key .. "')<cr>"
 endf
 
 func! autopairs#AutoPairsToggle()
     let b:autopairs_enabled = !b:autopairs_enabled
-    echo 'AutoPairs ' . (b:autopairs_enabled ? 'enabled' : 'disabled')
+    echo 'AutoPairs' (b:autopairs_enabled ? 'enabled' : 'disabled')
     return ''
 endf
 
 fun! autopairs#AutoPairsToggleMultilineClose()
     let b:AutoPairsMultilineClose = !b:AutoPairsMultilineClose
-    echo (b:AutoPairsMultilineClose ? "Enabled" : "Disabled") . " multiline close"
+    echo (b:AutoPairsMultilineClose ? "Enabled" : "Disabled") "multiline close"
     return ''
 endfun
 
@@ -611,9 +618,9 @@ func! autopairs#AutoPairsInit()
         let l:imsearch = &imsearch
         let l:iminsert = &iminsert
         let l:imdisable = &imdisable
-        execute 'setlocal keymap=' . &keymap
-        execute 'setlocal imsearch=' . l:imsearch
-        execute 'setlocal iminsert=' . l:iminsert
+        execute 'setlocal keymap=' .. &keymap
+        execute 'setlocal imsearch=' .. l:imsearch
+        execute 'setlocal iminsert=' .. l:iminsert
         if l:imdisable
             execute 'setlocal imdisable'
         else
