@@ -269,4 +269,8 @@ fun! autopairs#Keybinds#mapKeys()
         execute 'inoremap <buffer> <silent> ' . b:AutoPairsShortcutJump . ' <ESC>:call autopairs#AutoPairsJump()<CR>a'
         execute 'noremap <buffer> <silent> ' . b:AutoPairsShortcutJump . ' :call autopairs#AutoPairsJump()<CR>'
     end
+
+    if b:AutoPairsShortcutIgnore != ''
+        execute 'inoremap <buffer> <silent> ' .. b:AutoPairsShortcutIgnore .. ' <C-r>=autopairs#AutoPairsIgnore()<cr>'
+    end
 endfun

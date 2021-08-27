@@ -61,6 +61,7 @@ fun! autopairs#Variables#_InitVariables()
     call s:define('g:AutoPairsCenterLine', 1)
 
     call s:define('g:AutoPairsShortcutToggle', g:AutoPairsCompatibleMaps ? '<M-p>': '<C-p><C-t>')
+    call s:define("g:AutoPairsShortcutIgnore", '<C-e>')
     call s:define('g:AutoPairsShortcutFastWrap', g:AutoPairsCompatibleMaps ? '<M-e>' : '<C-f>')
 
     call s:define('g:AutoPairsMoveCharacter', "()[]{}\"'")
@@ -164,4 +165,7 @@ fun! autopairs#Variables#_InitBufferVariables()
     call s:define('b:AutoPairsShortcutToggle', g:AutoPairsShortcutToggle)
     call s:define('b:AutoPairsShortcutJump', g:AutoPairsShortcutJump)
     call s:define('b:AutoPairsShortcutToggleMultilineClose', g:AutoPairsShortcutToggleMultilineClose)
+    call s:define("b:AutoPairsShortcutIgnore", g:AutoPairsShortcutIgnore)
+
+    call s:define("b:AutoPairsIgnoreSingle", 0)
 endfun

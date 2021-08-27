@@ -144,6 +144,9 @@ endf
 
 func! autopairs#AutoPairsInsert(key, ...)
     if !b:autopairs_enabled
+        return "\<SPACE>"
+    elseif b:AutoPairsIgnoreSingle
+        let b:AutoPairsIgnoreSingle = 0
         return a:key
     end
 
@@ -282,6 +285,9 @@ endf
 
 func! autopairs#AutoPairsDelete()
     if !b:autopairs_enabled
+        return "\<SPACE>"
+    elseif b:AutoPairsIgnoreSingle
+        let b:AutoPairsIgnoreSingle = 0
         return "\<BS>"
     end
 
@@ -548,6 +554,9 @@ endf
 func! autopairs#AutoPairsSpace()
     if !b:autopairs_enabled
         return "\<SPACE>"
+    elseif b:AutoPairsIgnoreSingle
+        let b:AutoPairsIgnoreSingle = 0
+        return "\<SPACE>"
     end
 
     let [before, after, ig] = autopairs#Strings#getline()
@@ -587,6 +596,12 @@ func! autopairs#AutoPairsToggle()
     echo 'AutoPairs' (b:autopairs_enabled ? 'enabled' : 'disabled')
     return ''
 endf
+
+func! autopairs#AutoPairsIgnore()
+    let b:AutoPairsIgnoreSingle = !b:AutoPairsIgnoreSingle
+    echo (b:AutoPairsIgnoreSingle ? "Skipping next pair" : "Not skipping next pair")
+    return ''
+endfunc
 
 fun! autopairs#AutoPairsToggleMultilineClose()
     let b:AutoPairsMultilineClose = !b:AutoPairsMultilineClose
