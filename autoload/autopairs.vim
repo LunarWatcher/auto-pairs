@@ -144,7 +144,7 @@ endf
 
 func! autopairs#AutoPairsInsert(key, ...)
     if !b:autopairs_enabled
-        return "\<SPACE>"
+        return a:key
     elseif b:AutoPairsIgnoreSingle
         let b:AutoPairsIgnoreSingle = 0
         return a:key
@@ -285,7 +285,7 @@ endf
 
 func! autopairs#AutoPairsDelete()
     if !b:autopairs_enabled
-        return "\<SPACE>"
+        return "\<BS>"
     elseif b:AutoPairsIgnoreSingle
         let b:AutoPairsIgnoreSingle = 0
         return "\<BS>"

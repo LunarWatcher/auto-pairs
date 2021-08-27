@@ -1,0 +1,39 @@
+Describe Ignoring insertions is some times desired.
+    Before each
+        call autopairs#Variables#_InitVariables()
+    end
+    It should be possible to disable
+        new | only!
+        call autopairs#AutoPairsInit()
+        call autopairs#AutoPairsToggle()
+        call Expect(b:autopairs_enabled).to_equal(0)
+
+        exec "normal i((("
+        call Expect("").CheckBuff("(((")
+        call Expect("((()))\<Left>\<left>))").ToMatch("((()))))")
+    End
+    It should ignore pair insertion
+        new | only!
+        call autopairs#AutoPairsInit()
+        call autopairs#AutoPairsIgnore()
+        call Expect(b:AutoPairsIgnoreSingle).to_equal(1)
+
+        exec "normal i((("
+        call Expect("").CheckBuff("((())")
+        " Another check for balance testing
+        exec "normal a)"
+        call Expect("").CheckBuff("((()))")
+        " And balance/jump test
+        exec "normal a)"
+        call Expect("").CheckBuff("((()))")
+    End
+    It should ignore space insertion
+        new | only!
+        call autopairs#AutoPairsInit()
+        call Expect("(").ToMatch("()")
+        call autopairs#AutoPairsIgnore()
+
+        exec "normal a "
+        call Expect("").CheckBuff("( )")
+    End
+End
