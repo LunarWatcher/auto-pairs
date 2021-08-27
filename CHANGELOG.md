@@ -1,8 +1,11 @@
 # 3.0.0-beta13
 `let g:AutoPairsVersion = 30058`
 
+## Meta
 * Code cleanup
 * Vimscript standard update #1
+
+## Added
 * Skip single completion ([jiangmiao#335](https://github.com/jiangmiao/auto-pairs/issues/335))
 
 # 3.0.0-beta12

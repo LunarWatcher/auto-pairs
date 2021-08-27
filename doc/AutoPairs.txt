@@ -367,10 +367,13 @@ to link associated entries as close as possible.
 - |g:AutoPairsShortcutFastWrap| (has a buffer variant) (default: see the entry)
     Defines the shortcut for fast wrap
 - |g:AutoPairsShortcutJump| (has a buffer variant) (default: see the entry)
-    Defines thte shortcut for jumping to the first closed pair, regardless of
+    Defines the shortcut for jumping to the first closed pair, regardless of
     what that pair is
 - |g:AutoPairsShortcutBackInsert| (default: see the entry)
     Defines the shortcut for undoing a flymode jump.
+- |g:AutoPairsShortcutIgnore| (default: <C-p><C-e>)
+    Defines the shortcut for ignoring the next pair.
+    Simpler option than toggling auto-pairs entirely.
 - |g:AutoPairsMapBS| (has a buffer variant) (default: 0)
     Whether or not to map backspace
 - |g:AutoPairsMultilineBackspace| (has a buffer variant) (default: 0)
@@ -698,6 +701,26 @@ Default: <C-p><C-b> if |g:AutoPairsCompatibleMaps| is 0, <M-b> otherwise
 
 When |autopairs-flymode| does a jump you don't want it to do, you can use this
 shortcut to jump back, and automatically do a normal insert.
+
+------------------------------------------------------------------------------
+                                                     *g:AutoPairsShortcutIgnore*
+                                                                        string
+This variable also has a buffer variant~
+Default: <C-p><C-e>
+
+Defines what key to use to ignore the next character.
+
+Note that the key itself is a toggle. This means that if you press it twice,
+the next pair _won't_ be ignored. It's essentially a way to un-ignore the next
+pair, if the ignore hasn't been used already.
+
+Can be empty to not map a key.
+
+                                                       *b:AutoPairsIgnoreSingle*
+Buffer variable that controls the ignore logic. Note that
+|b:autopairs_enabled| takes precedence when checking. If autopairs is disabled
+and auto-pairs has been told to ignore a single pair, it won't ignore until
+after auto-pairs has been re-enabled.
 
 ------------------------------------------------------------------------------
                                                               *g:AutoPairsMapBS*
