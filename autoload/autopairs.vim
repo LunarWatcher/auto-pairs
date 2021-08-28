@@ -282,7 +282,7 @@ func! autopairs#AutoPairsInsert(key, ...)
 endf
 
 func! autopairs#AutoPairsDelete()
-    if !b:autopairs_enabled || b:b:AutoPairsIgnoreSingle
+    if !b:autopairs_enabled || b:AutoPairsIgnoreSingle
         let b:AutoPairsIgnoreSingle = 0
         return "\<BS>"
     end
