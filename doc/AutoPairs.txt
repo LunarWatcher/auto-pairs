@@ -717,10 +717,14 @@ pair, if the ignore hasn't been used already.
 Can be empty to not map a key.
 
                                                        *b:AutoPairsIgnoreSingle*
-Buffer variable that controls the ignore logic. Note that
-|b:autopairs_enabled| takes precedence when checking. If autopairs is disabled
-and auto-pairs has been told to ignore a single pair, it won't ignore until
-after auto-pairs has been re-enabled.
+Buffer variable that controls the ignore logic. Certain functions detect if
+this is set to 1, and return an appropriate no-op value. The exact one depends
+on the function. Insert returns the key pressed, the <cr> handler returns
+nothing (the mapping already has cr in it), etc.
+
+If detected to be 1, it's also set to 0.^1
+
+^1: May change in the future to make <n> ignores possible.
 
 ------------------------------------------------------------------------------
                                                               *g:AutoPairsMapBS*

@@ -144,8 +144,6 @@ endf
 
 func! autopairs#AutoPairsInsert(key, ...)
     if !b:autopairs_enabled
-        return a:key
-    elseif b:AutoPairsIgnoreSingle
         let b:AutoPairsIgnoreSingle = 0
         return a:key
     end
@@ -285,8 +283,6 @@ endf
 
 func! autopairs#AutoPairsDelete()
     if !b:autopairs_enabled
-        return "\<BS>"
-    elseif b:AutoPairsIgnoreSingle
         let b:AutoPairsIgnoreSingle = 0
         return "\<BS>"
     end
@@ -521,7 +517,8 @@ fun! autopairs#AutoPairsDetermineCRMovement()
 endfun
 
 func! autopairs#AutoPairsReturn()
-    if b:autopairs_enabled == 0
+    if b:autopairs_enabled == 0 || b:AutoPairsIgnoreSingle
+        let b:AutoPairsIgnoreSingle = 0
         return ''
     end
 
@@ -553,8 +550,6 @@ endf
 
 func! autopairs#AutoPairsSpace()
     if !b:autopairs_enabled
-        return "\<SPACE>"
-    elseif b:AutoPairsIgnoreSingle
         let b:AutoPairsIgnoreSingle = 0
         return "\<SPACE>"
     end
