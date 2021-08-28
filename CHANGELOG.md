@@ -7,6 +7,7 @@
 
 ## Added
 * Skip single completion ([jiangmiao#335](https://github.com/jiangmiao/auto-pairs/issues/335))
+* More tests (including tests to cover single skip)
 
 # 3.0.0-beta12
 `let g:AutoPairsVersion = 30057`
