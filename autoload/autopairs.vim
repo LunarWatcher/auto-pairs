@@ -143,7 +143,7 @@ func! autopairs#AutoPairsDefine(pairs, ...)
 endf
 
 func! autopairs#AutoPairsInsert(key, ...)
-    if !b:autopairs_enabled
+    if !b:autopairs_enabled || b:AutoPairsIgnoreSingle
         let b:AutoPairsIgnoreSingle = 0
         return a:key
     end
@@ -282,7 +282,7 @@ func! autopairs#AutoPairsInsert(key, ...)
 endf
 
 func! autopairs#AutoPairsDelete()
-    if !b:autopairs_enabled
+    if !b:autopairs_enabled || b:b:AutoPairsIgnoreSingle
         let b:AutoPairsIgnoreSingle = 0
         return "\<BS>"
     end
@@ -549,7 +549,7 @@ func! autopairs#AutoPairsReturn()
 endf
 
 func! autopairs#AutoPairsSpace()
-    if !b:autopairs_enabled
+    if !b:autopairs_enabled || b:AutoPairsIgnoreSingle
         let b:AutoPairsIgnoreSingle = 0
         return "\<SPACE>"
     end
