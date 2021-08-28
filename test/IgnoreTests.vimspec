@@ -36,4 +36,25 @@ Describe Ignoring insertions is some times desired.
         exec "normal a "
         call Expect("").CheckBuff("( )")
     End
+    It shouldn't break enter
+        new | only!
+        call autopairs#AutoPairsInit()
+        call Expect("(").ToMatch("()")
+        call autopairs#AutoPairsIgnore()
+
+        exec "normal a\<CR>"
+        " Why does this need to be double-escaped?
+        call Expect("").CheckBuff("(\\n)")
+    End
+    It should try to handle disabling
+        " I really need to make it redundant to put these in every single
+        " test... TODO, fix your shit Livi
+        new | only!
+        call autopairs#AutoPairsInit()
+
+        call autopairs#AutoPairsToggle()
+        call Expect("(").ToMatch("(")
+        call Expect(b:autopairs_enabled).to_equal(0)
+        call Expect(b:AutoPairsIgnoreSingle).to_equal(0)
+    End
 End
