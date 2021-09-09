@@ -3,14 +3,6 @@
 
 Insert or delete brackets, parens, and quotes in pair: a maintained fork of [jiangmiao/auto-pairs](https://github.com/jiangmiao/auto-pairs)
 
-## Neovim warning
-
-Due to [a bug in neovim itself](https://github.com/neovim/neovim/issues/14798), filetype blacklists in popups _do not work_. Due to Neovim's annoyingly slow release cycle, this means that when it's fixed, it won't make it to a tagged version for the near foreseeable future. When it's been fixed on their end, you'll need to compile neovim from source to get auto-pairs to behave correctly. If possible (I have no idea how `has()` works for Neovim patches), I'll be adding a disablable warning for Neovim users, to make it easier to tell when the bug has been fixed.
-
-Also note that there's nothing auto-pairs can do about this in the realm of not overriding maps. Even if the filetype blacklist were to prevent the creation of auto-pairs maps (which is planned, by the way), there's nothing to be done when the buffer creation is called before the filetype has been set. See [#34](https://github.com/LunarWatcher/auto-pairs/issues/34) for more details on the impact on auto-pairs, along with an extended reason for why a proper patch returning auto-pairs to its previous state isn't possible, as well as a workaround (TL;DR: use a `filetype` autocmd to disable auto-pairs - this won't do much for overridden mappings, however, due to the way auto-pairs is designed).
-
-Note that this is exclusively a neovim problem: Vim is not affected.
-
 ## Installation
 
 There's several installation methods, and you're free to use whatever you want, but I personally cannot recommend [vim-plug](https://github.com/junegunn/vim-plug) enough, in part because of the previous line of text. Installation, if you expect a more or less working variant, should be done with:
