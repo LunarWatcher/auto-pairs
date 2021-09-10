@@ -1,3 +1,7 @@
+# 3.0.0
+
+No changes; Purely a symbolic packaging for 3.0.0-beta13.
+
 # 3.0.0-beta13
 `let g:AutoPairsVersion = 30058`
 

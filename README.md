@@ -8,17 +8,30 @@ Insert or delete brackets, parens, and quotes in pair: a maintained fork of [jia
 There's several installation methods, and you're free to use whatever you want, but I personally cannot recommend [vim-plug](https://github.com/junegunn/vim-plug) enough, in part because of the previous line of text. Installation, if you expect a more or less working variant, should be done with:
 
 ```vim
-Plug 'LunarWatcher/auto-pairs', { 'tag': '*' }
-```
-(... = from Lunarwatcher/auto-pairs, pull the latest tag matching '*' -- a wildcard, which means the latest tag)
-
-You can also use the latest commit, though tags are recommended:
-
-```vim
 Plug 'LunarWatcher/auto-pairs'
 ```
+You can also specify a tag, but this is no longer needed as of v3.0.0.
+
+To use experimental changes before they're deployed, use:
+```vim
+Plug 'LunarWatcher/auto-pairs', {'branch': 'develop'}
+```
+
+The develop branch contains improvements to the master branch. Note that this does not include the changes for 4.0.0; see the section below.
 
 **Note:** I highly recommend using `let g:AutoPairsCompatibleMaps = 0` with this plugin. Setting it to 0 changes various mappings to use a control-based variant rather than a meta-based variant. This is to prevent issues with various alt combinations also being letters on the keyboard layout, as well as keeping things consistent if new maps are added (new maps will largely not use meta-based keybinds).
+
+### 4.0.0 rewrite
+
+v3.0.0 introduced a few years of feature requests and necessary bugfixes. Jumping into an existing system, there's a lot of suboptimal code and features that're blocked, largely due to technical debt. 4.0.0 aims to get rid of the tech debt, improve performance, and continue to improve features.
+
+4.0.0 is currently a long-term project. Features will still be added to the master branch, currently on 3.x.x, until 4.0.0 is getting ready.
+
+To use the 4.0.0 rewrite, use:
+```vim
+Plug 'LunarWatcher/auto-pairs', {'branch': 'develop-4.0.0'}
+```
+
 
 ## Running tests (not required)
 
