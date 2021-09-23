@@ -1580,13 +1580,20 @@ There are 3 ways:
 6.1. Conflicting keybinds                                 *autopairs-conflicts*
 
 European letters~
-AutoPairs has a mapping that uses the alt key (meta) in such a way that it
-conflicts with the letter å. This one specifically originates from Alt-E,
-which is consumed by |g:AutoPairsShortcutFastWrap|.
 
-While this is a known conflict, there could always be other. To see if there's
-a conflict with a key on your keyboard, `verbose imap <insert letter>` and see
-what it says. See: https://vi.stackexchange.com/q/20995/21251. You should be
+Note: We now have |g:AutoPairsCompatibleMaps|. By setting it to 0, all
+mappings will use a control-based alternative instead of the meta variants
+inherited from jiangmiao. This will be the default behavior in the future.
+
+AutoPairs has several mappings that uses the alt key (meta) in such a way
+that it conflicts various european letters, including å.
+This one specifically originates from Alt-E, which is used by
+|g:AutoPairsShortcutFastWrap| when using compatible mode.
+
+While this is a known conflict, there could always be other conflicts.
+To see if there's a conflict with a key on your keyboard,
+`verbose imap <insert letter>` and see what it says.
+See: https://vi.stackexchange.com/q/20995/21251. You should be
 able to backtrace the keybind from there, and using the options discussed in
 |autopairs-conflicts|, remap it to something else.
 
@@ -1596,13 +1603,12 @@ directly conflict with various letters for other european languages. Normally,
 this wouldn't be a problem, but in insert mode mappings? They, to say the
 least, introduces challenges.
 
-The obvious option would be to remap them to something else. Personally, I
-have no idea what I'd rather have some of these things mapped to. It's
-definitely open for discussion to remap these to something more sane,
-especially since mapping to meta in insert mode is, well, dumb, since
-meta-<letter> has other meanings. I'll revisit this when I get some input on
-the matter. Until then, if there's a conflict,  you'll need to track it down
-(`verbose imap`) and fix it
+Again, using |g:AutoPairsCompatibleMaps| lets you avoid issues where a meta
+combination results in a letter you need. While I highly recommend using
+|g:AutoPairsCompatibleMaps|, you can still manually remap the problematic
+keys.
+
+
 
 Other plugins~
 There's relatively little to do about conflicts with other plugins.
