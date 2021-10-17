@@ -1,5 +1,5 @@
 " Always silent the command
-inoremap <silent> <SID>AutoPairsReturn <C-R>=autopairs#AutoPairsReturn()<CR>
+inoremap <silent> <SID>AutoPairsReturn <cmd>set eventignore+=InsertEnter,InsertLeavePre,InsertLeave<CR><C-R>=autopairs#AutoPairsReturn()<CR><cmd>set eventignore-=InsertEnter,InsertLeavePre,InsertLeave<CR>
 imap <Plug>AutoPairsReturn <SID>AutoPairsReturn
 
 func! autopairs#Keybinds#ExpandMap(map)
@@ -222,7 +222,7 @@ fun! autopairs#Keybinds#mapKeys()
     if b:AutoPairsMoveExpression != ""
         for key in split(b:AutoPairsMoveCharacter, '\s*')
             let escaped_key = substitute(key, "'", "''", 'g')
-            execute 'inoremap <silent> <buffer> ' . substitute(b:AutoPairsMoveExpression, "%key", key, "") . " <C-R>=autopairs#AutoPairsMoveCharacter('".escaped_key."')<CR>"
+            execute 'inoremap <silent> <buffer> ' . substitute(b:AutoPairsMoveExpression, "%key", key, "") . " <cmd>set eventignore+=InsertEnter,InsertLeavePre,InsertLeave<CR><C-R>=autopairs#AutoPairsMoveCharacter('".escaped_key."')<CR><cmd>set eventignore-=InsertEnter,InsertLeavePre,InsertLeave<CR>"
         endfor
     endif
 
@@ -266,7 +266,8 @@ fun! autopairs#Keybinds#mapKeys()
     endif
 
     if b:AutoPairsShortcutJump != ''
-        execute 'inoremap <buffer> <silent> ' . b:AutoPairsShortcutJump . ' <ESC>:call autopairs#AutoPairsJump()<CR>a'
+        " execute 'inoremap <buffer> <silent> ' . b:AutoPairsShortcutJump . ' <cmd>set eventignore+=InsertEnter,InsertLeavePre,InsertLeave<CR><ESC>:call autopairs#AutoPairsJump()<CR>a<cmd>set eventignore-=InsertEnter,InsertLeavePre,InsertLeave<CR>'
+        execute 'inoremap <buffer> <silent> ' . b:AutoPairsShortcutJump . ' <cmd>call autopairs#AutoPairsJump()<CR>'
         execute 'noremap <buffer> <silent> ' . b:AutoPairsShortcutJump . ' :call autopairs#AutoPairsJump()<CR>'
     end
 
