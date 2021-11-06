@@ -247,7 +247,7 @@ fun! autopairs#Keybinds#mapKeys()
     if b:AutoPairsMoveExpression != ""
         for key in split(b:AutoPairsMoveCharacter, '\s*')
             let escaped_key = substitute(key, "'", "''", 'g')
-            execute 'inoremap <silent> <buffer> ' . substitute(b:AutoPairsMoveExpression, "%key", key, "") . " <C-R>=autopairs#Keybinds#IgnoreInsertEnter('autopairs#AutoPairsMoveCharacter', '".escaped_key."'"
+            execute 'inoremap <silent> <buffer> ' . substitute(b:AutoPairsMoveExpression, "%key", key, "") . " <C-R>=autopairs#Keybinds#IgnoreInsertEnter('autopairs#AutoPairsMoveCharacter', '".escaped_key."')<CR>"
         endfor
     endif
 
