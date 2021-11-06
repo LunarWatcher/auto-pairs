@@ -1,5 +1,30 @@
 " Always silent the command
-inoremap <silent> <SID>AutoPairsReturn <cmd>set eventignore+=InsertEnter,InsertLeavePre,InsertLeave<CR><C-R>=autopairs#AutoPairsReturn()<CR><cmd>set eventignore-=InsertEnter,InsertLeavePre,InsertLeave<CR>
+function! autopairs#Keybinds#IgnoreInsertEnter(f) abort
+    let l:pre = "\<C-r>=autopairs#Keybinds#SetEventignore()\<CR>"
+    let l:val = call(function(a:f), a:000)
+    let l:post = "\<C-r>=autopairs#Keybinds#ResetEventignore()\<CR>"
+    return l:pre . l:val . l:post
+endfunction
+
+function! autopairs#Keybinds#IgnoreInsertEnterCmd(cmd) abort
+    call autopairs#Keybinds#SetEventignore()
+    normal a:cmd
+    call autopairs#Keybinds#ResetEventignore()
+    return ''
+endfunction
+
+function! autopairs#Keybinds#SetEventignore()
+    let g:autopairs_oldeventignore = &eventignore
+    set eventignore+=InsertEnter,InsertLeavePre,InsertLeave
+    return ''
+endfunction
+
+function! autopairs#Keybinds#ResetEventignore()
+    let &eventignore = g:autopairs_oldeventignore
+    return ''
+endfunction
+
+inoremap <silent> <SID>AutoPairsReturn <C-r>=autopairs#Keybinds#IgnoreInsertEnter('autopairs#AutoPairsReturn')<cr>
 imap <Plug>AutoPairsReturn <SID>AutoPairsReturn
 
 func! autopairs#Keybinds#ExpandMap(map)
@@ -222,7 +247,7 @@ fun! autopairs#Keybinds#mapKeys()
     if b:AutoPairsMoveExpression != ""
         for key in split(b:AutoPairsMoveCharacter, '\s*')
             let escaped_key = substitute(key, "'", "''", 'g')
-            execute 'inoremap <silent> <buffer> ' . substitute(b:AutoPairsMoveExpression, "%key", key, "") . " <cmd>set eventignore+=InsertEnter,InsertLeavePre,InsertLeave<CR><C-R>=autopairs#AutoPairsMoveCharacter('".escaped_key."')<CR><cmd>set eventignore-=InsertEnter,InsertLeavePre,InsertLeave<CR>"
+            execute 'inoremap <silent> <buffer> ' . substitute(b:AutoPairsMoveExpression, "%key", key, "") . " <C-R>=autopairs#Keybinds#IgnoreInsertEnter('autopairs#AutoPairsMoveCharacter', '".escaped_key."'"
         endfor
     endif
 
@@ -267,6 +292,7 @@ fun! autopairs#Keybinds#mapKeys()
 
     if b:AutoPairsShortcutJump != ''
         " execute 'inoremap <buffer> <silent> ' . b:AutoPairsShortcutJump . ' <cmd>set eventignore+=InsertEnter,InsertLeavePre,InsertLeave<CR><ESC>:call autopairs#AutoPairsJump()<CR>a<cmd>set eventignore-=InsertEnter,InsertLeavePre,InsertLeave<CR>'
+        execute 'inoremap <buffer> <silent> ' . b:AutoPairsShortcutJump . ' <C-r>=autopairs#Keybinds#IgnoreInsertEnterCmd("<ESC>:call autopairs#AutoPairsJump()<CR>a")'
         execute 'inoremap <buffer> <silent> ' . b:AutoPairsShortcutJump . ' <cmd>call autopairs#AutoPairsJump()<CR>'
         execute 'noremap <buffer> <silent> ' . b:AutoPairsShortcutJump . ' :call autopairs#AutoPairsJump()<CR>'
     end
