@@ -1,5 +1,5 @@
-" Always silent the command
 function! autopairs#Keybinds#IgnoreInsertEnter(f) abort
+    " TODO: Change this to use <cmd> when support for vim 8.2.19xx is dropped
     let l:pre = "\<C-r>=autopairs#Keybinds#SetEventignore()\<CR>"
     let l:val = call(function(a:f), a:000)
     let l:post = "\<C-r>=autopairs#Keybinds#ResetEventignore()\<CR>"
@@ -14,16 +14,18 @@ function! autopairs#Keybinds#IgnoreInsertEnterCmd(cmd) abort
 endfunction
 
 function! autopairs#Keybinds#SetEventignore()
-    let g:autopairs_oldeventignore = &eventignore
-    set eventignore+=InsertEnter,InsertLeavePre,InsertLeave
+    " TODO: Add InsertLeavePre when we know how to check version correctly on nvim
+    " or when support for vim 8.2.1873 and below is dropped
+    set eventignore+=InsertEnter,InsertLeave
     return ''
 endfunction
 
 function! autopairs#Keybinds#ResetEventignore()
-    let &eventignore = g:autopairs_oldeventignore
+    set eventignore-=InsertEnter,InsertLeave
     return ''
 endfunction
 
+" Always silent the command
 inoremap <silent> <SID>AutoPairsReturn <C-r>=autopairs#Keybinds#IgnoreInsertEnter('autopairs#AutoPairsReturn')<cr>
 imap <Plug>AutoPairsReturn <SID>AutoPairsReturn
 
