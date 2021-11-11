@@ -1,5 +1,32 @@
+function! autopairs#Keybinds#IgnoreInsertEnter(f) abort
+    " TODO: Change this to use <cmd> when support for vim 8.2.19xx is dropped
+    let l:pre = "\<C-r>=autopairs#Keybinds#SetEventignore()\<CR>"
+    let l:val = call(function(a:f), a:000)
+    let l:post = "\<C-r>=autopairs#Keybinds#ResetEventignore()\<CR>"
+    return l:pre . l:val . l:post
+endfunction
+
+function! autopairs#Keybinds#IgnoreInsertEnterCmd(cmd) abort
+    call autopairs#Keybinds#SetEventignore()
+    normal a:cmd
+    call autopairs#Keybinds#ResetEventignore()
+    return ''
+endfunction
+
+function! autopairs#Keybinds#SetEventignore()
+    " TODO: Add InsertLeavePre when we know how to check version correctly on nvim
+    " or when support for vim 8.2.1873 and below is dropped
+    set eventignore+=InsertEnter,InsertLeave
+    return ''
+endfunction
+
+function! autopairs#Keybinds#ResetEventignore()
+    set eventignore-=InsertEnter,InsertLeave
+    return ''
+endfunction
+
 " Always silent the command
-inoremap <silent> <SID>AutoPairsReturn <C-R>=autopairs#AutoPairsReturn()<CR>
+inoremap <silent> <SID>AutoPairsReturn <C-r>=autopairs#Keybinds#IgnoreInsertEnter('autopairs#AutoPairsReturn')<cr>
 imap <Plug>AutoPairsReturn <SID>AutoPairsReturn
 
 func! autopairs#Keybinds#ExpandMap(map)
@@ -222,7 +249,7 @@ fun! autopairs#Keybinds#mapKeys()
     if b:AutoPairsMoveExpression != ""
         for key in split(b:AutoPairsMoveCharacter, '\s*')
             let escaped_key = substitute(key, "'", "''", 'g')
-            execute 'inoremap <silent> <buffer> ' . substitute(b:AutoPairsMoveExpression, "%key", key, "") . " <C-R>=autopairs#AutoPairsMoveCharacter('".escaped_key."')<CR>"
+            execute 'inoremap <silent> <buffer> ' . substitute(b:AutoPairsMoveExpression, "%key", key, "") . " <C-R>=autopairs#Keybinds#IgnoreInsertEnter('autopairs#AutoPairsMoveCharacter', '".escaped_key."')<CR>"
         endfor
     endif
 
@@ -266,7 +293,9 @@ fun! autopairs#Keybinds#mapKeys()
     endif
 
     if b:AutoPairsShortcutJump != ''
-        execute 'inoremap <buffer> <silent> ' . b:AutoPairsShortcutJump . ' <ESC>:call autopairs#AutoPairsJump()<CR>a'
+        " execute 'inoremap <buffer> <silent> ' . b:AutoPairsShortcutJump . ' <cmd>set eventignore+=InsertEnter,InsertLeavePre,InsertLeave<CR><ESC>:call autopairs#AutoPairsJump()<CR>a<cmd>set eventignore-=InsertEnter,InsertLeavePre,InsertLeave<CR>'
+        execute 'inoremap <buffer> <silent> ' . b:AutoPairsShortcutJump . ' <C-r>=autopairs#Keybinds#IgnoreInsertEnterCmd("<ESC>:call autopairs#AutoPairsJump()<CR>a")'
+        execute 'inoremap <buffer> <silent> ' . b:AutoPairsShortcutJump . ' <cmd>call autopairs#AutoPairsJump()<CR>'
         execute 'noremap <buffer> <silent> ' . b:AutoPairsShortcutJump . ' :call autopairs#AutoPairsJump()<CR>'
     end
 
