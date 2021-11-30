@@ -1560,7 +1560,7 @@ If auto pairs doesn't work, use |:verbose| |:imap| to check if the map is correc
 
 For i.e. `:verbose imap (`, the correct map is: >
 
-    <C-R>=AutoPairsInsert("(")<CR>
+    <C-R>=autopairs#AutoPairsInsert("(")<CR>
 
 How do I insert a character registered as a part of a pair without~
                         triggering the plugin?~
