@@ -1,3 +1,8 @@
+# 3.0.1
+
+## Fixed
+* Annoying escape problem ([#52](https://github.com/LunarWatcher/auto-pairs/discussions/52))
+
 # 3.0.0
 
 No changes; Purely a symbolic packaging for 3.0.0-beta13.
