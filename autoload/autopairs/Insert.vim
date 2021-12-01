@@ -88,7 +88,7 @@ fun! autopairs#Insert#checkClose(key, before, after, afterline)
             " Krasjet: do not search for the closing pair if spaces are in between
             " Olivia: Add override for people who want this (like me)
             " Note: this only checks the current line
-            let m = matchstr(a:afterline, searchRegex . close)
+            let m = matchstr(a:afterline, searchRegex .. escape(close, '\'))
             if m != ''
                 " Krasjet: only jump across the closing pair if pairs are balanced
                 let balance = autopairs#Insert#checkBalance(open, close, opt, a:before, a:after, a:afterline, 1)
@@ -115,7 +115,7 @@ fun! autopairs#Insert#checkClose(key, before, after, afterline)
             " This may check multiline depending on something.
             " Still not entirely sure what this brings to the table that the
             " other clause doesn't
-            let m = matchstr(a:after, '\v^\s*\zs\V'.close)
+            let m = matchstr(a:after, '\v^\s*\zs\V' .. escape(close, '\'))
             if m != ''
                 if opt['multiline']
                     if b:AutoPairsMultilineCloseDeleteSpace && b:autopairs_return_pos == line('.') && getline('.') =~ '\v^\s*$'

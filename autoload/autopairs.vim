@@ -157,12 +157,11 @@ func! autopairs#AutoPairsInsert(key, ...)
     " TODO: maybe move this to another file?
     for [open, close, opt] in b:AutoPairsList
         let ms = autopairs#Strings#matchend(before .. a:key, open)
-        let m = matchstr(afterline, '^\v\s*\zs\V' .. close)
+        let m = matchstr(afterline, '^\v\s*\zs\V' .. escape(close, '\'))
 
         if len(ms) > 0
             let target = ms[1]
             let openPair = ms[2]
-
 
             " To compensate for multibyte pairs,
             " we need to search for escaping after we find a match.

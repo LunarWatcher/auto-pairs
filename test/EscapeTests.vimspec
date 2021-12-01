@@ -26,11 +26,12 @@ Describe Backslashes are trash, but
         call Expect('\\{').ToMatch('\\{}')
     End
     It should work with pairs starting with a backslash
-        let g:AutoPairs = autopairs#AutoPairsDefine({'\\[': '\]'})
+        let g:AutoPairs = autopairs#AutoPairsDefine({'\\[': '\]', '\\(': '\)'})
         new | only!
         call Expect('[').ToMatch('[]')
         call Expect('\[').ToMatch('\[\]')
         call Expect('\\[').ToMatch('\\[')
         call Expect('\\\[').ToMatch('\\\[\]')
+        call Expect('\(').ToMatch('\(\)')
     End
 End

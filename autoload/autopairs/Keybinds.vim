@@ -119,7 +119,7 @@ fun! autopairs#Keybinds#mapPairKeybinds()
         " What in the fuck is this?
         " This is arguably Krasjet's least documented feature. Figure out what
         " it does pl0x
-        if stringClose !=? '' && stringClose !~# '\V\['.escape(join(b:AutoPairsQuoteClosingChar,''),'\').']'
+        if stringClose !=? '' && stringClose !~# '\V\[' .. escape(join(b:AutoPairsQuoteClosingChar, ''), '\') .. ']'
             let b:autopairs_next_char_whitelist += [escape(stringClose, '\')]
         end
     endfor

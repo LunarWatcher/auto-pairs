@@ -72,7 +72,7 @@ endf
 
 " returns [orig, close, text_after_close]
 func! autopairs#Strings#matchbegin(text, close)
-    let m = matchstr(a:text, '^\V'.a:close)
+    let m = matchstr(a:text, '^\V' .. escape(a:close, '\'))
     if m == ""
         return []
     end
