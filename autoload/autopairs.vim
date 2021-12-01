@@ -147,6 +147,7 @@ func! autopairs#AutoPairsInsert(key, ...)
         let b:AutoPairsIgnoreSingle = 0
         return a:key
     end
+    let balanced = -3
 
     let l:multiline = get(a:, '1', b:AutoPairsMultilineClose)
 
@@ -210,7 +211,8 @@ func! autopairs#AutoPairsInsert(key, ...)
                 break
             end
 
-            if autopairs#Insert#checkBalance(open, close, opt, before, after, afterline) <= 0
+            let balanced = autopairs#Insert#checkBalance(open, close, opt, before, after, afterline)
+            if balanced <= 0
                 break
             endif
 
@@ -252,6 +254,7 @@ func! autopairs#AutoPairsInsert(key, ...)
                     end
                 end
             endwhile
+            echom len(bs) len(del)
             return bs .. del .. openPair
                         \ .. close .. autopairs#Strings#left(close)
                         \ .. (index(b:AutoPairsAutoLineBreak, open) != -1 ?

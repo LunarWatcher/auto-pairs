@@ -1,7 +1,9 @@
 # 3.0.1
+`let g:AutoPairsVersion = 30060`
 
 ## Fixed
 * Annoying escape problem ([#52](https://github.com/LunarWatcher/auto-pairs/discussions/52))
+* Open == close-pairs struggled to verify balance. ([#40](https://github.com/LunarWatcher/auto-pairs/discussions/40), [#41](https://github.com/LunarWatcher/auto-pairs/issues/41))
 
 # 3.0.0
 

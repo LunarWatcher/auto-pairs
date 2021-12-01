@@ -5,6 +5,8 @@
 "   -1 if not balanced, but b:AutoPairsStringHandlingMode indicates this is
 "      fine in this context, and should jump if possible
 fun! autopairs#Insert#checkBalance(open, close, opt, before, after, afterline, ...)
+    " TODO: do more caching here to avoid unnecessary calls to the balance
+    " checker. It's potentially an expensive operation
     if a:close == ""
         return 1
     endif
@@ -15,6 +17,7 @@ fun! autopairs#Insert#checkBalance(open, close, opt, before, after, afterline, .
                     \ != autopairs#Strings#GetFirstUnicodeChar(a:close) ? 0 : -1
     endif
     let [closePre, openPre, closePost, openPost, strClose, strOpen, totClose, totOpen] = autopairs#Strings#countHighlightMatches(a:open, a:close, a:opt, 'string')
+    echom closePre openPre closePost openPost strClose strOpen totClose totOpen
     " Krasjet: do not complete the closing pair until pairs are balanced
     if a:open !~# b:autopairs_open_blacklist
         if b:AutoPairsStringHandlingMode == 1 && autopairs#Strings#isInString()
@@ -100,9 +103,9 @@ fun! autopairs#Insert#checkClose(key, before, after, afterline)
                 if b:AutoPairsNoJump == 1 || index(b:AutoPairsJumpBlacklist, close) != -1
                     return a:key
                 endif
-                if a:before =~ '\V'.open.'\v\s*$' && m[0] =~ '\v\s'
+                if a:before =~ '\V' .. open .. '\v\s*$' && m[0] =~ '\v\s'
                     " remove the space we inserted if the text in pairs is blank
-                    return "\<DEL>".autopairs#Strings#right(m[1:])
+                    return "\<DEL>" .. autopairs#Strings#right(m[1:])
                 else
                     return autopairs#Strings#right(m)
                 endif
