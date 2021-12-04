@@ -12,12 +12,4 @@ Describe Various edge-cases around balancing when preferring to close
         call Expect("()").ToMatch("()")
         call Expect(")(").ToMatch(")()")
     End
-    It shouldn't be dumb with quotes
-        new | only!
-
-        normal! i 'foo'
-        call Expect("").CheckBuff(" 'foo'")
-        normal! ^i'
-        call Expect("").CheckBuff("'' 'foo'")
-    End
 End

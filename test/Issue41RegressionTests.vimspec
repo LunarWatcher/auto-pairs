@@ -1,0 +1,15 @@
+Describe Regression tests for issue #41
+
+    Before each
+        call autopairs#Variables#_InitVariables()
+        new | only!
+    End
+    It shouldn't be dumb with quotes
+        new | only!
+
+        normal! i 'foo'
+        call Expect("").CheckBuff(" 'foo'")
+        normal! ^i'
+        call Expect("").CheckBuff("'' 'foo'")
+    End
+End
