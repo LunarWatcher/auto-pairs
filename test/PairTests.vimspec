@@ -62,7 +62,13 @@ Describe Basic tests of pair functionality
         new | only!
         call autopairs#AutoPairsTryInit()
         call Expect("[ ").ToMatch("[  ]")
-
+    End
+    It should erase old pairs on blank new pairs
+        call autopairs#AutoPairsAddPairs([#{open: '""', close: ""}, #{open: '"', close: 'abcd'}])
+        new | only!
+        call autopairs#AutoPairsTryInit()
+        call Expect('"').ToMatch('"abcd')
+        call Expect('""').ToMatch('""')
     End
 End
 " vim:sw=4

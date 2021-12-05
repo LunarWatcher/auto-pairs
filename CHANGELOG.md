@@ -4,6 +4,7 @@
 ## Fixed
 * Annoying escape problem ([#52](https://github.com/LunarWatcher/auto-pairs/discussions/52))
 * Open == close-pairs struggled to verify balance. ([#40](https://github.com/LunarWatcher/auto-pairs/discussions/40), [#41](https://github.com/LunarWatcher/auto-pairs/issues/41))
+* Bug preventing `open: 'not empty', close: ''` from clearing output inserted by other pairs
 
 # 3.0.0
 

@@ -220,8 +220,8 @@ func! autopairs#AutoPairsInsert(key, ...)
             " eg: if the pairs include < > and  <!-- -->
             " when <!-- is detected the inserted pair < > should be clean up
             "
-
-            if (len(openPair) == 1 && m == openPair) || (close == '')
+            echom m
+            if (len(openPair) == 1 && m == openPair) " || (close == '')
                 break
             end
             let bs = ''
@@ -254,7 +254,6 @@ func! autopairs#AutoPairsInsert(key, ...)
                     end
                 end
             endwhile
-            echom len(bs) len(del)
             return bs .. del .. openPair
                         \ .. close .. autopairs#Strings#left(close)
                         \ .. (index(b:AutoPairsAutoLineBreak, open) != -1 ?
