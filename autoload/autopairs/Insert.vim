@@ -19,7 +19,6 @@ fun! autopairs#Insert#checkBalance(open, close, opt, before, after, afterline, o
     endif
     let [closePre, openPre, closePost, openPost, strClose, strOpen, totClose, totOpen] = autopairs#Strings#countHighlightMatches(a:open, a:close, a:opt, 'string')
 
-    echom openPost checkingClose a:openArgs
     if (checkingClose == 0 && openPost % 2 != 0 && len(a:openArgs["openPair"]) == 1 && a:openArgs["openPair"] == a:openArgs["m"])
         return 0
     endif
