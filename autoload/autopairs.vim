@@ -147,6 +147,7 @@ func! autopairs#AutoPairsInsert(key, ...)
         let b:AutoPairsIgnoreSingle = 0
         return a:key
     end
+    let balanced = -3
 
     let l:multiline = get(a:, '1', b:AutoPairsMultilineClose)
 
@@ -161,6 +162,8 @@ func! autopairs#AutoPairsInsert(key, ...)
 
         if len(ms) > 0
             let target = ms[1]
+            " Contains the real pair, as opposed to the potential regex `open`
+            " contains. This really needs some cleanup
             let openPair = ms[2]
 
             " To compensate for multibyte pairs,
@@ -210,54 +213,13 @@ func! autopairs#AutoPairsInsert(key, ...)
                 break
             end
 
-            if autopairs#Insert#checkBalance(open, close, opt, before, after, afterline) <= 0
+            let balanced = autopairs#Insert#checkBalance(open, close, opt, before, after, afterline,
+                        \ {"openPair": openPair, "m": m}, 0)
+            if balanced <= 0
                 break
             endif
 
-            " remove inserted pair
-            " eg: if the pairs include < > and  <!-- -->
-            " when <!-- is detected the inserted pair < > should be clean up
-            "
-
-            if (len(openPair) == 1 && m == openPair) || (close == '')
-                break
-            end
-            let bs = ''
-            let del = ''
-            while len(before) > len(target)
-                let found = 0
-                " delete pair
-                for [o, c, opt] in b:AutoPairsList
-                    let os = autopairs#Strings#matchend(before, o)
-                    if len(os) && len(os[1]) < len(target)
-                        " any text before openPair should not be deleted
-                        continue
-                    end
-                    let cs = autopairs#Strings#matchbegin(afterline, c)
-                    if len(os) && len(cs)
-                        let found = 1
-                        let before = os[1]
-                        let afterline = cs[2]
-                        let bs = bs .. autopairs#Strings#backspace(os[2])
-                        let del = del .. autopairs#Strings#delete(cs[1])
-                        break
-                    end
-                endfor
-                if !found
-                    " delete character
-                    let ms = autopairs#Strings#matchend(before, '\v.')
-                    if len(ms)
-                        let before = ms[1]
-                        let bs = bs .. autopairs#Strings#backspace(ms[2])
-                    end
-                end
-            endwhile
-            return bs .. del .. openPair
-                        \ .. close .. autopairs#Strings#left(close)
-                        \ .. (index(b:AutoPairsAutoLineBreak, open) != -1 ?
-                        \     "\<cr>" .. autopairs#AutoPairsDetermineCRMovement()
-                        \     : '')
-
+            return autopairs#Balancing#doInsert(open, close, openPair, before, afterline, target)
         end
     endfor
     " }}}
