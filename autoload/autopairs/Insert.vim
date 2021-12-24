@@ -4,20 +4,26 @@
 "   0 if not
 "   -1 if not balanced, but b:AutoPairsStringHandlingMode indicates this is
 "      fine in this context, and should jump if possible
-fun! autopairs#Insert#checkBalance(open, close, opt, before, after, afterline, ...)
+fun! autopairs#Insert#checkBalance(open, close, opt, before, after, afterline, openArgs, checkingClose)
     " TODO: do more caching here to avoid unnecessary calls to the balance
     " checker. It's potentially an expensive operation
     if a:close == ""
         return 1
     endif
-    let checkingClose = get(a:, "0", 0)
+
+    let checkingClose = a:checkingClose
 
     if b:AutoPairsStringHandlingMode == 2 && autopairs#Strings#isInString()
         return autopairs#Strings#GetFirstUnicodeChar(getline('.')[col('.') - 1:])
                     \ != autopairs#Strings#GetFirstUnicodeChar(a:close) ? 0 : -1
     endif
     let [closePre, openPre, closePost, openPost, strClose, strOpen, totClose, totOpen] = autopairs#Strings#countHighlightMatches(a:open, a:close, a:opt, 'string')
-    echom closePre openPre closePost openPost strClose strOpen totClose totOpen
+
+    echom openPost checkingClose a:openArgs
+    if (checkingClose == 0 && openPost % 2 != 0 && len(a:openArgs["openPair"]) == 1 && a:openArgs["openPair"] == a:openArgs["m"])
+        return 0
+    endif
+
     " Krasjet: do not complete the closing pair until pairs are balanced
     if a:open !~# b:autopairs_open_blacklist
         if b:AutoPairsStringHandlingMode == 1 && autopairs#Strings#isInString()
@@ -94,7 +100,7 @@ fun! autopairs#Insert#checkClose(key, before, after, afterline)
             let m = matchstr(a:afterline, searchRegex .. escape(close, '\'))
             if m != ''
                 " Krasjet: only jump across the closing pair if pairs are balanced
-                let balance = autopairs#Insert#checkBalance(open, close, opt, a:before, a:after, a:afterline, 1)
+                let balance = autopairs#Insert#checkBalance(open, close, opt, a:before, a:after, a:afterline, {}, 1)
                 if balance == 0
                     return a:key
                 endif

@@ -162,6 +162,8 @@ func! autopairs#AutoPairsInsert(key, ...)
 
         if len(ms) > 0
             let target = ms[1]
+            " Contains the real pair, as opposed to the potential regex `open`
+            " contains. This really needs some cleanup
             let openPair = ms[2]
 
             " To compensate for multibyte pairs,
@@ -211,15 +213,12 @@ func! autopairs#AutoPairsInsert(key, ...)
                 break
             end
 
-            let balanced = autopairs#Insert#checkBalance(open, close, opt, before, after, afterline)
+            let balanced = autopairs#Insert#checkBalance(open, close, opt, before, after, afterline,
+                        \ {"openPair": openPair, "m": m}, 0)
             if balanced <= 0
                 break
             endif
 
-            echom m
-            if (len(openPair) == 1 && m == openPair) " || (close == '')
-                break
-            end
             return autopairs#Balancing#doInsert(open, close, openPair, before, afterline, target)
         end
     endfor
