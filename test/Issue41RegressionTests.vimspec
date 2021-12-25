@@ -31,24 +31,4 @@ Describe Regression tests for issue #41
 
         %d
     End
-    It should work in semantic mode
-        let g:AutoPairsStringHandlingMode = 1
-        new file.md | only!
-
-        normal i 'foo
-        call Expect("").CheckBuff(" 'foo'")
-        normal a '
-        call Expect("").CheckBuff(" 'foo '")
-        normal 0i'
-        call Expect("").CheckBuff("'' 'foo '")
-
-        call Expect('"""').ToMatch('""""""')
-        call Expect("```").ToMatch('``````')
-
-        %d
-    End
-    It should work in typescript
-        normal isomething = "";
-        call Expect("").CheckBuff("something = \"\";")
-    End
 End
