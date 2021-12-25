@@ -1,0 +1,36 @@
+Describe Contextual balancing should cooperate with everything
+    Before each
+        call autopairs#Variables#_InitVariables()
+        let g:AutoPairsStringHandlingMode = 1
+    End
+    It should work in semantic mode in markdown
+        new file.md | only!
+
+        normal i 'foo
+        call Expect("").CheckBuff(" 'foo'")
+        normal a '
+        call Expect("").CheckBuff(" 'foo '")
+        normal 0i'
+        call Expect("").CheckBuff("'' 'foo '")
+
+        call Expect('"""').ToMatch('""""""')
+        call Expect("```").ToMatch('``````')
+
+        %d
+    End
+    It should work in typescript
+        new file.ts | only!
+
+        call Expect('something = "";').ToMatch("something = \"\";")
+        call Expect('''call Expect(""').ToMatch('''call Expect("")''')
+    End
+    It shouldn't be dumb in Vimscript
+        new file.vim | only!
+        " This isn't technically a part of #55, but the changes that triggered
+        " #55 also triggered this one.
+        " A generic regression test file could be a better place for this, but
+        " considering how tightly correlated these two bugs are... it's fine.
+        " No one cares anyway, as long as it runs.
+        call Expect("\" Any text '").ToMatch("\" Any text ''")
+    End
+End

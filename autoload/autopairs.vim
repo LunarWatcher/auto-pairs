@@ -208,7 +208,6 @@ func! autopairs#AutoPairsInsert(key, ...)
             " Krasjet: only insert the closing pair if the next character is a space
             " or a non-quote closing pair, or a whitelisted character (string)
             " Olivia: that ^ if and only if it's desired.
-
             if b:AutoPairsCompleteOnlyOnSpace == 1 && afterline[0] =~? '^\v\S' && afterline[0] !~# b:autopairs_next_char_whitelist
                 break
             end

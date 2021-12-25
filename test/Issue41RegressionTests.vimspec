@@ -3,7 +3,6 @@ Describe Regression tests for issue #41
     Before each
         call autopairs#Variables#_InitVariables()
         new | only!
-        call autopairs#AutoPairsTryInit()
     End
     It shouldn't be dumb with single quotes
         normal i 'foo
@@ -16,5 +15,20 @@ Describe Regression tests for issue #41
         call Expect("").CheckBuff(' "foo"')
         normal 0i"
         call Expect("").CheckBuff('"" "foo"')
+    End
+    It should work in markdown
+        new file.md | only!
+
+        normal i 'foo
+        call Expect("").CheckBuff(" 'foo'")
+        normal a '
+        call Expect("").CheckBuff(" 'foo '")
+        normal 0i'
+        call Expect("").CheckBuff("'' 'foo '")
+
+        call Expect('"""').ToMatch('""""""')
+        call Expect("```").ToMatch('``````')
+
+        %d
     End
 End

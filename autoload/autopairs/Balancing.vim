@@ -1,8 +1,3 @@
-fun! autopairs#Balancing#insertBalance(before, after, afterline, open, close, opt)
-
-
-endfun
-
 fun! autopairs#Balancing#doInsert(open, close, openPair, before, afterline, target)
     let open = a:open
     let close = a:close
@@ -50,7 +45,6 @@ fun! autopairs#Balancing#doInsert(open, close, openPair, before, afterline, targ
             end
         end
     endwhile
-    "
     return bs .. del .. openPair
                 \ .. close .. autopairs#Strings#left(close)
                 \ .. (index(b:AutoPairsAutoLineBreak, open) != -1 ?

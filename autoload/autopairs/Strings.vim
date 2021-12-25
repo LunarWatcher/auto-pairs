@@ -189,7 +189,7 @@ fun! autopairs#Strings#countHighlightMatches(open, close, opt, highlightGroup)
         endif
         let lastPos = pos
         if !hlAt || (hlBefore && !hlAfter && pos != last - len(open)) || (!hlBefore && hlAfter)
-            let {offset >= cursorIdx - 1 ? 'openPost' : 'openPre'} += 1
+            let {offset >= cursorIdx ? 'openPost' : 'openPre'} += 1
             let wasLastAString = 0
         else
             let wasLastAString = 1

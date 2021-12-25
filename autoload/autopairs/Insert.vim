@@ -12,14 +12,36 @@ fun! autopairs#Insert#checkBalance(open, close, opt, before, after, afterline, o
     endif
 
     let checkingClose = a:checkingClose
-
-    if b:AutoPairsStringHandlingMode == 2 && autopairs#Strings#isInString()
+    let inString = autopairs#Strings#isInString()
+    if b:AutoPairsStringHandlingMode == 2 && inString
         return autopairs#Strings#GetFirstUnicodeChar(getline('.')[col('.') - 1:])
                     \ != autopairs#Strings#GetFirstUnicodeChar(a:close) ? 0 : -1
     endif
     let [closePre, openPre, closePost, openPost, strClose, strOpen, totClose, totOpen] = autopairs#Strings#countHighlightMatches(a:open, a:close, a:opt, 'string')
+    "echom "Matches for " a:open a:close ":" closePre openPre closePost openPost strClose strOpen totClose totOpen
 
-    if (checkingClose == 0 && openPost % 2 != 0 && len(a:openArgs["openPair"]) == 1 && a:openArgs["openPair"] == a:openArgs["m"])
+    " Explanation, because this is a complex expression.
+    "
+    " First of all, this should only run if we're
+    " checking for open pairs. This exists to forward open == close to close
+    " checking for balancing and jumping.
+    "
+    " Secondly, we check for overall balance: if it's not balanced after the
+    " cursor, we can skip and let closure handle balancing or skipping.
+    "
+    " The rest of this is fairly self-explanatory, and is a part of
+    " jiangmiao's original code, but now without an initial pain in the ass of
+    " a bug (#41) that got substantially worse in this fork due to active
+    " balance checking.
+    "
+    " It simply checks if the open pair is after the cursor, which someone (I
+    " assume) manages to check if open == close, but I'm honestly not entirely
+    " sure how the intial handling in m and ms really works.
+    "
+    " The variable names are trash, and it's undocumented code that isn't
+    " mine, and I've never bothered figuring out what their purpose is.
+    if (checkingClose == 0 && (openPost % 2 != 0 || inString && strOpen % 2 != 1)
+                \ && len(a:openArgs["openPair"]) == 1 && a:openArgs["openPair"] == a:openArgs["m"])
         return 0
     endif
 

@@ -19,7 +19,7 @@ fun! autopairs#Variables#_InitVariables()
         \ "erlang": {'<<': '>>'},
         \ "tex": {'``': "''", '$': '$'},
         \ "html": {'<': '>'},
-        \ 'vim': {'\v(^\s*\zs"\ze|".*"\s*\zs"\ze$|^(\s*[a-zA-Z]+\s*([a-zA-Z]*\s*\=\s*)?)@!(\s*\zs"\ze(\\\"|[^"])*$))': {"close": '', 'mapclose': 0}},
+        \ 'vim': {'\v(^\s*\zs"\ze|".*"\s*\zs"\ze$|^(\s*[a-zA-Z]+\s*([a-zA-Z]*\s*\=\s*)?)@!(\s*\zs"\ze((\\\"|[^"])*$)@=))': {"close": '', 'mapclose': 0}},
         \ 'rust': {'\w\zs<': '>', '&\zs''': ''},
         \ 'php': {'<?': { 'close': '?>', 'mapclose': ']'}, '<?php': {'close': '?>', 'mapclose': ']'}}
         \ })
