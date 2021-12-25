@@ -3,10 +3,10 @@
 
 ## Fixed
 * Annoying escape problem ([#52](https://github.com/LunarWatcher/auto-pairs/discussions/52))
-* Open == close-pairs struggled to verify balance. ([#40](https://github.com/LunarWatcher/auto-pairs/discussions/40), [#41](https://github.com/LunarWatcher/auto-pairs/issues/41))
+* Open == close-pairs struggled to verify balance. ([#40](https://github.com/LunarWatcher/auto-pairs/discussions/40) (discussion) and its associated issue ([#41](https://github.com/LunarWatcher/auto-pairs/issues/41)))
 * Bug preventing `open: 'not empty', close: ''` from clearing output inserted by other pairs
 * Typo in offset potentially breaking balancing (not sure if this was a problem before 3.0.1 or if the changes made here made it painfully obvious, but it's fixed now nonetheless)
-* Add a lookahead to the regex group for single quotes in vim files. Just using `\ze` doesn't actually prevent it from matching the rest of the quote, causing weird quote insertion behavior.
+* Add a lookahead to the regex group for single quotes in vim files. Just using `\ze` doesn't actually prevent it from matching the rest of the quote, causing weird quote insertion behavior with the changes made as a part of 3.0.1.
 
 # 3.0.0
 

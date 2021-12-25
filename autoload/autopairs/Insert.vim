@@ -31,7 +31,7 @@ fun! autopairs#Insert#checkBalance(open, close, opt, before, after, afterline, o
     "
     " The rest of this is fairly self-explanatory, and is a part of
     " jiangmiao's original code, but now without an initial pain in the ass of
-    " a bug (#44) that got substantially worse in this fork due to active
+    " a bug (#41) that got substantially worse in this fork due to active
     " balance checking.
     "
     " It simply checks if the open pair is after the cursor, which someone (I
