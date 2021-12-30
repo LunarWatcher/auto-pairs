@@ -33,4 +33,8 @@ Describe Contextual balancing should cooperate with everything
         " No one cares anyway, as long as it runs.
         call Expect("\" Any text '").ToMatch("\" Any text ''")
     End
+    It shouldn't misbehave with trailing strings
+        new file.cpp | only!
+        call Expect("std::cout << \"\"").ToMatch("std::cout << \"\"")
+    End
 End

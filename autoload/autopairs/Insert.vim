@@ -18,7 +18,7 @@ fun! autopairs#Insert#checkBalance(open, close, opt, before, after, afterline, o
                     \ != autopairs#Strings#GetFirstUnicodeChar(a:close) ? 0 : -1
     endif
     let [closePre, openPre, closePost, openPost, strClose, strOpen, totClose, totOpen] = autopairs#Strings#countHighlightMatches(a:open, a:close, a:opt, 'string')
-    "echom "Matches for " a:open a:close ":" closePre openPre closePost openPost strClose strOpen totClose totOpen
+    echom "Matches for " a:open a:close ":" closePre openPre closePost openPost strClose strOpen totClose totOpen
 
     " Explanation, because this is a complex expression.
     "

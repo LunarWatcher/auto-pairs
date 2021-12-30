@@ -237,6 +237,9 @@ fun! autopairs#Strings#countHighlightMatches(open, close, opt, highlightGroup)
 endfun
 
 fun! autopairs#Strings#posInGroup(y, x, group)
+    if (a:y > len(col('$')))
+        return 0
+    endif
     return match(map(synstack(a:y, min([a:x, col('$')])), 'synIDattr(v:val, "name")'), '\c' . a:group) != -1
 endfun
 
