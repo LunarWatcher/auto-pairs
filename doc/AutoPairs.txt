@@ -62,14 +62,15 @@ than a meta (alt)-based one.
                                                        *autopairs-contributing*
 Contributing~
 
-if you enjoy the plugin, please consider starring it on GitHub:
+If you enjoy the plugin, please consider starring it on GitHub:
         https://github.com/LunarWatcher/auto-pairs
 
 This fork is maintained (and will continue to be maintained). Issues can
 currently be submitted to: https://github.com/LunarWatcher/auto-pairs/issues
 
 I do, however, keep an eye on the issue tracker in jiangmiao's repo, because
-this fork doesn't have nearly as many users as the original.
+this fork doesn't have nearly as many users as the original, and many legacy
+bugs still haunt users.
 
 Questions about the plugin can be submitted as an issue, but should preferably
 be submitted on GitHub Discussions, in the repo previously linked (direct
@@ -93,7 +94,7 @@ standards to stay intact.
 A few notes on config:
 * Backspace isn't mapped by default. |g:AutoPairsMapBS|
 * Multiline backspace is opt-in. |g:AutoPairsMultilineBackspace|
-* Several varaibles have been removed. It's hard to list all the internal
+* Several variables have been removed. It's hard to list all the internal
   changes, but if you expect something to work that doesn't, check the
   documentation. If the documentation is gone, it's been removed. If you're in
   doubt, open an issue - it helps me expand this list.
@@ -218,7 +219,7 @@ Support ```, ''' and """: >
         output:
             '''|'''
 
-Delete Repeated Pairs in one time: >
+Delete Repeated Pairs with one keypress: >
 
         input: """|""" (press <BS> at |)
         output: |
@@ -284,29 +285,28 @@ some languages, but it's not implemented at this time.
 ==============================================================================
 3. Fly Mode                                                  *autopairs-flymode*
 
+Note: Flymode is currently considered buggy and unreliable. It should be avoided
+unless you enjoy spending time on flymode doing weird shit while you're
+typing. Creative ideas and/or pull requests for making flymode less bad are
+welcome. (|autopairs-contributing|)
+
 Fly Mode will always force closed-pair jumping instead of inserting. Only for
 ")", "}", "]". If jumps in mistake, you can use |g:AutoPairsBackInsert| (default
 Key: <M-b>) to jump back and insert closed pair.
 
 The most situation maybe you want to insert single closed pair in the string,
-eg: >
+such as: >
 
     ")"
 
 Fly Mode is disabled by default. To enable Fly Mode, add following to your
-'.vimrc': >
-
+.vimrc: >
     let g:AutoPairsFlyMode = 1
 
 Default options: >
-
     let g:AutoPairsFlyMode = 0
     let g:AutoPairsShortcutBackInsert = '<C-p><C-b>'
 
-Note: Flymode is currently considered buggy and unreliable. It should be avoided
-unless you enjoy spending time on flymode doing weird shit while you're
-typing. Creative ideas and/or pull requests for making flymode less bad are
-welcome.
 
 ==============================================================================
 4. Shortcuts                                               *autopairs-shortcuts*
@@ -345,14 +345,18 @@ Additionally, there's currently one keybind that lets you remap `<cr>`. This
 also lets you prevent <cr> conflicts, or just remap it if you prefer having
 the actions mapped to <CR> on a different key.
 
+In incompatible mode, mappings primarily use the <C-p> prefix. This does,
+admittedly, conflict with Ctrl-P (the plugin), and there's no way to change
+the prefix itself. The offending mappings can still be remapped, however, but
+there's no way to bulk-change the prefix at this time.
+
 ==============================================================================
 5. Options                                                   *autopairs-options*
 
-These options exist in a global variant (`g:variableName`), and a local
-variant (`b:variableName`), where `variableName` refers to some defined
-variable. The documentation should contain a notice when a buffer variable
-exists, but as it's still being added, it may be incomplete. See
-autopairs#AutoPairsInit()'s source if in doubt.
+These options exist in a global variant (`g:variableName`), and may have a
+local variant (`b:variableName`), where `variableName` refers to some defined
+variable. The documentation contains a notice when a buffer variable
+exists, both in the overall list, as well as the entry.
 
 ------------------------------------------------------------------------------
                                                     *autopairs-options-contents*
@@ -390,7 +394,7 @@ to link associated entries as close as possible.
     Whether or not to allow skipping close pairs by typing the close character
     for a given pair.
 - |g:AutoPairsCenterLine| (default: 1)
-    If |g:AutoPairsMapCR| is 1 and this option is 1, wheter or not to center
+    If |g:AutoPairsMapCR| is 1 and this option is 1, whether or not to center
     the current line if it was relatively far down on the screen
 - |g:AutoPairsMapSpace| (default: 1)
     Whether or not to map space
@@ -493,7 +497,7 @@ longer the case.
 The example above will enable matching of `<` with `>`. You can also use: >
     let g:AutoPairs = { '(': ')', ...}
 <
-... where the `...` represents additional mappings, but note that this overrides
+... Where the `...` represents additional mappings, but note that this overrides
 all the defaults. If you only do the first mapping in the above example, for
 an instance, the ONLY key bracket/quote/other auto-pairs knows of is ().
 
@@ -611,8 +615,9 @@ This variable also exists in a buffer variant.~
 
 Default: 0
 
-Defines whether or not to require a space or EOL to complete. If this is 1 and
-you try: `{|word`, you'll get `{|word`, rather than `{|}word` if this is 0.
+Defines whether or not to require a space or end of the line to complete. If
+this is 1 and you try: `{|word`, you'll get `{|word`, rather than `{|}word`
+if this is 0.
 
 3.0.0-alpha5:~
     renamed from *g:AutoPairsCompleteOnSpace* to |g:AutoPairsCompleteOnlyOnSpace|
@@ -713,7 +718,7 @@ Default: <C-p><C-e>
 Defines what key to use to ignore the next character.
 
 Note that the key itself is a toggle. This means that if you press it twice,
-the next pair _won't_ be ignored. It's essentially a way to un-ignore the next
+the next pair _won't_ be ignored. It's essentially a way to unignore the next
 pair, if the ignore hasn't been used already.
 
 Can be empty to not map a key.
@@ -877,7 +882,7 @@ Example use~
 Note~
 
 While the example uses function(), and the type listed is function(), its
-underlaying |type()| is a funcref. There's many ways to Rome on this one, so
+underlying |type()| is a funcref. There's many ways to Rome on this one, so
 you don't _have_ to use a |function()| to get the funcref.
 
 Note: this may be replaced with a user autocmd in the future.
@@ -909,7 +914,7 @@ Default: 1
 This variable also exists in a buffer variant.~
 
 Sets whether or not to search for close brackets after a space. This is
-default behavior in jiangmiao/auto-pairs, and disabled in krasjet/auto.pairs.
+default behavior in jiangmiao/auto-pairs, and disabled in Krasjet/auto.pairs.
 Neither of the two have an option to toggle this, however.
 
 value = 0:
@@ -1158,9 +1163,9 @@ Section changelog~
                                                                           list
 
 Defines the current version. Note that while this is largely intended to
-follow certain semantic aspects regarding the version whereever possible, to
+follow certain semantic aspects regarding the version wherever possible, to
 facilitate for the use of >=, it's semi-arbitrarily set (effective
-3.0.0-beta5: increment by 1). this way, it's guaranteed to always go up.
+3.0.0-beta5: increment by 1). This way, it's guaranteed to always go up.
 
 Note that the first number will increase as versions do. From 4.0.0 up to (but
 excluding) 5.0.0 will be greater than or equal to 40000, and less than 50000.
@@ -1326,7 +1331,7 @@ This variable defines whether or not to use backwards-compatible maps.
 Backwards compatible in this case refers to the mappings defined in
 jiangmiao/auto-pairs. These mappings are meta mappings, and may conflict with
 keys on your keyboard. Meta keys have primarily conflicted with certain
-european keys, but may conflict with other keys depending on your layout.
+European keys, but may conflict with other keys depending on your layout.
 
 If you're experiencing certain letters breaking, this should be set to 0.
 
@@ -1404,7 +1409,7 @@ Legal values:
     2: Auto-pairs is disabled inside strings, and all open and close brackets
        inside strings are ignored.
 
-0 is equivalent ot jiangmiao/auto-pairs. This option overall controls how
+0 is equivalent to jiangmiao/auto-pairs. This option overall controls how
 auto-pairs behaves with auto-insert in and around strings.
 
 Note that due to being experimental, this feature may break entirely. If Vim
@@ -1418,13 +1423,13 @@ future release.
 Warning~
 
 This feature relies heavily on the width of characters to be sane. This is NOT
-the case for unicode characters. As a result, this feature does not work
+the case for Unicode characters. As a result, this feature does not work
 accurately with multibyte pairs stacked after each other. There's measures in
-place to prevent a cascading effect, but unicode characters placed close to
+place to prevent a cascading effect, but Unicode characters placed close to
 each other WILL NOT work reliably.
 
 The relevant code is in autopairs#Strings#countHighlightMatches() - pull
-requests or just ideas on how to better handle unicode in these cases are
+requests or just ideas on how to better handle Unicode in these cases are
 welcome.
 
 Performance aspects~
@@ -1439,12 +1444,12 @@ use option 0 or 2 instead of 1.
 
 The options for no differentiation between strings and code and the option for
 disabling auto-pairs inside strings (respectively options 0 and 2) are by far
-the lightest options. These don't cause any noticable lag. Just for reference,
+the lightest options. These don't cause any noticeable lag. Just for reference,
 in a test of inserting over 200 open characters, the method used to check if
 the cursor is in a string was called 200 times; one per insertion, for a total
 of .006623 seconds for 270 calls. At 24 microseconds per (prior to a performance
 patch to avoid the ridiculously slow `join` function - I guess that's a
-side-effect of not using vim9), it's not _fast_, but it's nowhere close enough
+side-effect of not using Vim 9), it's not _fast_, but it's nowhere close enough
 to cause a slowdown.
 
 The simple fact is, getting syngroups and converting them to their name
@@ -1465,15 +1470,15 @@ With a small optimization for sequential characters, we hit about 400
 characters before a slowdown occurs. This is largely important because it
 means we substantially reduce the number of calls to synstack.
 
-A few thing sto keep in mind here: only the relevant open and close characters
+A few things to keep in mind here: only the relevant open and close characters
 are indexed, which means a line consisting of thousands of wrapped characters
 isn't on its own a problem. The problem starts showing up when all of those
 are pairs. Of course, if you have hundreds of the open and close pairs on the
 same line, you have bigger problems than auto-pairs struggling.
 
-The optimizations are extremely linear, however. In a case like ( ( ( ( ( (...
+The optimizations are extremely linear, however. In a case like ( ( ( ( ( (...,
 the optimizations do fall apart. Finding pairs is based on match() is done to
-compensate for multibyte pairs and some unicode support, making space
+compensate for multibyte pairs and some Unicode support, making space
 detection mildly annoying to implement.
 
 Unfortunately, languages are complex. These ideas fall apart:
@@ -1481,7 +1486,7 @@ Unfortunately, languages are complex. These ideas fall apart:
   Idea                                              Broken by
   --------------------------------------------------------------------------
   Check for quotes on line                          raw strings
-  Byte by byte parsing                              Multibyte pairs, unicode
+  Byte by byte parsing                              Multibyte pairs, Unicode
                                                     pairs
   Semantic parsing                                  Auto-pairs, not language
                                                     parser.
@@ -1529,7 +1534,7 @@ Note that setting it to 0 has the side-effect if making
  |)         ) at |
 
 jump instead of insert, which again, may or may not be desirable. If the
-preceeding line contains an opening (, the closure would be correct.
+preceding line contains an opening (, the closure would be correct.
 Otherwise, it's not.
 
 ------------------------------------------------------------------------------
@@ -1587,8 +1592,8 @@ Note: We now have |g:AutoPairsCompatibleMaps|. By setting it to 0, all
 mappings will use a control-based alternative instead of the meta variants
 inherited from jiangmiao. This will be the default behavior in the future.
 
-AutoPairs has several mappings that uses the alt key (meta) in such a way
-that it conflicts various european letters, including å.
+Auto-pairs has several mappings that uses the alt key (meta) in such a way
+that it conflicts various European letters, including å.
 This one specifically originates from Alt-E, which is used by
 |g:AutoPairsShortcutFastWrap| when using compatible mode.
 
@@ -1600,8 +1605,8 @@ able to backtrace the keybind from there, and using the options discussed in
 |autopairs-conflicts|, remap it to something else.
 
 From issues on the original autopairs repo, however, it's abundantly clear
-that this isn't specific to scandinavian languages: a few of the meta keybinds
-directly conflict with various letters for other european languages. Normally,
+that this isn't specific to Scandinavian languages: a few of the meta keybinds
+directly conflict with various letters for other European languages. Normally,
 this wouldn't be a problem, but in insert mode mappings? They, to say the
 least, introduces challenges.
 
@@ -1609,8 +1614,6 @@ Again, using |g:AutoPairsCompatibleMaps| lets you avoid issues where a meta
 combination results in a letter you need. While I highly recommend using
 |g:AutoPairsCompatibleMaps|, you can still manually remap the problematic
 keys.
-
-
 
 Other plugins~
 There's relatively little to do about conflicts with other plugins.
@@ -1630,6 +1633,7 @@ If you read any of this and you can tell me I'm wrong, and offer a solution or
 a start, either as a pull request or as an issue, please do let me know. I'm
 more than willing to hear alternative solutions to this problem that cause
 less inconvenience for the users.
+Related: |autopairs-contributing|
 
 ------------------------------------------------------------------------------
                                                         *autopairs-uninstalling*
@@ -1665,7 +1669,7 @@ updated after the option is set.
 TL;DR:~
 Won't fix, but remove the folder defined by |'viewdir'|, or remove the
 auto-pairs maps from the files in said directory. `set viewoptions-=options`
-helps prevent this problem from occuring, but won't fix any existing view
+helps prevent this problem from occurring, but won't fix any existing view
 files.
 
 ==============================================================================
@@ -1710,7 +1714,7 @@ You're left with:
         )
 <
 
-... possibly with another indent level, or possibly something else you don't
+... Possibly with another indent level, or possibly something else you don't
 like. You might even have come here wondering how you make it: >
     func(
 
@@ -1745,7 +1749,7 @@ In Python, you may end up with this: >
             |
             )
 <
-... and I've personally tried but can't for the life of me figure out what
+... And I've personally tried but can't for the life of me figure out what
 combination of the Python indent options result in: >
     (
         |
@@ -1753,7 +1757,7 @@ combination of the Python indent options result in: >
 <
 
 Some of the options align, but don't put the cursor at an indented position or
-cause weirdness for nested brackets... it's a mess, basically.
+cause weirdness for nested brackets... It's a mess, basically.
 
 Unfortunately, this isn't a problem auto-pairs can easily fix. Because there's
 so many languages and because there's so many individual preferences, trying
@@ -1890,7 +1894,6 @@ See also |autopairs#AutoPairsDefine()|
 While functions are normally a part of the API section, this is an exception.
 
 
-
 Arguments: (pair[, target_variable])
     pair:            an object (CANNOT be anything that isn't an object) containing the
                      definition for the pair. See |autopairs-pair-object| for more
@@ -1995,7 +1998,8 @@ If it wasn't obvious already, the plugin itself is based on
 jiangmiao/auto-pairs. Jiangmiao's work laid the foundation for this plugin.
 
 Additionally, it contains quite a bit of work from Krasjet, as their work on a
-fork for personal use has been merged into this plugin.
+fork for personal use has been merged into this plugin. Krasjet wrote the
+initial insertion balancing logic.
 
 Additionally, there's a number of contributors to jiangmiao's upstream repo,
 and in the future possibly directly on this fork, who have contributed to the
@@ -2006,42 +2010,13 @@ plugin. The complete list is available on GitHub:
 ==============================================================================
 11. Backwards compatibility                         *autopairs-backwards-compat*
 
-Backwards compat is apparently tricker than initially expected. Following the
-resolution of [issue 12](https://github.com/LunarWatcher/auto-pairs/issues/12)
-in a semi-ugly way, it became apparent that backwards compatibility not being
-maintained has consequences.
+This fork does try to maintain some backwards compatibility, in particular for
+plugins that interact with auto-pairs, but as proven by the changelog,
+complete compatibility is impossible.
 
-If you look at the changelog, you'll pretty quickly notice that the
-3.0.0-alpha* releases come with a few major overhauls, including moving the
-plugin to an autoload file. This also includes renaming all the functions to
-autopairs#<old function name>, as well as renaming the main script file.
+A consequence of auto-pairs being dead for a number of years is that catching
+up and modernising means certain things end up being incompatibly changed.
+This section isn't meant as an overview of that, but this fork will not go far
+to make sure compatibility is maintained with a dead repo.
 
-As for consequences, at least one plugin has been identified that relies on
-autopairs function access. At this time, updating the remote plugins aren't
-really an option, because use of this fork isn't wide-spread. Asking for
-changes for a fork like that is likely to be rejected, and as such, this
-plugin will temporarily introduce a backwards compat API. This literally means
-adding functions with the old names (on an as needed basis) and exposing them
-when |g:AutoPairsBackwardsCompat| is 1.
-
-The legacy API is minimal and togglable because it SHOULD NOT be used; it only
-exists to prevent other plugins from breaking in an either temporary or
-permanent transition period. This plugin shouldn't break other plugins, which
-is why the backwards compatible API exists. Keybinds are not considered
-protected; if you rely on keybinds accessing autopairs API features, please
-migrate them by adding `autopairs#` to the function name.
-
-The migration should involve very little work; only the prefix (or whatever
-it's called) has changed, and as such, the call only has to be changed. Again,
-the backwards compatible API only exists to prevent breaking plugins for
-people jumping from jiangmiao/auto-pairs to this fork, and should not be used
-to add new keybinds, or build new plugins around it. Plugins built with this
-one in mind should not use the backwards compat API intentionally; use the
-new one.
-
-To aid with backwards compat in the future, |g:AutoPairsVersion| has been
-added to identify versions to give an easy way to detect API changes for
-plugin compatibility. Unfortunately, it's introduced so late it's not really
-useful for at least a few years.
-
-vim:ft=help
+vim:ft=help:spell
