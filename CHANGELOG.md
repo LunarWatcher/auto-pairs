@@ -1,6 +1,9 @@
 # 3.0.2
 `let g:AutoPairsVersion = 30061`
 
+## Meta
+* Cleaned up the help documents to, hopefully, be easier to navigate.
+
 ## Removed
 * `g:AutoPairsBackwardsCompat`, as it doesn't appear to have any uses at this time.
 
