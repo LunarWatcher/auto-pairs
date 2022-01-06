@@ -67,7 +67,7 @@ blacklist actually requires the filetype to be set.
 
 This behavior isn't present in 0.4.3 and up to (and including) commit 03b3ff8
 in neovim 0.5.0. After that commit, Telescope misbehaves due to the
-aformentioned bug, which means that auto-pairs is started long before it
+aforementioned bug, which means that auto-pairs is started long before it
 should. Again, the consequences of this is that auto-pairs ends up in a state
 it's not meant to be in. The workaround hack is to set an autocmd that
 disables auto-pairs when the filetype is set. Note, however, that keybinds are
