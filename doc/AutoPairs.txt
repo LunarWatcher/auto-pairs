@@ -11,7 +11,9 @@ Fork URL: https://github.com/LunarWatcher/auto-pairs (bugs, feature requests,
                                                       here)
 Changelog: https://github.com/LunarWatcher/auto-pairs/blob/master/CHANGELOG.md
 
-Table of help documents
+==============================================================================
+Table of help documents~
+
     |AutoPairs.txt| (you are here)
     |AutoPairsCompatibility|
 
@@ -41,7 +43,7 @@ With vim-plug: >
 
     Plug 'LunarWatcher/auto-pairs'
 <
-Preferred/recommended: >
+Alternatively, for more stable releases: >
     Plug 'LunarWatcher/auto-pairs', {'tag': '*'}
 <
 
