@@ -10,13 +10,14 @@ if !has('nvim') && has('vimscript-4')
     " We'll enforce the new version for versions of Vim that support the
     " fantastic |scriptversion|. The rest are gonna have to sort themselves
     " out.
+    " This also lets me make sure I write better Vimscript
     scriptversion 4
 endif
 
 " Current version; not representative of tags or real versions, but purely
 " meant as a number associated with the version. Semantic meaning on the first
 " digit will take place. See the documentation for more details.
-let g:AutoPairsVersion = 30060
+let g:AutoPairsVersion = 30061
 
 let s:save_cpo = &cpoptions
 set cpoptions&vim

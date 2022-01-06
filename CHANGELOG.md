@@ -1,3 +1,9 @@
+# 3.0.2
+`let g:AutoPairsVersion = 30061`
+
+## Removed
+* `g:AutoPairsBackwardsCompat`, as it doesn't appear to have any uses at this time.
+
 # 3.0.1
 `let g:AutoPairsVersion = 30060`
 

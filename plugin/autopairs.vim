@@ -9,24 +9,6 @@ if exists('g:AutoPairsLoaded') || &cp
 end
 let g:AutoPairsLoaded = 1
 
-" Try to do a sane default for backwards compat.
-" For now, the only known incompatibility is with vim_visual_multi
-" This doesn't override anything specific, so it can be disabled entirely if
-" this behavior isn't desired.
-if !exists("g:AutoPairsBackwardsCompat")
-    let g:AutoPairsBackwardsCompat = 0
-endif
-
-" Expose backwards compat API if and only if it's enabled.
-" At this time, I'm only aware of one function used by other plugins that
-" needs to be exposed for compatibility.
-" If there are other functions, please open an issue or submit a PR
-if g:AutoPairsBackwardsCompat
-    fun! AutoPairsTryInit()
-        call autopairs#AutoPairsTryInit()
-    endfun
-endif
-
 if exists('g:AutoPairsExperimentalAutocmd') && g:AutoPairsExperimentalAutocmd
     au BufWinEnter * :call autopairs#AutoPairsTryInit()
 else

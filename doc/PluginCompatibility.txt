@@ -1,8 +1,11 @@
 *AutoPairsCompatibility* *autopairs-compatbility* *auto-pairs-compat*
 
-Table of help documents
+==============================================================================
+Table of help documents~
+
     |AutoPairs.txt|
     |AutoPairsCompatibility| (you are here)
+    |AutoPairsTroubleshooting|
 
 ================================================================================
 Table of Contents                               *autopairs-compatibility-contents*

@@ -1,0 +1,157 @@
+*autopairs-troubleshooting* *AutoPairsTroubleshooting* *AutoPairsTrouble*
+
+==============================================================================
+Table of help documents~
+
+    |AutoPairs.txt|
+    |AutoPairsCompatibility|
+    |AutoPairsTroubleshooting| (you are here)
+
+==============================================================================
+Table of Contents                           *autopairs-troubleshooting-contents*
+
+    1. General troubleshooting .............. |autopairs-troubleshooting|
+    2. Conflicting keybinds ................. |autopairs-conflicts|
+        1. European letters ................. |autopairs-european-letters|
+        2. Other plugins .................... |autopairs-conflict-plugins|
+    3. Uninstalling ......................... |autopairs-uninstalling|
+        1. Vim views ........................ |autopairs-uninstall-views|
+
+==============================================================================
+1. General troubleshooting                           *autopairs-troubleshooting*
+
+This plugin remaps, among others, `([{'"}]) <BS> <CR>` . BS and CR can be
+controlled by options in the plugin, but the rest are mapped based on what
+pairs you're using. See |g:AutoPairs|
+
+If auto pairs doesn't work, use |:verbose| |:imap| to check if the map is correct.
+
+For i.e. `:verbose imap (`, the correct map is: >
+
+    <C-R>=autopairs#AutoPairsInsert("(")<CR>
+
+How do I insert a character registered as a part of a pair without~
+                        triggering the plugin?~
+
+There are four ways to do this:
+
+    1. Use `Ctrl-V )` to insert an open or close character (where ")" is any
+        open or close character) without trigger the plugin.
+
+    2. Use `Alt-P` or `Ctrl-P Ctrl-T` to turn off the plugin. See
+        |g:AutoPairsShortcutToggle|
+
+    3. Use `DEL`, `<C-O>x`, or other "normal" means of deletion to delete the
+        character inserted by the plugin.
+
+    4. Use <C-p><C-e> (|g:AutoPairsShortcutIgnore|) to ignore a single
+        insertion. The next pair character you insert will be inserted
+        literally, and auto-pairs will immediately be re-enabled.
+
+        This is effectively equivalewnt to the toggle option, but with fewer
+        steps.
+
+==============================================================================
+2. Conflicting keybinds                                    *autopairs-conflicts*
+
+There may be other reasons and solutions for conflicting keybinds than what's
+laid out here; this aims to be a general overview of a few known conflicts.
+
+------------------------------------------------------------------------------
+2.1. European letters                               *autopairs-european-letters*
+
+Note: We now have |g:AutoPairsCompatibleMaps|. By setting it to 0, all
+mappings will use a control-based alternative instead of the meta variants
+inherited from jiangmiao. This will be the default behavior in the future.
+
+Auto-pairs has several mappings that uses the alt key (meta) in such a way
+that it conflicts various European letters, including å.
+This one specifically originates from Alt-E, which is used by
+|g:AutoPairsShortcutFastWrap| when using compatible mode.
+
+While this is a known conflict, there could always be other conflicts.
+To see if there's a conflict with a key on your keyboard,
+`verbose imap <insert letter>` and see what it says.
+See: https://vi.stackexchange.com/q/20995/21251. You should be
+able to backtrace the keybind from there, and using the options discussed in
+|autopairs-conflicts|, remap it to something else.
+
+From issues on the original autopairs repo, however, it's abundantly clear
+that this isn't specific to Scandinavian languages: a few of the meta keybinds
+directly conflict with various letters for other European languages. Normally,
+this wouldn't be a problem, but in insert mode mappings? They, to say the
+least, introduces challenges.
+
+Again, using |g:AutoPairsCompatibleMaps| lets you avoid issues where a meta
+combination results in a letter you need. While I highly recommend using
+|g:AutoPairsCompatibleMaps|, you can still manually remap the problematic
+keys.
+
+------------------------------------------------------------------------------
+2.2. Other plugins                                  *autopairs-conflict-plugins*
+
+There's relatively little to do about conflicts with other plugins.
+
+This plugin tries its best to make sure it doesn't override other mappings, by
+"importing" other maps, but these may still occur. Auto-pairs' mappings are
+done on a per-buffer basis, so it can be compatible with certain other
+plugins, but it can also not.
+
+If you find yourself in a situation where you're unable to make sure enter does
+what you want, you can always write a function and map <cr> to that. However,
+thanks to plugins being weird, you may have to disable bits that remap <cr> for
+this to work at all.
+
+Pull requests/issues~
+If you read any of this and you can tell me I'm wrong, and offer a solution or
+a start, either as a pull request or as an issue, please do let me know. I'm
+more than willing to hear alternative solutions to this problem that cause
+less inconvenience for the users.
+Related: |autopairs-contributing|
+
+==============================================================================
+3. Uninstalling                                         *autopairs-uninstalling*
+
+In most cases, uninstalkling is trivial, and doesn't need any other steps than
+being removed from your plugin manager, and cleaned from your system. (Or
+similar steps if you're not using a plugin manager).
+
+However, there are certain exceptions. If you're having a hard time
+uninstalling, this section may explain why.
+
+------------------------------------------------------------------------------
+3.1. Views                                           *autopairs-uninstall-views*
+
+If you use |:mkview| to save folds or other data, you may have trouble
+uninstalling. See:
+* https://github.com/jiangmiao/auto-pairs/issues/192
+* https://github.com/LunarWatcher/auto-pairs/issues/33
+
+Views, with the default settings for |viewoptions|, saves maps for buffers.
+Since auto-pairs maps several central keys, this becomes painfully obvious the
+second a pair character (or even just space, enter, or backspace) is pressed
+after uninstalling.
+
+There's no way for the plugin to "ask" for certain keybinds to be excluded
+from saving, which means there's only hackish workarounds.
+
+The general idea is, you need to clean out your view files. The "easiest"
+option, if you don't mind losing your data, is deleting |'viewdir'|.
+(`:echo &viewdir` to see which directory to delete). Alternatively, you can
+manually edit the files, or apply a bit of `sed`/`grep`-magic to get rid of
+the offending maps.
+
+If you're looking to just save folds, you can alternatively
+`set viewoptions-=options`, which excludes mappings from being saved.
+Unfortunately, this won't help you load the view files - they're still going
+to be in a broken state. However, it'll prevent the same type of problems from
+happening with this or other plugins, as well as from happening on view files
+updated after the option is set.
+
+TL;DR:~
+Won't fix, but remove the folder defined by |'viewdir'|, or remove the
+auto-pairs maps from the files in said directory. `set viewoptions-=options`
+helps prevent this problem from occurring, but won't fix any existing view
+files.
+
+vim:ft=help

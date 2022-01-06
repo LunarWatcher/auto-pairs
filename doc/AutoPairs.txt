@@ -12,29 +12,45 @@ Fork URL: https://github.com/LunarWatcher/auto-pairs (bugs, feature requests,
 Changelog: https://github.com/LunarWatcher/auto-pairs/blob/master/CHANGELOG.md
 
 ==============================================================================
+                                     *autopairs-help-documents* *autopairs-readme*
 Table of help documents~
 
+
     |AutoPairs.txt| (you are here)
+        Covers the core features of auto-pairs, as well as various meta
+        surrounding the plugin.
     |AutoPairsCompatibility|
+        Contains a few solutions to incompatibility with specific (known!)
+        plugins.
+    |AutoPairsTroubleshooting|
+        Contains answers to known and common problems with auto-pairs.
+
+Note: While the documents aim to contain only categorically relevant info,
+there are cases where this won't happen. There are a number of reasons for
+this, but the table of contents in each document is still meant to be
+representative of the content of the file. If the table of content doesn't
+help, it may be in another file.
+
+If not, feel free to ask on GitHub (see: |autopairs-contributing|). I'm trying
+my best to keep a clear structure, but I'm highly aware there are parts that
+fall short. Identifying those, however, is the tricky part, and you can help
+me do this by asking on GitHub.
 
 ==============================================================================
 CONTENTS                                                    *autopairs-contents*
 
-    1.  Installation ............................ |autopairs-installation|
-    2.  Features .................................... |autopairs-features|
-         2.1. Multibyte pairs ...................... |autopairs-multibyte|
-    3.  Fly Mode ..................................... |autopairs-flymode|
-    4.  Shortcuts .................................. |autopairs-shortcuts|
-         4.1. Shortcut remapping .......... |autopairs-shortcut-remapping|
-    5.  Options ...................................... |autopairs-options|
-    6.  Troubleshooting ...................... |autopairs-troubleshooting|
-         6.1. Conflicting keybinds ................. |autopairs-conflicts|
-         6.2. Uninstalling ...................... |autopairs-uninstalling|
-    7.  Diagnosing indentation ............... |autopairs-diagnose-indent|
-    8.  Functions (API) ............................ |autopairs-functions|
-    9.  Declaring custom pairs ...................|autopairs-custom-pairs|
-    10. Credits/contributors ......................... |autopairs-credits|
-    11. Backwards compatibility ............. |autopairs-backwards-compat|
+    1.  Installation .................................. |autopairs-installation|
+    2.  Features .......................................... |autopairs-features|
+         2.1. Multibyte pairs ............................ |autopairs-multibyte|
+    3.  Fly Mode ........................................... |autopairs-flymode|
+    4.  Shortcuts ........................................ |autopairs-shortcuts|
+         4.1. Shortcut remapping ................ |autopairs-shortcut-remapping|
+    5.  Options ............................................ |autopairs-options|
+    6.  Diagnosing indentation ..................... |autopairs-diagnose-indent|
+    7.  Functions (API) .................................. |autopairs-functions|
+    8.  Declaring custom pairs .........................|autopairs-custom-pairs|
+    9.  Credits/contributors ............................... |autopairs-credits|
+    10. Backwards compatibility ................... |autopairs-backwards-compat|
 
 ==============================================================================
 1. Installation                                         *autopairs-installation*
@@ -59,6 +75,7 @@ Future maps, if any are added, will be built around a ctrl-based system rather
 than a meta (alt)-based one.
 
 
+------------------------------------------------------------------------------
                                                        *autopairs-contributing*
 Contributing~
 
@@ -78,7 +95,7 @@ link: https://github.com/LunarWatcher/auto-pairs/discussions)
 
 Pull requests are also more than welcome, and I'll make sure they don't stick
 around for 6 years without being merged.
-
+------------------------------------------------------------------------------
                                                            *autopairs-migrating*
 Migrating from jiangmiao~
 
@@ -97,7 +114,7 @@ A few notes on config:
 * Several variables have been removed. It's hard to list all the internal
   changes, but if you expect something to work that doesn't, check the
   documentation. If the documentation is gone, it's been removed. If you're in
-  doubt, open an issue - it helps me expand this list.
+  doubt, or have questions, feel free to open an issue.
 
 Overall caveats~
 
@@ -1072,8 +1089,8 @@ Default: 0
 This variable also exists in a buffer variant.~
 
 Defines whether or not to do "careful" string expansion on <CR>. Careful in
-this case essentially means, count whether or not the amount of quotes in the
-previous line is divisible by 2. If it is, assume whatever we're doing is the
+this case essentially means, count whether or not the amount of quotes earlier
+in the line is divisible by 2. If it is, assume whatever we're doing is the
 start of a new string and therefore don't do the normal <CR> string expansion.
 Otherwise, run it.
 
@@ -1088,13 +1105,8 @@ executed, the linebreak has already taken place. As a result, I can't actually
 test in the former spot. Moreover, if I measure the previous spot and it's a
 quote, the string syngroup is present.
 
-This variable will be replaced in the future if I'm able to find a way to use
-syngroups instead of this idiotic check.
-
 This check being dumb consequentially means it can lead to other unwanted
 behavior, or just give incorrect results. Therefore, it's disabled by default.
-I don't want to push something that's likely to cause problems and requires
-config with some languages into the general public.
 
 ------------------------------------------------------------------------------
                                                              *g:AutoPairsQuotes*
@@ -1104,8 +1116,8 @@ Default: ["'", '"']
 This variable also exists in a buffer variant.~
 
 Controls what openers trigger |g:AutoPairsCarefulStringExpansion|. Note that
-for implementation reasons, this only works when the openers and closers are
-the same.
+for implementation reasons, this only works when the open and close characters
+are the same.
 
 ------------------------------------------------------------------------------
                                                *g:AutoPairsOpenBalanceBlacklist*
@@ -1141,24 +1153,6 @@ Disabled by default because this introduced breaking behavior in comparison to
 jiangmiao/auto-pairs.
 
 ------------------------------------------------------------------------------
-                                                    *g:AutoPairsBackwardsCompat*
-                                                                           int
-
-Default: 0
-
-Whether or not to expose the backwards compat API. This MUST be set before
-plugin/ is sourced. It cannot be toggled at runtime.
-
-This should not be used unless absolutely necessary. DO NOT build your
-keybinds or anything else around the legacy API. Please see
-|autopairs-backwards-compat| for the full discussion.
-
-Section changelog~
-    v3.0.0-beta8: Default to 0. The addition of `g:VM_plugins_compatibilty`
-                  lets us fix this without having to set backwards-compatible
-                  functions.
-
-------------------------------------------------------------------------------
                                                             *g:AutoPairsVersion*
                                                                           list
 
@@ -1172,11 +1166,6 @@ excluding) 5.0.0 will be greater than or equal to 40000, and less than 50000.
 Other updates uses a Vim-like patch number instead, largely because there's no
 chance in hell there's going to be 10000 tagged releases between two major
 versions.
-
-This is purely meant for script use, as well as cosmetic use if desired. This
-also exists, in combination with * in |exists()|, to prevent major backwards
-compat fuckups, such as the one caused by moving functions into the
-`autopairs#` prefix.
 
 3.0.0-beta5~
     Changed representation meaning (backwards compatible)
@@ -1557,123 +1546,7 @@ the pair itself.
 *autopairs-end-of-options* (this tag exists purely for doc editing purposes and
                             has no meaning for the plugin)
 ==============================================================================
-6. Troubleshooting                                   *autopairs-troubleshooting*
-
-This plugin remaps, among others, `([{'"}]) <BS> <CR>` . BS and CR can be
-controlled by options in the plugin, but the rest are mapped based on what
-pairs you're using. See |g:AutoPairs|
-
-If auto pairs doesn't work, use |:verbose| |:imap| to check if the map is correct.
-
-For i.e. `:verbose imap (`, the correct map is: >
-
-    <C-R>=autopairs#AutoPairsInsert("(")<CR>
-
-How do I insert a character registered as a part of a pair without~
-                        triggering the plugin?~
-
-There are 3 ways:
-
-    1. Use `Ctrl-V )` to insert an open or close character (where ) is any
-        open or close character) without trigger the plugin.
-
-    2. Use `Alt-P` or `Ctrl-P Ctrl-T` to turn off the plugin. See
-        |g:AutoPairsShortcutToggle|
-
-    3. Use `DEL`, `<C-O>x`, or other "normal" means of deletion to delete the
-        character insert by the plugin.
-
-------------------------------------------------------------------------------
-6.1. Conflicting keybinds                                 *autopairs-conflicts*
-
-European letters~
-
-Note: We now have |g:AutoPairsCompatibleMaps|. By setting it to 0, all
-mappings will use a control-based alternative instead of the meta variants
-inherited from jiangmiao. This will be the default behavior in the future.
-
-Auto-pairs has several mappings that uses the alt key (meta) in such a way
-that it conflicts various European letters, including å.
-This one specifically originates from Alt-E, which is used by
-|g:AutoPairsShortcutFastWrap| when using compatible mode.
-
-While this is a known conflict, there could always be other conflicts.
-To see if there's a conflict with a key on your keyboard,
-`verbose imap <insert letter>` and see what it says.
-See: https://vi.stackexchange.com/q/20995/21251. You should be
-able to backtrace the keybind from there, and using the options discussed in
-|autopairs-conflicts|, remap it to something else.
-
-From issues on the original autopairs repo, however, it's abundantly clear
-that this isn't specific to Scandinavian languages: a few of the meta keybinds
-directly conflict with various letters for other European languages. Normally,
-this wouldn't be a problem, but in insert mode mappings? They, to say the
-least, introduces challenges.
-
-Again, using |g:AutoPairsCompatibleMaps| lets you avoid issues where a meta
-combination results in a letter you need. While I highly recommend using
-|g:AutoPairsCompatibleMaps|, you can still manually remap the problematic
-keys.
-
-Other plugins~
-There's relatively little to do about conflicts with other plugins.
-
-This plugin tries its best to make sure it doesn't override other mappings, by
-"importing" other maps, but these may still occur. Auto-pairs' mappings are
-done on a per-buffer basis, so it _should_ be compatible with other plugins,
-but edge cases may still occur.
-
-If you find yourself in a situation where you're unable to make sure enter does
-what you want, you can always write a function and map <cr> to that. However,
-thanks to plugins being weird, you may have to disable bits that remap <cr> for
-this to work at all.
-
-Pull requests/issues~
-If you read any of this and you can tell me I'm wrong, and offer a solution or
-a start, either as a pull request or as an issue, please do let me know. I'm
-more than willing to hear alternative solutions to this problem that cause
-less inconvenience for the users.
-Related: |autopairs-contributing|
-
-------------------------------------------------------------------------------
-                                                        *autopairs-uninstalling*
-
-Views~
-
-If you use |:mkview| to save folds or other data, you may have trouble
-uninstalling. See:
-* https://github.com/jiangmiao/auto-pairs/issues/192
-* https://github.com/LunarWatcher/auto-pairs/issues/33
-
-Views, with the default settings for |viewoptions|, saves maps for buffers.
-Since auto-pairs maps several central keys, this becomes painfully obvious the
-second a pair character (or even just space, enter, or backspace) is pressed
-after uninstalling.
-
-There's no way for the plugin to "ask" for certain keybinds to be excluded
-from saving, which means there's only hackish workarounds.
-
-The general idea is, you need to clean out your view files. The "easiest"
-option, if you don't mind losing your data, is deleting |'viewdir'|.
-(`:echo &viewdir` to see which directory to delete). Alternatively, you can
-manually edit the files, or apply a bit of `sed`/`grep`-magic to get rid of
-the offending maps.
-
-If you're looking to just save folds, you can alternatively
-`set viewoptions-=options`, which excludes mappings from being saved.
-Unfortunately, this won't help you load the view files - they're still going
-to be in a broken state. However, it'll prevent the same type of problems from
-happening with this or other plugins, as well as from happening on view files
-updated after the option is set.
-
-TL;DR:~
-Won't fix, but remove the folder defined by |'viewdir'|, or remove the
-auto-pairs maps from the files in said directory. `set viewoptions-=options`
-helps prevent this problem from occurring, but won't fix any existing view
-files.
-
-==============================================================================
-7. Diagnose indent                                   *autopairs-diagnose-indent*
+6. Diagnose indent                                   *autopairs-diagnose-indent*
                                                      *autopairs-indent-problems*
 Before reading the rest of this, I strongly urge you to read
 https://stackoverflow.com/q/59700770/6296561 - it explains Vim's indentation
@@ -1776,7 +1649,7 @@ unfortunately no better answer to this than "see if someone else has already
 done it", because indentation is complex.
 
 ==============================================================================
-8. Functions                                               *autopairs-functions*
+7. Functions                                               *autopairs-functions*
 
 Autopairs defines a lot of functions that you're probably never going to use.
 There are, however, a couple that may have to be used in scripting contexts,
@@ -1847,7 +1720,7 @@ to map a key to this function unless:
     3. You're doing scripting involving the function
 
 ==============================================================================
-9. Declaring custom pairs                               *autopairs-custom-pairs*
+8. Declaring custom pairs                               *autopairs-custom-pairs*
 
 Since v3.0.0-beta8, there's additional ways to declare pairs. While the bulk
 of the logic should be put through |autopairs#AutoPairsAddPair|, each entry to
@@ -1989,7 +1862,7 @@ expressions is dropped during the migration to proper objects.
 
 
 ==============================================================================
-10. Credits                                                  *autopairs-credits*
+9. Credits                                                   *autopairs-credits*
 
 Being a fork (and open-source), this plugin does contain work from other
 people.
@@ -2008,7 +1881,7 @@ plugin. The complete list is available on GitHub:
     https://github.com/LunarWatcher/auto-pairs/graphs/contributors
 
 ==============================================================================
-11. Backwards compatibility                         *autopairs-backwards-compat*
+10. Backwards compatibility                         *autopairs-backwards-compat*
 
 This fork does try to maintain some backwards compatibility, in particular for
 plugins that interact with auto-pairs, but as proven by the changelog,
@@ -2019,4 +1892,4 @@ up and modernising means certain things end up being incompatibly changed.
 This section isn't meant as an overview of that, but this fork will not go far
 to make sure compatibility is maintained with a dead repo.
 
-vim:ft=help:spell
+vim:ft=help
