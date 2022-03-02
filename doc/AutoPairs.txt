@@ -1246,7 +1246,7 @@ considered experimental even though it's enabled by default. If you experience
 that it doesn't work, please open an issue.
 
 When this is enabled, it enables wrapping multibyte pairs -- note that it only
-does this for pairs registered in *g:AutoPairs* , as arbitrary selections
+does this for pairs registered in |g:AutoPairs| , as arbitrary selections
 would be unpredictable.
 
 If a multibyte pair or a normal pair isn't found, it'll fall back to standard
@@ -1776,7 +1776,7 @@ Arguments: (pair[, target_variable])
 
 ------------------------------------------------------------------------------
                                                  *autopairs#AutoPairsAddPairs()*
-                                                 *autopairs#AutoPairsAddPair*
+                                                 *autopairs#AutoPairsAddPairs*
 
 |autopairs#AutoPairsAddPair()|, but takes a list of pairs instead of a single
 pair. This is basically a fancy wrapper around a for loop calling AddPair on
@@ -1791,7 +1791,7 @@ While undefined keys have no effect, missing required will throw errors.
 
 *autopairs-open* *autopairs-close* *autopairs-passiveopen*
 *autopairs-passiveclose* *autopairs-mapclose* *autopairs-mapopen*
-*autopairs-close* *autopairs-alwaysmapdefault*
+*autopairs-alwaysmapdefault*
 
 Essentially: >
     {
