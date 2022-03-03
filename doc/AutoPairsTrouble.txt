@@ -18,7 +18,7 @@ Table of Contents                           *autopairs-troubleshooting-contents*
         1. Vim views ........................ |autopairs-uninstall-views|
 
 ==============================================================================
-1. General troubleshooting                           *autopairs-troubleshooting*
+1. General troubleshooting                           *autopairs-troubleshooting-general*
 
 This plugin remaps, among others, `([{'"}]) <BS> <CR>` . BS and CR can be
 controlled by options in the plugin, but the rest are mapped based on what
