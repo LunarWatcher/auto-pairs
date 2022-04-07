@@ -16,6 +16,7 @@ Table of Contents                           *autopairs-troubleshooting-contents*
         2. Other plugins .................... |autopairs-conflict-plugins|
     3. Uninstalling ......................... |autopairs-uninstalling|
         1. Vim views ........................ |autopairs-uninstall-views|
+    4. Rust ................................. |autopairs-rust|
 
 ==============================================================================
 1. General troubleshooting                           *autopairs-troubleshooting-general*
@@ -153,5 +154,29 @@ Won't fix, but remove the folder defined by |'viewdir'|, or remove the
 auto-pairs maps from the files in said directory. `set viewoptions-=options`
 helps prevent this problem from occurring, but won't fix any existing view
 files.
+
+==============================================================================
+4. Rust                                          *autopairs-rust* *rust-autopairs*
+
+If you're using the Rust plugin (https://github.com/rust-lang/rust.vim), you
+may have noticed that your custom pairs don't autocomplete. This isn't
+auto-pairs fault.
+
+The Rust plugin overrides auto-pairs entirely, which also means your custom
+pairs get nuked.
+
+To keep your pairs, you have to: >
+    let g:rust_keep_autopairs_default = 1
+<
+
+See https://github.com/rust-lang/rust.vim/blob/87c745d8d506fc1eecc1d81df15d5bde1658a2fc/doc/rust.txt#L277
+
+The Rust plugin sets these pairs: >
+    let b:AutoPairs = {'(':')', '[':']', '{':'}','"':'"', '`':'`'}
+<
+
+All of which are already enabled by default. You're not losing any pairs by
+setting the option, but by letting it be 0, you lose any other defined pairs
+-- including your custom pairs.
 
 vim:ft=help
