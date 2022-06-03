@@ -16,5 +16,22 @@ Describe <BS> tests
         call Expect("(((\<BS>\<BS>").ToMatch("()")
         call Expect("(((\<BS>\<BS>\<BS>").ToMatch("")
     End
+    It should delete after, but only when enabled
+        new | only!
+        call autopairs#AutoPairsInit()
+
+        call Expect("()\<BS>").ToMatch("")
+        let b:AutoPairsBSAfter = 0
+
+        call Expect("()\<BS>").ToMatch("(")
+    End
+    It should delete in when instructed
+        new | only!
+        call autopairs#AutoPairsInit()
+
+        call Expect("(\<BS>").ToMatch("")
+        let b:AutoPairsBSIn = 0
+        call Expect("(\<BS>").ToMatch(")")
+    End
 
 End

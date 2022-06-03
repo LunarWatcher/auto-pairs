@@ -248,61 +248,67 @@ func! autopairs#AutoPairsDelete()
         return "\<BS>"
     end
 
+    
     let [before, after, ig] = autopairs#Strings#getline(b:AutoPairsMultilineBackspace)
 
-    for [open, close, opt] in b:AutoPairsList
-        if !opt["delete"] || close == ''
-            " Non-deletable pairs? Skip 'em
-            continue
-        endif
-        let rest_of_line = opt['multiline'] ? after : ig
-        let b = matchstr(before, '\V' .. open .. '\v\s?$')
-        let a = matchstr(rest_of_line, '^\v\s*\V' .. close)
-
-        if b != '' && a != ''
-            if b[-1:-1] == ' '
-                if a[0] == ' '
-                    return "\<BS>\<DELETE>"
-                else
-                    return "\<BS>"
-                end
-            end
-            return autopairs#Strings#backspace(b) .. autopairs#Strings#delete(a)
-        end
-    endfor
-
-    " delete the pair foo[]| <BS> to foo
-    for [open, close, opt] in b:AutoPairsList
-        if !opt["delete"]
-            continue
-        endif
-        if (close == '')
-            continue
-        endif
-        let m = autopairs#Strings#matchend(before, '\V' .. open .. '\v\s*' .. '\V' .. close .. '\v$')
-
-        if len(m) > 0
-            return autopairs#Strings#backspace(m[2])
-        elseif opt["multiline"] && b:AutoPairsMultilineBackspace
-            let m = matchstr(before, '^\v\s*\V' .. close)
-            if m != ''
-                let b = ""
-                let offset = 1
-                " a = m
-                while getline(line('.') - offset) =~ "^\s*$"
-                    let b ..= getline(line('.') - offset) .. ' '
-                    let offset += 1
-                    if (line('.') - offset <= 0)
-                        return "\<BS>"
-                    endif
-                endwhile
-                let a = matchstr(getline(line('.') - offset), '\V' .. open .. '\v\s*$') .. ' '
-                if a != ' '
-                    return autopairs#Strings#backspace(a) .. autopairs#Strings#backspace(b) .. autopairs#Strings#backspace(m)
-                endif
+    if b:AutoPairsBSIn == 1
+        for [open, close, opt] in b:AutoPairsList
+            if !opt["delete"] || close == ''
+                " Non-deletable pairs? Skip 'em
+                continue
             endif
-        end
-    endfor
+            let rest_of_line = opt['multiline'] ? after : ig
+            let b = matchstr(before, '\V' .. open .. '\v\s?$')
+            let a = matchstr(rest_of_line, '^\v\s*\V' .. close)
+
+            if b != '' && a != ''
+                if b[-1:-1] == ' '
+                    if a[0] == ' '
+                        return "\<BS>\<DELETE>"
+                    else
+                        return "\<BS>"
+                    end
+                end
+                return autopairs#Strings#backspace(b) .. autopairs#Strings#delete(a)
+            end
+        endfor
+    endif
+
+    if b:AutoPairsBSAfter == 1
+
+        " delete the pair foo[]| <BS> to foo
+        for [open, close, opt] in b:AutoPairsList
+            if !opt["delete"]
+                continue
+            endif
+            if (close == '')
+                continue
+            endif
+            let m = autopairs#Strings#matchend(before, '\V' .. open .. '\v\s*' .. '\V' .. close .. '\v$')
+
+            if len(m) > 0
+                return autopairs#Strings#backspace(m[2])
+            elseif opt["multiline"] && b:AutoPairsMultilineBackspace
+                let m = matchstr(before, '^\v\s*\V' .. close)
+                if m != ''
+                    let b = ""
+                    let offset = 1
+                    " a = m
+                    while getline(line('.') - offset) =~ "^\s*$"
+                        let b ..= getline(line('.') - offset) .. ' '
+                        let offset += 1
+                        if (line('.') - offset <= 0)
+                            return "\<BS>"
+                        endif
+                    endwhile
+                    let a = matchstr(getline(line('.') - offset), '\V' .. open .. '\v\s*$') .. ' '
+                    if a != ' '
+                        return autopairs#Strings#backspace(a) .. autopairs#Strings#backspace(b) .. autopairs#Strings#backspace(m)
+                    endif
+                endif
+            end
+        endfor
+    endif
     return "\<BS>"
 endf
 

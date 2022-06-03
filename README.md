@@ -3,6 +3,10 @@
 
 Insert or delete brackets, parens, and quotes in pair: a maintained fork of [jiangmiao/auto-pairs](https://github.com/jiangmiao/auto-pairs)
 
+## Note to migrating users
+
+If you're migrating from jiangmiao's version, it's highly recommended that you read `:h autopairs-migrating` after installing. There have been a number of breaking changes made in this fork, as well as changes to default behavior. See the migration guide for important differences that are may affect your workflow.
+
 ## Installation
 
 There's several installation methods, and you're free to use whatever you want, but I personally cannot recommend [vim-plug](https://github.com/junegunn/vim-plug) enough, in part because of the previous line of text. Installation, if you expect a more or less working variant, should be done with:
@@ -20,6 +24,8 @@ Plug 'LunarWatcher/auto-pairs', {'branch': 'develop'}
 The develop branch contains improvements to the master branch. Note that this does not include the changes for 4.0.0; see the section below.
 
 **Note:** I highly recommend using `let g:AutoPairsCompatibleMaps = 0` with this plugin. Setting it to 0 changes various mappings to use a control-based variant rather than a meta-based variant. This is to prevent issues with various alt combinations also being letters on the keyboard layout, as well as keeping things consistent if new maps are added (new maps will largely not use meta-based keybinds).
+
+
 
 ### 4.0.0 rewrite
 

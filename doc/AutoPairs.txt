@@ -74,6 +74,14 @@ Note that setting |g:AutoPairsCompatibleMaps| to 0 is HIGHLY recommended.
 Future maps, if any are added, will be built around a ctrl-based system rather
 than a meta (alt)-based one.
 
+Requirements~
+
+Auto-pairs is fully self-contained. Consequently, it only has one requirement:
+Vim 7.4 or newer.
+
+4.0.0 may require a newer version; the master branch, as well as tags, follow
+3.x.y. Unless you explicitly source the 4.0.0 branch, the minimum requirement
+is 7.4.
 
 ------------------------------------------------------------------------------
                                                        *autopairs-contributing*
@@ -378,58 +386,74 @@ exists, both in the overall list, as well as the entry.
 ------------------------------------------------------------------------------
                                                     *autopairs-options-contents*
 
-Note that this list isn't entirely in order at the time of writing, but tries
-to link associated entries as close as possible.
+This list is a table of contents for the options, sorted by categories.
 
+Core~
 - |g:AutoPairs| (has buffer variant) (default: see the entry)
     Defines what pairs AutoPairs will complete
 - |g:AutoPairsCompleteOnlyOnSpace| (has a buffer variant) (default: 0)
     Defines whether or not there has to be a space (or EOL) to insert a pair
 - |g:AutoPairsShortcutToggle| (has a buffer variant) (default: see the entry)
     Defines the shortcut for toggling auto-pairs
-- |g:AutoPairsShortcutFastWrap| (has a buffer variant) (default: see the entry)
-    Defines the shortcut for fast wrap
-- |g:AutoPairsShortcutJump| (has a buffer variant) (default: see the entry)
-    Defines the shortcut for jumping to the first closed pair, regardless of
-    what that pair is
-- |g:AutoPairsShortcutBackInsert| (default: see the entry)
-    Defines the shortcut for undoing a flymode jump.
-- |g:AutoPairsShortcutIgnore| (default: <C-p><C-e>)
-    Defines the shortcut for ignoring the next pair.
-    Simpler option than toggling auto-pairs entirely.
-- |g:AutoPairsMapBS| (has a buffer variant) (default: 0)
-    Whether or not to map backspace
-- |g:AutoPairsMultilineBackspace| (has a buffer variant) (default: 0)
-    Whether or not to use multiline deletion
-- |g:AutoPairsMapCR| (has a buffer variant) (default: 1)
-    Whether or not to map enter
-- |g:AutoPairsCRKey| (has a buffer variant) (default: '<CR>')
-    Which key to use for the return action if |g:AutoPairsMapCR| is 1
-- |g:AutoPairsJumpBlacklist| (has buffer variant) (default: [])
-    Defines a set of close keybinds that don't trigger close skipping.
-- |g:AutoPairsNoJump| (has buffer variant) (default: 0)
-    Whether or not to allow skipping close pairs by typing the close character
-    for a given pair.
-- |g:AutoPairsCenterLine| (default: 1)
-    If |g:AutoPairsMapCR| is 1 and this option is 1, whether or not to center
-    the current line if it was relatively far down on the screen
-- |g:AutoPairsMapSpace| (default: 1)
-    Whether or not to map space
-- |g:AutoPairsFlyMode| (default: 0)
-    Whether or not to enable flymode. Please read |autopairs-flymode| before
-    enabling.
-- |g:AutoPairsShortcutMultilineClose| (default: <C-p>c)
-    Calls getchar() to get a close character. Either closes a pair, or jumps
-    to the nearest match.
+- |g:AutoPairsInitHook| (default: 0 (= null))
+    A pre-init hook for auto-pairs.
+- |g:AutoPairsExperimentalAutocmd| (default: 0)
+    Whether or not to use BufWinEnter instead of BufEnter
 - |g:AutoPairsDirectoryBlacklist| (default: [])
     Directories to disable auto-pairs in
 - |b:autopairs_enabled| ("default": 1)
     Whether or not auto-pairs is enabled in the buffer. Can also be used to
     toggle auto-pairs
-- |g:AutoPairsInitHook| (default: 0 (= null))
-    A pre-init hook for auto-pairs.
-- |g:AutoPairsSearchCloseAfterSpace| (has buffer variant) (default: 1)
-    Whether or not to check if the nearest close is after a space
+- |g:AutoPairsLanguagePairs| (default: see entry)
+    A set of pairs for different languages - useful for avoiding autocmds and
+    explicit definition of |b:AutoPairs|
+- |g:AutoPairsOpenBalanceBlacklist| (has a buffer variant) (default: [])
+    Contains a list of characters that don't trigger opening balance checks
+- |g:AutoPairsFiletypeBlacklist| (default: [])
+    Contains filetypes in which |b:autopairs_enabled| is 0 when entering the
+    file.
+
+Compat~
+- |g:AutoPairsCompatibleMaps| (default: 1)
+    Whether or not to use legacy keybinds (from jiangmiao/auto-pairs), or to
+    use new ones designed not to conflict with other maps, or with characters
+    in various languages.
+- |g:AutoPairsBackwardsCompat| (default: 0)
+    Exposes a function for other plugins that haven't been made compatible
+    with this fork, but that actively access it
+- |g:AutoPairsVersion|
+    This is not directly an option, but it defines the current version of
+    auto-pairs. Can be used for compatibility checks
+
+Backspace~
+- |g:AutoPairsMapBS| (has a buffer variant) (default: 0)
+    Whether or not to map backspace
+- |g:AutoPairsMultilineBackspace| (has a buffer variant) (default: 0)
+    Whether or not to use multiline deletion
+- |g:AutoPairsBSAfter| (has a buffer variant) (default: 1)
+    Whether or not to enable deleting a pair from behind
+- |g:AutoPairsBSIn| (has a buffer variant) (default: 1)
+    Whether or not to enable deleting a pair from within
+
+Newlines~
+- |g:AutoPairsMapCR| (has a buffer variant) (default: 1)
+    Whether or not to map enter
+- |g:AutoPairsCRKey| (has a buffer variant) (default: '<CR>')
+    Which key to use for the return action if |g:AutoPairsMapCR| is 1
+- |g:AutoPairsCenterLine| (default: 1)
+    If |g:AutoPairsMapCR| is 1 and this option is 1, whether or not to center
+    the current line if it was relatively far down on the screen
+- |g:AutoPairsReturnOnEmptyOnly| (has a buffer variant) (default: 1)
+    Whether or not the pair has to be empty to trigger the return action
+
+Jumping~
+- |g:AutoPairsJumpBlacklist| (has buffer variant) (default: [])
+    Defines a set of close keybinds that don't trigger close skipping.
+- |g:AutoPairsNoJump| (has buffer variant) (default: 0)
+    Whether or not to allow skipping close pairs by typing the close character
+    for a given pair.
+
+Quote management~
 - |g:AutoPairsSingleQuoteMode| (has buffer variant) (default: 2)
     How auto-pairs handles single quotes. Reading the documentation is highly
     recommended
@@ -439,59 +463,70 @@ to link associated entries as close as possible.
 - |g:AutoPairsSingleQuoteExpandFor| (has a buffer variant) (default: 'fbr')
     Character group defining characters that are exempt to auto-pairs ignoring
     letters while expanding.
-- |g:AutoPairsLanguagePairs| (default: see entry)
-    A set of pairs for different languages - useful for avoiding autocmds and
-    explicit definition of |b:AutoPairs|
-- |g:AutoPairsAutoLineBreak| (has a buffer variant) (default: [])
-    A set of opening characters that trigger an instant line break (as in
-    auto-pairs does the line break after the open character automagically)
 - |g:AutoPairsCarefulStringExpansion| (has a buffer variant) (default: 0)
     Whether or not to be careful when running CR on strings. See the entry for
     a full explanation
 - |g:AutoPairsQuotes| (has a buffer variant) (default: ["'", '"'])
     Defines which characters are considered quotes by
     |g:AutoPairsCarefulStringExpansion|
-- |g:AutoPairsOpenBalanceBlacklist| (has a buffer variant) (default: [])
-    Contains a list of characters that don't trigger opening balance checks
-- |g:AutoPairsMultilineFastWrap| (default: 0)
-    Whether or not to let fast wrap work across lines intentionally
-- |g:AutoPairsBackwardsCompat| (default: 0)
-    Exposes a function for other plugins that haven't been made compatible
-    with this fork, but that actively access it
-- |g:AutoPairsVersion|
-    This is not directly an option, but it defines the current version of
-    auto-pairs. Can be used for compatibility checks
-- |g:AutoPairsFlyModeList| (has a buffer variant) (default: '}\])')
-    Defines what close pairs trigger fly mode if |g:AutoPairsFlyMode| is 1
-- |g:AutoPairsMultibyteFastWrap| (has a buffer variant) (default: 1)
-    Whether or not to allow moving multibyte pairs with fast wrap
-- |g:AutoPairsFiletypeBlacklist| (default: [])
-    Contains filetypes in which |b:autopairs_enabled| is 0 when entering the
-    file.
-- |b:AutoPairsJumpRegex| (default: generated on-demand based on |b:AutoPairs|)
-    Largely for internal use, but defines how jumps are done when
-    |g:AutoPairsShortcutJump| is used.
-- |g:AutoPairsCompatibleMaps| (default: 1)
-    Whether or not to use legacy keybinds (from jiangmiao/auto-pairs), or to
-    use new ones designed not to conflict with other maps, or with characters
-    in various languages.
-- |g:AutoPairsReturnOnEmptyOnly| (has a buffer variant) (default: 1)
-    Whether or not the pair has to be empty to trigger the return action
-- |g:AutoPairsExperimentalAutocmd| (default: 0)
-    Whether or not to use BufWinEnter instead of BufEnter
+
+String and comment management~
+
 - |g:AutoPairsStringHandlingMode| (has a buffer variant) (default: 0)
     How auto-pairs handles strings. HIGHLY EXPERIMENTAL!
-- |g:AutoPairsMoveExpression| (has a buffer variant) (default: <C-p>%key)
-    Defines an expression that triggers the move feature. Please read the
-    entry before using.
-- |g:AutoPairsMultilineClose| (has a buffer variant) (default: 0)
-    Whether or not to search across lines when looking for close pairs.
-- |g:AutoPairsShortcutToggleMultilineClose| (has a buffer variant) (default: <C-p><C-m>)
-    What keybind to use for toggling |g:AutoPairsMultilineClose|
+
+
+Insertion behavior~
+- |g:AutoPairsAutoLineBreak| (has a buffer variant) (default: [])
+    A set of opening characters that trigger an instant line break (as in
+    auto-pairs does the line break after the open character automagically)
+
+Balancing~
 - |g:AutoPairsPreferClose| (default: 1)
     Whether to prefer closing over jumping.
 - |g:AutoPairsSearchEscape| (has a buffer variant) (default: 1)
     Whether or not to take backslashes into account when inserting pairs
+- |g:AutoPairsMultilineClose| (has a buffer variant) (default: 0)
+    Whether or not to search across lines when looking for close pairs.
+- |g:AutoPairsShortcutToggleMultilineClose| (has a buffer variant) (default: <C-p><C-m>)
+    What keybind to use for toggling |g:AutoPairsMultilineClose|
+- |g:AutoPairsSearchCloseAfterSpace| (has buffer variant) (default: 1)
+    Whether or not to check if the nearest close is after a space
+
+Fast wrap~
+- |g:AutoPairsMultilineFastWrap| (default: 0)
+    Whether or not to let fast wrap work across lines intentionally
+- |g:AutoPairsMultibyteFastWrap| (has a buffer variant) (default: 1)
+    Whether or not to allow moving multibyte pairs with fast wrap
+- |g:AutoPairsShortcutFastWrap| (has a buffer variant) (default: see the entry)
+    Defines the shortcut for fast wrap
+
+Misc. mapping~
+- |g:AutoPairsMapSpace| (default: 1)
+    Whether or not to map space
+
+Misc. navigation~
+                                                  *autopairs-navigation-options*
+
+- |g:AutoPairsFlyMode| (default: 0)
+    Whether or not to enable flymode. Please read |autopairs-flymode| before
+    enabling.
+- |g:AutoPairsFlyModeList| (has a buffer variant) (default: '}\])')
+    Defines what close pairs trigger fly mode if |g:AutoPairsFlyMode| is 1
+- |g:AutoPairsShortcutJump| (has a buffer variant) (default: see the entry)
+    Defines the shortcut for jumping to the first closed pair, regardless of
+    what that pair is
+- |g:AutoPairsShortcutBackInsert| (default: see the entry)
+    Defines the shortcut for undoing a flymode jump.
+- |g:AutoPairsShortcutIgnore| (default: <C-p><C-e>)
+    Defines the shortcut for ignoring the next pair.
+    Simpler option than toggling auto-pairs entirely.
+- |b:AutoPairsJumpRegex| (default: generated on-demand based on |b:AutoPairs|)
+    Largely for internal use, but defines how jumps are done when
+    |g:AutoPairsShortcutJump| is used.
+- |g:AutoPairsMoveExpression| (has a buffer variant) (default: <C-p>%key)
+    Defines an expression that triggers the move feature. Please read the
+    entry before using.
 
 ------------------------------------------------------------------------------
                                                        *g:AutoPairs* *b:AutoPairs*
@@ -768,6 +803,32 @@ This variable exists in a buffer variant~
 Default: 0
 
 Whether or not to use multiline deletion on supported pairs
+
+------------------------------------------------------------------------------
+                                                            *g:AutoPairsBSAfter*
+                                                                           int
+
+This variable exists in a buffer variant~
+Default: 1
+
+Whether or not to enable backspacing after a pair. Only takes effect if
+|g:AutoPairsMapBS| = 1
+
+Value = 0: []|<bs> -> [|
+Value = 1: []|<bs> -> |
+
+------------------------------------------------------------------------------
+                                                               *g:AutoPairsBSIn*
+                                                                           int
+
+This variable exists in a buffer variant~
+Default: 1
+
+Whether or not to enable backspacing within a pair. Only takes effect if
+|g:AutoPairsMapBS| = 1.
+
+Value = 0: (|), <bs> at | -> |)
+Value = 1: (|), <bs> at | -> |
 
 ------------------------------------------------------------------------------
                                                               *g:AutoPairsMapCR*
