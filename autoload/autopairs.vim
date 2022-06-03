@@ -248,7 +248,6 @@ func! autopairs#AutoPairsDelete()
         return "\<BS>"
     end
 
-    
     let [before, after, ig] = autopairs#Strings#getline(b:AutoPairsMultilineBackspace)
 
     if b:AutoPairsBSIn == 1
