@@ -418,9 +418,6 @@ Compat~
     Whether or not to use legacy keybinds (from jiangmiao/auto-pairs), or to
     use new ones designed not to conflict with other maps, or with characters
     in various languages.
-- |g:AutoPairsBackwardsCompat| (default: 0)
-    Exposes a function for other plugins that haven't been made compatible
-    with this fork, but that actively access it
 - |g:AutoPairsVersion|
     This is not directly an option, but it defines the current version of
     auto-pairs. Can be used for compatibility checks

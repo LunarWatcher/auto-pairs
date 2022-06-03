@@ -7,6 +7,14 @@
 ## Removed
 * `g:AutoPairsBackwardsCompat`, as it doesn't appear to have any uses at this time.
 
+## Added
+* `g:AutoPairsBSIn`
+* `g:AutoPairsBSAfter`
+* Troubleshooting docs for Rust
+
+## Fixed
+* Duplicate tags in help docs ([#59](https://github.com/LunarWatcher/auto-pairs/pull/59))
+
 # 3.0.1
 `let g:AutoPairsVersion = 30060`
 
