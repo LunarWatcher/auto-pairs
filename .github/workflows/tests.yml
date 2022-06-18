@@ -1,12 +1,11 @@
 name: Tests
 on:
   push:
-    branches: [ master ]
+    branches: [ master, develop, develop-4.0.0 ]
   pull_request:
-    branches: [ master ]
+    branches: [ master, develop, develop-4.0.0 ]
 jobs:
   pre-commit:
-    if: "!contains(github.event.head_commit.message, '[skip-ci]')"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -16,7 +15,6 @@ jobs:
           python3 -m pip install pre-commit
           pre-commit run --all-files
   test-ubuntu:
-    if: "!contains(github.event.head_commit.message, '[skip-ci]')"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -27,7 +25,6 @@ jobs:
           git clone https://github.com/thinca/vim-themis
           ./vim-themis/bin/themis
   test-mac:
-    if: "!contains(github.event.head_commit.message, '[skip-ci]')"
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
@@ -38,7 +35,6 @@ jobs:
           git clone https://github.com/thinca/vim-themis
           ./vim-themis/bin/themis
   test-windows:
-    if: "!contains(github.event.head_commit.message, '[skip-ci]')"
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
