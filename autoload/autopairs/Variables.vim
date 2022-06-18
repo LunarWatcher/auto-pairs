@@ -109,7 +109,7 @@ fun! autopairs#Variables#_InitVariables()
 
     call s:define('g:AutoPairsReturnOnEmptyOnly', 1)
 
-    call s:define('g:AutoPairsExperimentalAutocmd', 0)
+    call s:define('g:AutoPairsExperimentalAutocmd', 1)
     call s:define('g:AutoPairsStringHandlingMode', 0)
     call s:define('g:AutoPairsSingleQuotePrefixGroup', '^|\W')
 
