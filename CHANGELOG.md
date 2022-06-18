@@ -1,3 +1,9 @@
+# 3.0.3
+`let g:AutoPairsVersion = 30062`
+
+## Changed
+* Enabled experimental autocmd by default; preparing for the eventual deprecation of it
+
 # 3.0.2
 `let g:AutoPairsVersion = 30061`
 

@@ -17,7 +17,7 @@ endif
 " Current version; not representative of tags or real versions, but purely
 " meant as a number associated with the version. Semantic meaning on the first
 " digit will take place. See the documentation for more details.
-let g:AutoPairsVersion = 30061
+let g:AutoPairsVersion = 30062
 
 let s:save_cpo = &cpoptions
 set cpoptions&vim
