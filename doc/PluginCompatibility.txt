@@ -6,6 +6,7 @@ Table of help documents~
     |AutoPairs.txt|
     |AutoPairsCompatibility| (you are here)
     |AutoPairsTroubleshooting|
+    |AutoPairsHowTo|
 
 ================================================================================
 Table of Contents                               *autopairs-compatibility-contents*

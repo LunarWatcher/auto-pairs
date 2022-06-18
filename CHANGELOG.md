@@ -1,3 +1,14 @@
+# 4.0.0-alpha1
+`let g:AutoPairsVersion = 40000`
+
+## Changed
+
+* `g:AutoPairsCompatibleMaps` is now 0 by default.
+
+## Added
+* Documentation with some basic how-to guides for auto-pairs features. These can technically be figured out by just reading the documentation, but it's easier to compress it into concrete guides.
+* Documentation for krasjet's character whitelist
+
 # 3.0.2
 `let g:AutoPairsVersion = 30061`
 

@@ -24,6 +24,9 @@ Table of help documents~
         plugins.
     |AutoPairsTroubleshooting|
         Contains answers to known and common problems with auto-pairs.
+    |AutoPairsHowTo|
+        Contains a set of concrete guides for common auto-pairs
+        configurations.
 
 Note: While the documents aim to contain only categorically relevant info,
 there are cases where this won't happen. There are a number of reasons for
@@ -391,8 +394,6 @@ This list is a table of contents for the options, sorted by categories.
 Core~
 - |g:AutoPairs| (has buffer variant) (default: see the entry)
     Defines what pairs AutoPairs will complete
-- |g:AutoPairsCompleteOnlyOnSpace| (has a buffer variant) (default: 0)
-    Defines whether or not there has to be a space (or EOL) to insert a pair
 - |g:AutoPairsShortcutToggle| (has a buffer variant) (default: see the entry)
     Defines the shortcut for toggling auto-pairs
 - |g:AutoPairsInitHook| (default: 0 (= null))
@@ -412,6 +413,15 @@ Core~
 - |g:AutoPairsFiletypeBlacklist| (default: [])
     Contains filetypes in which |b:autopairs_enabled| is 0 when entering the
     file.
+
+Whitespace and autocomplete~
+- |g:AutoPairsCompleteOnlyOnSpace| (has a buffer variant) (default: 0)
+    Defines whether or not there has to be a space (or EOL) to insert a pair.
+- |g:AutoPairsAutoBuildSpaceWhitelist| (has a buffer variant) (default: 1)
+    Whether or not to automatically generate parts of the character whitelist
+- |g:AutoPairsNextCharWhitelist| (has a buffer variant) (default: [])
+    Defines additional characters to add to the list of exceptions for
+    |g:AutoPairsCompleteOnlyOnSpace|
 
 Compat~
 - |g:AutoPairsCompatibleMaps| (default: 1)
@@ -668,8 +678,55 @@ Defines whether or not to require a space or end of the line to complete. If
 this is 1 and you try: `{|word`, you'll get `{|word`, rather than `{|}word`
 if this is 0.
 
+Note that there are a few exceptions to this rule, represented as a part of an
+internal variable; |b:autopairs_whitespace_exceptions|
+
 3.0.0-alpha5:~
     renamed from *g:AutoPairsCompleteOnSpace* to |g:AutoPairsCompleteOnlyOnSpace|
+
+------------------------------------------------------------------------------
+                                            *g:AutoPairsAutoBuildSpaceWhitelist*
+                                                                        number
+
+This variable also exists in a buffer variant~
+Default: 1
+
+Whether or not to prepopulate |g:AutoPairsNextCharWhitelist|
+
+------------------------------------------------------------------------------
+                                                  *g:AutoPairsNextCharWhitelist*
+                                                                          list
+
+This variable also exists in a buffer variant~
+Default: [] when |g:AutoPairsAutoBuildSpaceWhitelist| is 0; otherwise, dynamic
+based on close pairs not in *g:AutoPairsQuoteClosingChar* , which is a list of
+characters that count as closing a string. Must not be confused with
+|g:AutoPairsQuotes|, which are currently two different options. This may
+change in the future.
+
+Only takes effect when |g:AutoPairsCompleteOnlyOnSpace| = 1 (particularly,
+when the buffer variant is 1)
+
+Takes any number of characters that act as an exception to only inserting when
+there's whitespace after the cursor. Note that this variable does NOT support
+multiple bytes per exception; this will not change.
+
+Read: ['a', 'd', 'e'] is okay, ['ac', 'dc', 'e'] is not
+
+------------------------------------------------------------------------------
+                                             *b:autopairs_whitespace_exceptions*
+                                                                    [internal]
+
+This variable should not be used directly~
+
+Contains a regex of close pairs that count as an exception to whitespace only
+completion when |g:AutoPairsCompleteOnlyOnSpace| is 1.
+
+This variable should not be used directly. There are two control variables:
+
+* To enable or disable automatic population of close pairs that aren't string,
+    use |g:AutoPairsAutoBuildSpaceWhitelist|
+* To manually add pairs to this list, use |g:AutoPairsNextCharWhitelist|
 
 ------------------------------------------------------------------------------
                                                      *g:AutoPairsShortcutToggle*

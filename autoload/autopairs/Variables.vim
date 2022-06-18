@@ -46,7 +46,7 @@ fun! autopairs#Variables#_InitVariables()
     call s:define('g:AutoPairsDirectoryBlacklist', [])
     call s:define('g:AutoPairsFiletypeBlacklist', [])
 
-    call s:define('g:AutoPairsCompatibleMaps', 1)
+    call s:define('g:AutoPairsCompatibleMaps', 0)
 
     " Olivia: set to 0 based on my own personal biases
     call s:define('g:AutoPairsMapBS', 0)
@@ -70,6 +70,8 @@ fun! autopairs#Variables#_InitVariables()
     " Variable controlling whether or not to require a space or EOL to complete
     " bracket pairs. Extension off Krasjet.
     call s:define('g:AutoPairsCompleteOnlyOnSpace', 0)
+    call s:define('g:AutoPairsAutoBuildSpaceWhitelist', 1)
+    call s:define('g:AutoPairsDefaultSpaceWhitelist', '')
 
     call s:define('g:AutoPairsShortcutJump', g:AutoPairsCompatibleMaps ? '<M-n>' : '<C-p><C-s>')
 
@@ -132,11 +134,14 @@ fun! autopairs#Variables#_InitBufferVariables()
     call s:define('b:autopairs_enabled', 1)
     call s:define('b:AutoPairs', autopairs#AutoPairsDefaultPairs())
     call s:define('b:AutoPairsQuoteClosingChar', copy(g:AutoPairsQuoteClosingChar))
-    call s:define('b:AutoPairsNextCharWhitelist', copy(g:AutoPairsNextCharWhitelist))
     call s:define('b:AutoPairsOpenBalanceBlacklist', copy(g:AutoPairsOpenBalanceBlacklist))
     call s:define('b:AutoPairsSingleQuoteBalanceCheck', g:AutoPairsSingleQuoteBalanceCheck)
     call s:define('b:AutoPairsMoveCharacter', g:AutoPairsMoveCharacter)
+
     call s:define('b:AutoPairsCompleteOnlyOnSpace', g:AutoPairsCompleteOnlyOnSpace)
+    call s:define('b:AutoPairsAutoBuildSpaceWhitelist', g:AutoPairsAutoBuildSpaceWhitelist)
+    call s:define('b:AutoPairsNextCharWhitelist', copy(g:AutoPairsNextCharWhitelist))
+
     call s:define('b:AutoPairsFlyMode', g:AutoPairsFlyMode)
     call s:define('b:AutoPairsNoJump', g:AutoPairsNoJump)
     call s:define('b:AutoPairsSearchCloseAfterSpace', g:AutoPairsSearchCloseAfterSpace)

@@ -116,11 +116,12 @@ fun! autopairs#Keybinds#mapPairKeybinds()
 
         " Krasjet: add any non-string closing characters to a list
         let b:AutoPairsList += [[open, stringClose, opt]]
-        " What in the fuck is this?
-        " This is arguably Krasjet's least documented feature. Figure out what
-        " it does pl0x
-        if stringClose !=? '' && stringClose !~# '\V\[' .. escape(join(b:AutoPairsQuoteClosingChar, ''), '\') .. ']'
-            let b:autopairs_next_char_whitelist += [escape(stringClose, '\')]
+
+        " Inserts all non-string close characters into a regex for matching
+        " whitelisted characters for the following character
+        if b:AutoPairsAutoBuildSpaceWhitelist &&
+                    \ stringClose !=? '' && stringClose !~# '\V\[' .. escape(join(b:AutoPairsQuoteClosingChar, ''), '\') .. ']'
+            let b:autopairs_whitespace_exceptions += [escape(stringClose, '\')]
         end
     endfor
 
@@ -129,13 +130,13 @@ fun! autopairs#Keybinds#mapPairKeybinds()
 
     " Krasjet: add whitelisted strings to the list
     for str in b:AutoPairsNextCharWhitelist
-        let b:autopairs_next_char_whitelist += [escape(str,'\')]
+        let b:autopairs_whitespace_exceptions += [escape(str,'\')]
     endfor
     " Krasjet: construct a regex for whitelisted strings
-    if empty(b:autopairs_next_char_whitelist)
-        let b:autopairs_next_char_whitelist = '^$'
+    if empty(b:autopairs_whitespace_exceptions)
+        let b:autopairs_whitespace_exceptions = '^$'
     else
-        let b:autopairs_next_char_whitelist = '^\V\(' . join(b:autopairs_next_char_whitelist, '\|') . '\)'
+        let b:autopairs_whitespace_exceptions = '^\V\(' . join(b:autopairs_whitespace_exceptions, '\|') . '\)'
     endif
 
     " Krasjet: add blacklisted open strings to the list
