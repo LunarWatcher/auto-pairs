@@ -1,3 +1,7 @@
+if !has('nvim') && has('vimscript-4')
+    scriptversion 4
+endif
+
 fun! s:define(name, default)
     " g:AutoPairsForceDefine is a variable meant for tests.
     " It's undocumented because it shouldn't be used outside testing,
@@ -121,12 +125,6 @@ fun! autopairs#Variables#_InitVariables()
 
     call s:define("g:AutoPairsBSAfter", 1)
     call s:define("g:AutoPairsBSIn", 1)
-
-    if exists('g:AutoPairsEnableMove')
-        echom "g:AutoPairsEnableMove has been deprecated. If you set it to 1, you may remove it."
-                    \ . " If you set it to 0, let g:AutoPairsMoveExpression = '' to disable move again."
-                    \ . "  See the documentation for both variables for more details."
-    endif
 endfun
 
 

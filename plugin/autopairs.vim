@@ -7,6 +7,11 @@
 if exists('g:AutoPairsLoaded') || &cp
     finish
 end
+
+if !has('nvim') && has('vimscript-4')
+    scriptversion 4
+endif
+
 let g:AutoPairsLoaded = 1
 
 if exists('g:AutoPairsExperimentalAutocmd') && g:AutoPairsExperimentalAutocmd
@@ -29,6 +34,10 @@ command! AutoPairsEnable let b:autopairs_enabled = 1 | echo "Enabled auto-pairs"
 " Plugin compatibility
 
 " https://github.com/mg979/vim-visual-multi
+" NOTE: the typo does NOT stem from auto-pairs; blame vim-visual-multi for
+" that. 
+" If it ever changes, this will break. if it does, this is where to look to
+" fix it.
 if exists('g:VM_plugins_compatibilty') || exists('*vm#maps#init')
     " The test doesn't include any of the `exists`s, because it's pretty damn
     " obvious that they exist when the plugin creating them is setting it.

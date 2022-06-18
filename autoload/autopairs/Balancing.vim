@@ -1,3 +1,7 @@
+if !has('nvim') && has('vimscript-4')
+    scriptversion 4
+endif
+
 fun! autopairs#Balancing#doInsert(open, close, openPair, before, afterline, target)
     let open = a:open
     let close = a:close
