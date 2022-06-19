@@ -1,0 +1,13 @@
+Describe Whitespace-restricted completion
+    Before each
+        call autopairs#Variables#_InitVariables()
+    End
+    It should support the basic functionality
+        let g:AutoPairsCompleteOnlyOnSpace = 1
+        new | only!
+
+        call Expect("[").ToMatch("[]")
+        call Expect("[[").ToMatch("[[]]")
+        call Expect("[a\<left>[").ToMatch("[[a]")
+    End
+End
