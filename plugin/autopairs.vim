@@ -35,7 +35,7 @@ command! AutoPairsEnable let b:autopairs_enabled = 1 | echo "Enabled auto-pairs"
 
 " https://github.com/mg979/vim-visual-multi
 " NOTE: the typo does NOT stem from auto-pairs; blame vim-visual-multi for
-" that. 
+" that.
 " If it ever changes, this will break. if it does, this is where to look to
 " fix it.
 if exists('g:VM_plugins_compatibilty') || exists('*vm#maps#init')

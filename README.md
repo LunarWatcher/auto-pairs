@@ -21,22 +21,14 @@ To use experimental changes before they're deployed, use:
 Plug 'LunarWatcher/auto-pairs', {'branch': 'develop'}
 ```
 
-The develop branch contains improvements to the master branch. Note that this does not include the changes for 4.0.0; see the section below.
+The develop branch contains improvements to the master branch. For the experimental 4.0.0 upgrade (you're here!), use:
 
-**Note:** I highly recommend using `let g:AutoPairsCompatibleMaps = 0` with this plugin. Setting it to 0 changes various mappings to use a control-based variant rather than a meta-based variant. This is to prevent issues with various alt combinations also being letters on the keyboard layout, as well as keeping things consistent if new maps are added (new maps will largely not use meta-based keybinds).
-
-
-
-### 4.0.0 rewrite
-
-v3.0.0 introduced a few years of feature requests and necessary bugfixes. Jumping into an existing system, there's a lot of suboptimal code and features that're blocked, largely due to technical debt. 4.0.0 aims to get rid of the tech debt, improve performance, and continue to improve features.
-
-4.0.0 is currently a long-term project. Features will still be added to the master branch, currently on 3.x.x, until 4.0.0 is getting ready.
-
-To use the 4.0.0 rewrite, use:
 ```vim
 Plug 'LunarWatcher/auto-pairs', {'branch': 'develop-4.0.0'}
 ```
+
+**Note:** As of 4.0.0, `let g:AutoPairsCompatibleMaps = 0` is default. Set the variable to 1 to use jiangmiao-compatible keybinds.
+
 
 
 ## Running tests (not required)
@@ -64,6 +56,7 @@ At this point, there's far too many differences to list all of them. Aside remov
 * QOL improvements for matching
 * Balance checks with advanced modes (See `:h g:AutoPairsStringHandlingMode`)
 * ... Lots of bugfixes and general improvements
+* Better standards
 * Support and continued development :)
 
 The entire list is too long to place in its entirety here -- the documentation should cover all the variables, so reading it should give you a complete idea of the changes.

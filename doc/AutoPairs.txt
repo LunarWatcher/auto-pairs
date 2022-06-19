@@ -80,11 +80,11 @@ than a meta (alt)-based one.
 Requirements~
 
 Auto-pairs is fully self-contained. Consequently, it only has one requirement:
-Vim 7.4 or newer.
+Vim 8.1 with patch 1114 or newer.
 
 4.0.0 may require a newer version; the master branch, as well as tags, follow
 3.x.y. Unless you explicitly source the 4.0.0 branch, the minimum requirement
-is 7.4.
+is still Vim 8.1 with patch 1114.
 
 ------------------------------------------------------------------------------
                                                        *autopairs-contributing*
