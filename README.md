@@ -9,6 +9,8 @@ If you're migrating from jiangmiao's version, it's highly recommended that you r
 
 ## Installation
 
+**NOTE:** Auto-pairs currently requires at least vim 8.1 with patch 1114. See [#37](https://github.com/LunarWatcher/auto-pairs/discussions/37)
+
 There's several installation methods, and you're free to use whatever you want, but I personally cannot recommend [vim-plug](https://github.com/junegunn/vim-plug) enough, in part because of the previous line of text. Installation, if you expect a more or less working variant, should be done with:
 
 ```vim
