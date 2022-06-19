@@ -213,7 +213,7 @@ fun! autopairs#Strings#countHighlightMatches(open, close, opt, highlightGroup)
 
         let offset = 0
         while offset < last
-            let pos = match(line, '\V' . a:close, offset)
+            let pos = match(line, '\V' .. a:close, offset)
             if pos == -1
                 break
             endif

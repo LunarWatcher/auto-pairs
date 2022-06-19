@@ -144,14 +144,14 @@ fun! autopairs#Keybinds#mapPairKeybinds()
     endif
 
     " Krasjet: add blacklisted open strings to the list
-    let b:autopairs_open_blacklist = []
+    let b:autopairs_balance_blacklist = []
     for str in b:AutoPairsOpenBalanceBlacklist
-        let b:autopairs_open_blacklist += [escape(str,'\')]
+        let b:autopairs_balance_blacklist += [escape(str,'\')]
     endfor
-    if empty(b:autopairs_open_blacklist)
-        let b:autopairs_open_blacklist = '^$'
+    if empty(b:autopairs_balance_blacklist)
+        let b:autopairs_balance_blacklist = '^$'
     else
-        let b:autopairs_open_blacklist = '\V\('..join(b:autopairs_open_blacklist, '\|') .. '\)'
+        let b:autopairs_balance_blacklist = '\V\('..join(b:autopairs_balance_blacklist, '\|') .. '\)'
     endif
 
     for item in b:AutoPairsList

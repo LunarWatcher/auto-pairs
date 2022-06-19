@@ -500,6 +500,9 @@ Balancing~
 - |g:AutoPairsSearchCloseAfterSpace| (has buffer variant) (default: 1)
     Whether or not to check if the nearest close is after a space
 
+- |g:AutoPairsOpenBalanceBlacklist| (has a buffer variant) (default: [])
+    List of characters to ignore when doing extended balance checking
+
 Fast wrap~
 - |g:AutoPairsMultilineFastWrap| (default: 0)
     Whether or not to let fast wrap work across lines intentionally
@@ -727,6 +730,20 @@ This variable should not be used directly. There are two control variables:
 * To enable or disable automatic population of close pairs that aren't string,
     use |g:AutoPairsAutoBuildSpaceWhitelist|
 * To manually add pairs to this list, use |g:AutoPairsNextCharWhitelist|
+------------------------------------------------------------------------------
+                                               *g:AutoPairsOpenBalanceBlacklist*
+                                                                    list[char]
+
+Has a buffer variant~
+Default: []
+
+Contains a list of characters that are exceptions to auto-balancing; i.e.
+pairs that fully ignore the auto-balancing rules.
+
+Similarly to |g:AutoPairsNextCharWhitelist|, this variable only supports
+single characters, and not multibyte values.
+
+Used to populate an internal variable that does the actual heavy lifting.
 
 ------------------------------------------------------------------------------
                                                      *g:AutoPairsShortcutToggle*

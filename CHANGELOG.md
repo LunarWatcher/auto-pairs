@@ -4,10 +4,12 @@
 ## Changed
 
 * `g:AutoPairsCompatibleMaps` is now 0 by default.
+* Added enforcement of scriptversion 4 to all files
 
 ## Added
 * Documentation with some basic how-to guides for auto-pairs features. These can technically be figured out by just reading the documentation, but it's easier to compress it into concrete guides.
-* Documentation for krasjet's character whitelist
+* Documentation for krasjet's character whitelist, and first-class support for it.
+* Documentation and first-class support for Krasjet's balance blacklist
 
 # 3.0.3
 `let g:AutoPairsVersion = 30062`
