@@ -1,7 +1,7 @@
 # Auto Pairs
 
 [![Tests](https://github.com/LunarWatcher/auto-pairs/actions/workflows/tests.yml/badge.svg)](https://github.com/LunarWatcher/auto-pairs/actions/workflows/tests.yml)
-[![Minimum Vim version 8.1 patch 1114](https://img.shields.io/badge/Vim-8.1%201--1114%20or%20newer-%23FFC0CB)](//github.com/vim/vim)
+[![Minimum Vim version 8.1 patch 1114](https://img.shields.io/badge/Vim-8.1%201--1114%20or%20newer-%23FFC0CB?logo=vim&labelColor=019833)](//github.com/vim/vim)
 
 Insert or delete brackets, parens, and quotes in pair: a maintained fork of [jiangmiao/auto-pairs](https://github.com/jiangmiao/auto-pairs)
 
