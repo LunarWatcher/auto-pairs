@@ -1,13 +1,46 @@
 Describe Whitespace-restricted completion
     Before each
         call autopairs#Variables#_InitVariables()
+        let g:AutoPairsCompleteOnlyOnSpace = 1
     End
     It should support the basic functionality
-        let g:AutoPairsCompleteOnlyOnSpace = 1
         new | only!
 
         call Expect("[").ToMatch("[]")
         call Expect("[[").ToMatch("[[]]")
         call Expect("[a\<left>[").ToMatch("[[a]")
+        let b:AutoPairsCompleteOnlyOnSpace = 0
+        call Expect("[a\<left>[").ToMatch("[[]a]")
+    End
+    It should support fully disabling the whitelist
+        let g:AutoPairsAutoBuildSpaceWhitelist = 0
+        new | only!
+
+        call Expect("[").ToMatch("[]")
+        call Expect("[[").ToMatch("[[]")
+
+        call Expect("[ \<left>[").ToMatch("[[]  ]")
+        call Expect("[b\<left>[").ToMatch("[[b]")
+    End
+    It should support a whitelist without auto-building one
+
+        let g:AutoPairsAutoBuildSpaceWhitelist = 0
+        let g:AutoPairsNextCharWhitelist = ['a', ']']
+        new | only!
+        call Expect("[").ToMatch("[]")
+        call Expect("[[").ToMatch("[[]]")
+        call Expect("[a\<left>[").ToMatch("[[]a]")
+        call Expect("[b\<left>[").ToMatch("[[b]")
+    End
+    It should support adding to the whitelist when auto-building
+
+        let g:AutoPairsNextCharWhitelist = ['a', ']']
+        new | only!
+
+        call Expect("[").ToMatch("[]")
+        call Expect("[[").ToMatch("[[]]")
+
+        call Expect("[a\<left>[").ToMatch("[[]a]")
+        call Expect("[b\<left>[").ToMatch("[[b]")
     End
 End
