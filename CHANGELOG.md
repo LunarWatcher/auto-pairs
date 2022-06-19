@@ -6,10 +6,14 @@
 * `g:AutoPairsCompatibleMaps` is now 0 by default.
 * Added enforcement of scriptversion 4 to all files
 
+## Fixed
+* Minimum Vim version is now correctly listed as 8.1 patch 1114; I severely misread the minimum required version before.
+
 ## Added
 * Documentation with some basic how-to guides for auto-pairs features. These can technically be figured out by just reading the documentation, but it's easier to compress it into concrete guides.
-* Documentation for krasjet's character whitelist, and first-class support for it.
+* Documentation for Krasjet's space-only completion exceptions, and first-class support for it.
 * Documentation and first-class support for Krasjet's balance blacklist
+* Tests for both the character whitelist for only completing on space, and the balance check blacklist.
 
 # 3.0.3
 `let g:AutoPairsVersion = 30062`
