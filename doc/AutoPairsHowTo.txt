@@ -21,7 +21,7 @@ About this document                                      *autopairs-howto-about*
 This document is for a concrete list of common questions and answers regarding
 commonly asked-about auto-pairs configurations.
 
-Use *autopairs-howto-contents* to navigate the contents of this file.
+Use |autopairs-howto-contents| to navigate the contents of this file.
 If you have anything you feel fits in this document, and that others would
 benefit from, consider opening a PR with your addition. New sections are added
 last, unless they fit better as a subsection. See other sections for examples.

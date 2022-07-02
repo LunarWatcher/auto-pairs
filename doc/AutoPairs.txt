@@ -500,9 +500,6 @@ Balancing~
 - |g:AutoPairsSearchCloseAfterSpace| (has buffer variant) (default: 1)
     Whether or not to check if the nearest close is after a space
 
-- |g:AutoPairsOpenBalanceBlacklist| (has a buffer variant) (default: [])
-    List of characters to ignore when doing extended balance checking
-
 Fast wrap~
 - |g:AutoPairsMultilineFastWrap| (default: 0)
     Whether or not to let fast wrap work across lines intentionally
@@ -1250,20 +1247,6 @@ This variable also exists in a buffer variant.~
 Controls what openers trigger |g:AutoPairsCarefulStringExpansion|. Note that
 for implementation reasons, this only works when the open and close characters
 are the same.
-
-------------------------------------------------------------------------------
-                                               *g:AutoPairsOpenBalanceBlacklist*
-                                                                         array
-This variable also exists in a buffer variant.~
-
-Default: []
-
-Blacklist for checking for balance before inserting.
-
-3.0.0-beta3:~
-    * Made the default [], because defaulting to quotes triggered weird
-      behavior, and I can't remember the rationale for adding them in the
-      first place
 
 ------------------------------------------------------------------------------
                                                   *g:AutoPairsMultilineFastWrap*
