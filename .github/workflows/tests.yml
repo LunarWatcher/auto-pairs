@@ -53,4 +53,12 @@ jobs:
         run: vim --version
       - name: Run tests
         run: |
+          # TL;DR:
+          # Run helptags doc
+          # If an error happens, the try-catch catches it. Echoerr v:exception then logs it
+          # and aborts the rest of that command. If it doesn't error, the `qa` is executed,
+          # and vim exits normally, resulting in the last -c not being executed.
+          # The last -c is only executed if an error occurs, and cq is exiting vim with an error,
+          # which causes the CI to observe teh error as well, and causing a proper CI failure.
+          # Stonks!
           vim -c "try | helptags doc | catch | echoerr v:exception | endtry | qa" -c "cq"
