@@ -53,4 +53,4 @@ jobs:
         run: vim --version
       - name: Run tests
         run: |
-          vim -c "helptags doc" -c "qa"
+          vim -c "helptags doc"
