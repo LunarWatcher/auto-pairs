@@ -499,11 +499,7 @@ Balancing~
     What keybind to use for toggling |g:AutoPairsMultilineClose|
 - |g:AutoPairsSearchCloseAfterSpace| (has buffer variant) (default: 1)
     Whether or not to check if the nearest close is after a space
-    *a* 
 
-*b*
-
-    *a*
 Fast wrap~
 - |g:AutoPairsMultilineFastWrap| (default: 0)
     Whether or not to let fast wrap work across lines intentionally
