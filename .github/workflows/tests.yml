@@ -45,3 +45,12 @@ jobs:
         run: |
           git clone https://github.com/thinca/vim-themis
           bash -c "./vim-themis/bin/themis"
+  test-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Versions
+        run: vim --version
+      - name: Run tests
+        run: |
+          vim -c "helptags doc" -c "qa"
