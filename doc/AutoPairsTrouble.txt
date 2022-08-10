@@ -18,6 +18,7 @@ Table of Contents                           *autopairs-troubleshooting-contents*
     3. Uninstalling ......................... |autopairs-uninstalling|
         1. Vim views ........................ |autopairs-uninstall-views|
     4. Rust ................................. |autopairs-rust|
+    5. Enter to insert auto-complete ........ |autopairs-autocomplete|
 
 ==============================================================================
 1. General troubleshooting                           *autopairs-troubleshooting-general*
@@ -179,5 +180,39 @@ The Rust plugin sets these pairs: >
 All of which are already enabled by default. You're not losing any pairs by
 setting the option, but by letting it be 0, you lose any other defined pairs
 -- including your custom pairs.
+
+==============================================================================
+5. Enter to insert auto-complete                        *autopairs-autocomplete*
+
+See also: https://github.com/LunarWatcher/auto-pairs/issues/66
+
+Due to the way Vim's input system works, if you map `<CR>` to configure
+auto-complete insertions, you can and will see auto-pairs act weirdly if
+|g:AutoPairsMapCR| is set.
+
+There's a large number of auto-complete plugins, and a large number of
+different systems. Several modern auto-complete plugins are additionally
+async, which adds a layer of complexity.
+
+The execution order of auto-pairs and auto-complete plugins, though
+particularly coc.nvim has been demonstrated to do this, isn't deterministic.
+coc's timeout may or may not fire in time for auto-pairs to have completed,
+and if it fires before auto-pairs has a chance to do anything, `pumvisible()`
+or similar isn't viable.
+
+Simply put, the pum may have closed by the time auto-pairs is executed. Simply
+put, there's no easy way to fix this behavior.
+
+Workarounds~
+
+The first option is disabling |g:AutoPairsMapCR|, and changing your map to
+incorporate `\<cr>\<C-r>=autopairs#Keybinds#IgnoreInsertEnter('autopairs#AutoPairsReturn')\<cr>`
+into your mapping. Auto-pairs simply wasn't meant for this type of use, so
+yes, the command is nasty. This has to be as the fallback to the pum being
+visible for a custom `<CR>` map. This is left as an exercise to the reader.
+
+Alternative B... stop using `<CR>` to insert the completion match, and get
+used to <C-y>, which is a default Vim mapping for completion insertion. Or, of
+course, map completion insertion to an altogether different key.
 
 vim:ft=help
