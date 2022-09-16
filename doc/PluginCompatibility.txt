@@ -49,9 +49,12 @@ it makes no practical difference.
                                                              *telescope-autopairs*
 
 COMPATIBILITY STATUS
-Poor (bug in nvim; requires hacks)
+Currently good
 
-Description~
+Known bug #1: auto-pairs runs in terminal buffers~
+FIXED
+Update to 0.6.0 or newer
+---
 Auto-pairs doesn't work in Telescope, by design. The same goes for terminal
 buffers in Vim and Neovim.
 

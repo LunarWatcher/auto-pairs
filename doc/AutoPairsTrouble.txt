@@ -19,6 +19,8 @@ Table of Contents                           *autopairs-troubleshooting-contents*
         1. Vim views ........................ |autopairs-uninstall-views|
     4. Rust ................................. |autopairs-rust|
     5. Enter to insert auto-complete ........ |autopairs-autocomplete|
+    6. Test failures (and related errors) ... |autopairs-test-failures|
+        1. Autocmd and syntax errors ........ |autopairs-typescript-errors|
 
 ==============================================================================
 1. General troubleshooting                           *autopairs-troubleshooting-general*
@@ -214,5 +216,38 @@ visible for a custom `<CR>` map. This is left as an exercise to the reader.
 Alternative B... stop using `<CR>` to insert the completion match, and get
 used to <C-y>, which is a default Vim mapping for completion insertion. Or, of
 course, map completion insertion to an altogether different key.
+
+==============================================================================
+6. Test failures (and related errors)                  *autopairs-test-failures*
+
+------------------------------------------------------------------------------
+6.1. TypeScript errors                             *autopairs-typescript-errors*
+
+Type: Vim bug
+Status: Fixed in later versions of Vim. Test fails can be ignored
+
+I've done minimal research into this problem, so not sure whether this is
+exclusively a problem with 
+
+The "Contextual balancing should cooperate with everything should work in
+typescript" test fails in at least Vim 9.0.263, for an unknown reason.
+
+This is a bug in Vim itself, and can only be solved by updating Vim. 9.0.482
+is a known good patch.
+
+Example of an affected error log: >
+    not ok 49 - Contextual balancing should cooperate with everything should work in typescript
+    # function 188() abort dict  Line:1  [ Absolute Line: 34 ]  (/tmp/vwcnP9s/12)
+    # function BufNewFile Autocommands for "*.ts"()  This function is already deleted.
+    # function FileType Autocommands for "*"()  This function is already deleted.
+    # function Syntax Autocommands for "*"()  This function is already deleted.
+    # function function <SNR>21_SynSet()  This function is already deleted.
+    # function script()  This function is already deleted.
+    # 
+    # Vim(source):E484: Can't open file /usr/local/share/vim/vim90/syntax/shared/typescriptcommon.vim
+<
+
+Tests failing with this error can safely be ignored
+
 
 vim:ft=help

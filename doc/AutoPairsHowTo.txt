@@ -67,7 +67,7 @@ Given () "|" ), pressing ( at |, the three modes yield:
  2: No completion; jumping is still supported. Example output:
     () "(|" ), regardless of whether the ) at the end is there or not
 
-Option 1 comes with the heaviest performance conseqsuences, as it has to check
+Option 1 comes with the heaviest performance consequences, as it has to check
 each individual character for highlight groups. At the time of writing, this
 function call comes with some significant overhead, and it's unclear why.
 
