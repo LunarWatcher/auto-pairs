@@ -1,0 +1,14 @@
+Describe Auto-break settings
+    Before each
+        call autopairs#Variables#_InitVariables()
+    End
+    It should sync options
+        let g:AutoPairsSyncAutoBreakOptions = 1
+        let g:AutoPairsAutoBreakBefore = ['{', '"""']
+        let g:AutoPairsAutoLineBreak = ['[']
+        new | only!
+
+        call Expect(b:AutoPairsAutoBreakBefore).to_equal(g:AutoPairsAutoLineBreak)
+        call Expect(b:AutoPairsAutoLineBreak).to_equal(g:AutoPairsAutoLineBreak)
+    End
+End
