@@ -105,8 +105,8 @@ fun! autopairs#AutoPairsAddPair(pair, ...)
     endif
 endfun
 
-" default pairs base on filetype
-func! autopairs#AutoPairsDefaultPairs(...)
+" Returns the default set of pairs given the current buffer's filetype
+func! autopairs#AutoPairsDefaultPairs()
     let r = copy(g:AutoPairs)
     if has_key(g:AutoPairsLanguagePairs, &ft)
         for [open, close] in items(g:AutoPairsLanguagePairs[&ft])
