@@ -9,7 +9,14 @@ Insert or delete brackets, parens, and quotes in pair: a maintained fork of [jia
 
 If you're migrating from jiangmiao's version, it's highly recommended that you read `:h autopairs-migrating` after installing. There have been a number of breaking changes made in this fork, as well as changes to default behavior. See the migration guide for important differences that are may affect your workflow.
 
+## 4.0.0 note
+
+Early adopters of the 4.0.0 branch may use the develop-4.0.0 branch instead.
+
+However, because this is a development branch, it'll eventually be merged into the master branch. When this happens, a notice will be issued to switch back to the master branch. The 4.0.0 branch will be temporarily preserved to allow for updates with as little friction as possible.
+
 ## Installation
+
 
 **NOTE:** Auto-pairs currently requires at least vim 8.1 with patch 1114. See [#37](https://github.com/LunarWatcher/auto-pairs/discussions/37)
 
