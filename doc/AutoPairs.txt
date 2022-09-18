@@ -478,15 +478,19 @@ Quote management~
     |g:AutoPairsCarefulStringExpansion|
 
 String and comment management~
-
 - |g:AutoPairsStringHandlingMode| (has a buffer variant) (default: 0)
     How auto-pairs handles strings. HIGHLY EXPERIMENTAL!
-
 
 Insertion behavior~
 - |g:AutoPairsAutoLineBreak| (has a buffer variant) (default: [])
     A set of opening characters that trigger an instant line break (as in
     auto-pairs does the line break after the open character automagically)
+- |g:AutoPairsAutoBreakBefore| (has a buffer variant) (default: [])
+    A set of opening characters that insert a linebreak before the pair.
+- |g:AutoPairsSyncAutoBreakOptions| (has a buffer variant) (default: 0)
+    Whether or not to automatically assign
+    |b:AutoPairsAutoBreakBefore| = |b:AutoPairsAutoLineBreak|
+    Please read the full help entry for limitations!
 
 Balancing~
 - |g:AutoPairsPreferClose| (default: 1)
@@ -1197,9 +1201,9 @@ means attempts to deal with HTML-like tags using regex simply aren't feasible.
 Default: []
 This variable also exists in a buffer variant.~
 
-Contains a list of opening brackets  that result in an instant linebreak. It's
-empty by default as this is one of the more intrusive options -- make sure you
-want this when you set it.
+Contains a list of opening brackets  that result in an instant linebreak after
+the open character. It's empty by default as this is one of the more intrusive
+options -- make sure you want this when you set it.
 
 Example, assuming '{' is in the list: >
     Input : {|
@@ -1210,6 +1214,44 @@ Example, assuming '{' is in the list: >
 
 Note that the exact cursor and bracket positions may vary. See
 |autopairs-indent-problems| and |indent|.
+
+------------------------------------------------------------------------------
+                                                    *g:AutoPairsAutoBreakBefore*
+                                                                          list
+
+Default: []
+This variable also exists in a buffer variant~
+
+Contains a list of opening brackets that results in an instant linebreak
+before the open character. With great similarity to
+|g:AutoPairsAutoLineBreak|, this option is highly intrusive, and does not come
+with an undo switch.
+
+This is fully compatible with |g:AutoPairsLineBreak|; if both are enabled for
+a given pair, the effects stack.
+
+------------------------------------------------------------------------------
+                                               *g:AutoPairsSyncAutoBreakOptions*
+                                                                          bool
+Default: 0
+This variable also exists in a buffer variant~
+
+Whether or not to sync b:AutoPairsAutoBreakBefore = b:AutoPairsAutoLineBreak
+on buffer creation.
+
+When this has happened, internal pointer logic ensures any changes to either
+list is reflected in the other. However, by initialization logic, any and all
+pairs have to be added to |g:AutoPairsAutoLineBreak| (or its buffer variant).
+When the buffer has initialized, which the pairs are added to is irrelevant,
+because they're actually the same list.
+
+This also means that if, for some reason, you want to split the two lists into
+distinct lists without reloading the buffer, you have to ensure you make
+|g:AutoPairsAutoBreakBefore| a brand new list, or alternatively use |copy|
+
+Also, if this option is set, note that the contents of this variable is
+completely disregarded, and is overwritten if it exists.
+
 ------------------------------------------------------------------------------
                                              *g:AutoPairsCarefulStringExpansion*
                                                                            int

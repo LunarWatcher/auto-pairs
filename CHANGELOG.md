@@ -14,6 +14,10 @@
 * Documentation for Krasjet's space-only completion exceptions, and first-class support for it.
 * Documentation and first-class support for Krasjet's balance blacklist
 * Tests for both the character whitelist for only completing on space, and the balance check blacklist.
+* Added `g:AutoPairsAutoBreakBefore` and `g:AutoPairsSyncAutoBreakOptions` ([#57](https://github.com/LunarWatcher/auto-pairs/issues/57))
+
+## Meta
+* Removed pre-commit
 
 # 3.0.3
 `let g:AutoPairsVersion = 30062`

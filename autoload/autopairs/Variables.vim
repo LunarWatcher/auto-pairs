@@ -100,6 +100,7 @@ fun! autopairs#Variables#_InitVariables()
     call s:define('g:AutoPairsSingleQuoteExpandFor', 'fbr')
 
     call s:define('g:AutoPairsAutoLineBreak', [])
+    call s:define('g:AutoPairsAutoBreakBefore', [])
 
     call s:define('g:AutoPairsCarefulStringExpansion', 1)
     call s:define('g:AutoPairsQuotes', ["'", '"'])
@@ -125,6 +126,8 @@ fun! autopairs#Variables#_InitVariables()
 
     call s:define("g:AutoPairsBSAfter", 1)
     call s:define("g:AutoPairsBSIn", 1)
+
+    call s:define("g:AutoPairsSyncAutoBreakOptions", 0)
 endfun
 
 
@@ -145,7 +148,6 @@ fun! autopairs#Variables#_InitBufferVariables()
     call s:define('b:AutoPairsSearchCloseAfterSpace', g:AutoPairsSearchCloseAfterSpace)
     call s:define('b:AutoPairsSingleQuoteMode', g:AutoPairsSingleQuoteMode)
     call s:define('b:AutoPairsSingleQuoteExpandFor', g:AutoPairsSingleQuoteExpandFor)
-    call s:define('b:AutoPairsAutoLineBreak', g:AutoPairsAutoLineBreak)
     call s:define('b:AutoPairsCarefulStringExpansion', g:AutoPairsCarefulStringExpansion)
     call s:define('b:AutoPairsQuotes', g:AutoPairsQuotes)
     call s:define('b:AutoPairsFlyModeList', g:AutoPairsFlyModeList)
@@ -176,4 +178,13 @@ fun! autopairs#Variables#_InitBufferVariables()
     call s:define("b:AutoPairsShortcutIgnore", g:AutoPairsShortcutIgnore)
 
     call s:define("b:AutoPairsIgnoreSingle", 0)
+    call s:define("b:AutoPairsSyncAutoBreakOptions", g:AutoPairsSyncAutoBreakOptions)
+
+    " Linebreaks
+    call s:define('b:AutoPairsAutoLineBreak', g:AutoPairsAutoLineBreak)
+    if !b:AutoPairsSyncAutoBreakOptions
+        call s:define('b:AutoPairsAutoBreakBefore', g:AutoPairsAutoBreakBefore)
+    else
+        let b:AutoPairsAutoBreakBefore = b:AutoPairsAutoLineBreak
+    endif
 endfun

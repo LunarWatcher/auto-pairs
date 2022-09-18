@@ -49,7 +49,7 @@ fun! autopairs#Balancing#doInsert(open, close, openPair, before, afterline, targ
             end
         end
     endwhile
-    return bs .. del .. openPair
+    return bs .. del .. (index(b:AutoPairsAutoBreakBefore, open) != -1 ? "\<cr>" : '') .. openPair
                 \ .. close .. autopairs#Strings#left(close)
                 \ .. (index(b:AutoPairsAutoLineBreak, open) != -1 ?
                 \     "\<cr>" .. autopairs#AutoPairsDetermineCRMovement()
