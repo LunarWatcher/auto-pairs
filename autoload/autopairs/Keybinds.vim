@@ -20,12 +20,17 @@ endfunction
 function! autopairs#Keybinds#SetEventignore()
     " TODO: Add InsertLeavePre when we know how to check version correctly on nvim
     " or when support for vim 8.2.1873 and below is dropped
+    let b:autopairs_eventignore = &eventignore
     set eventignore+=InsertEnter,InsertLeave
+    if exists('##InsertLeavePre')
+        set eventignore+=InsertLeavePre
+    endif
+
     return ''
 endfunction
 
 function! autopairs#Keybinds#ResetEventignore()
-    set eventignore-=InsertEnter,InsertLeave
+    let &eventignore = b:autopairs_eventignore
     return ''
 endfunction
 

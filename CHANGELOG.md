@@ -10,6 +10,7 @@
 * Minimum Vim version is now correctly listed as 8.1 patch 1114; I severely misread the minimum required version before.
 * Missing `...` specifier prevented argument forwarding for IgnoreInsertEnter
 * Missing period for string concatenation seems to have broken the move feature
+* Switched to a variable for universal event ignoring, without overwriting the variable unrecoverably (`exists('##InsertLeavePre')` &lt;3)
 
 ## Added
 * Documentation with some basic how-to guides for auto-pairs features. These can technically be figured out by just reading the documentation, but it's easier to compress it into concrete guides.
@@ -17,6 +18,7 @@
 * Documentation and first-class support for Krasjet's balance blacklist
 * Tests for both the character whitelist for only completing on space, and the balance check blacklist.
 * Added `g:AutoPairsAutoBreakBefore` and `g:AutoPairsSyncAutoBreakOptions` ([#57](https://github.com/LunarWatcher/auto-pairs/issues/57))
+* `InsertLeavePre` is now ignored
 
 ## Meta
 * Removed pre-commit
