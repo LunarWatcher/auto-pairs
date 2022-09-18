@@ -11,7 +11,7 @@ If you're migrating from jiangmiao's version, it's highly recommended that you r
 
 ## 4.0.0 note
 
-Early adopters of the 4.0.0 branch may use the develop-4.0.0 branch instead.
+Early adopters of v4.0.0 may use the develop-4.0.0 branch instead.
 
 However, because this is a development branch, it'll eventually be merged into the master branch. When this happens, a notice will be issued to switch back to the master branch. The 4.0.0 branch will be temporarily preserved to allow for updates with as little friction as possible.
 
