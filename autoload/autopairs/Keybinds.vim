@@ -2,7 +2,7 @@ if !has('nvim') && has('vimscript-4')
     scriptversion 4
 endif
 
-function! autopairs#Keybinds#IgnoreInsertEnter(f) abort
+function! autopairs#Keybinds#IgnoreInsertEnter(f, ...) abort
     " TODO: Change this to use <cmd> when support for vim 8.2.19xx is dropped
     let l:pre = "\<C-r>=autopairs#Keybinds#SetEventignore()\<CR>"
     let l:val = call(function(a:f), a:000)

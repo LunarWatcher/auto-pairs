@@ -1,4 +1,4 @@
-*AutoPairs.txt* *autopairs* *AutoPairs*
+*AutoPairs.txt* *autopairs* *AutoPairs* *auto-pairs*
 
 Insert or delete brackets, parens, and quotes in pair (a fork by LunarWatcher)
 

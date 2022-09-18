@@ -436,12 +436,10 @@ func! autopairs#AutoPairsJump()
     call search('\V' .. b:AutoPairsJumpRegex, 'W')
 endf
 
-" Handles the move feature -- note that the move feature has been disabled by
-" default. DO NOT confuse this for the jump feature.
 func! autopairs#AutoPairsMoveCharacter(key)
     let c = getline(".")[col(".")-1]
     let escaped_key = substitute(a:key, "'", "''", 'g')
-    return "\<DEL>\<ESC>:call search("."'" .. escaped_key .. "'" .. ")\<CR>a" .. c .. "\<LEFT>"
+    return "\<DEL>\<ESC>:call search(" .. "'" .. escaped_key .. "'" .. ")\<CR>a" .. c .. "\<LEFT>"
 endf
 
 " Back insert for flymode.
