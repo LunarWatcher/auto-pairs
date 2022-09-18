@@ -11,6 +11,7 @@
 * Missing `...` specifier prevented argument forwarding for IgnoreInsertEnter
 * Missing period for string concatenation seems to have broken the move feature
 * Switched to a variable for universal event ignoring, without overwriting the variable unrecoverably (`exists('##InsertLeavePre')` &lt;3)
+* Syntax checks are now done using `synID` instead of `synstack`
 
 ## Added
 * Documentation with some basic how-to guides for auto-pairs features. These can technically be figured out by just reading the documentation, but it's easier to compress it into concrete guides.
