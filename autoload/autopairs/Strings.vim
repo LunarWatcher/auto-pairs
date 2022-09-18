@@ -244,7 +244,7 @@ fun! autopairs#Strings#posInGroup(y, x, group)
     if (a:y > len(col('$')))
         return 0
     endif
-    return match(synIDattr(synID(a:y, min([a:x, col('$')]), 0), "name"), '\c' .. a:group) != -1
+    return match(map(synstack(a:y, min([a:x, col('$')])), 'synIDattr(v:val, "name")'), '\c' .. a:group) != -1
 endfun
 
 fun! autopairs#Strings#isInString()
@@ -256,8 +256,8 @@ fun! autopairs#Strings#isInString()
     " More creative ideas are welcome here, though. A double check is somewhat
     " heavy, though. Synstack seems to be an overall heavy call.
     " TODO: revisit
-    return match(synIDattr(synID(line('.'), col('.'), 0), "name"), '\cstring') != -1 &&
-                \ match(synIDattr(synID(line('.'), col('.') - 1, 0), "name"), '\cstring')  != -1
+    return match(map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")'), '\cstring') != -1 &&
+                \ match(map(synstack(line('.'), col('.') - 1), 'synIDattr(v:val, "name")'), '\cstring') != -1
 
 endfun
 " }}}

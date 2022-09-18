@@ -14,11 +14,16 @@ Describe String handling modes should be different
         call Expect('func("don''t").chain(''').ToMatch('func("don''t").chain('')')
     End
     It is going to handle in and out of strings better for option == 1
+        new | only!
         set ft=cpp
         let b:AutoPairsStringHandlingMode = 1
         call Expect('func("don''t').ToMatch("func(\"don't\")")
         " sanity check tests
-        call Expect(join(map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")'), ',') =~ '\cstring').to_be_true("There should be syngroups")
+
+        call Expect(col('.')).to_equal(11)
+        call Expect(line('.')).to_equal(1)
+        syntax sync fromstart
+        call Expect(autopairs#Strings#isInString()).to_be_true("There should be syngroups")
         call Expect("func(\"don't\<Esc>A.chain('").ToMatch('func("don''t").chain('''')')
     End
 End

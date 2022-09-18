@@ -1,6 +1,6 @@
 let s:expect = themis#helper('expect')
 let g:CachePairs = autopairs#AutoPairsDefine({})
-let g:AutoPairsForceDefine = 621
+let g:AutoPairsForceDefine = 69420
 let g:Assert = themis#helper("assert")
 
 syntax on
