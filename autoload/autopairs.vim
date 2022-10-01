@@ -613,8 +613,7 @@ func! autopairs#AutoPairsTryInit()
         call g:AutoPairsInitHook()
     endif
     if index(g:AutoPairsDirectoryBlacklist, getcwd()) >= 0 || index(g:AutoPairsFiletypeBlacklist, &ft) != -1
-        " TODO: return and make an explicit enable possible
-        let b:autopairs_enabled = 0
+        return
     endif
 
     call autopairs#Variables#_InitBufferVariables()

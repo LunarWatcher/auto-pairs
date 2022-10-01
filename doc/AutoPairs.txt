@@ -401,7 +401,7 @@ Core~
 - |g:AutoPairsExperimentalAutocmd| (default: 0)
     Whether or not to use BufWinEnter instead of BufEnter
 - |g:AutoPairsDirectoryBlacklist| (default: [])
-    Directories to disable auto-pairs in
+    Directories to completely disable auto-pairs in
 - |b:autopairs_enabled| ("default": 1)
     Whether or not auto-pairs is enabled in the buffer. Can also be used to
     toggle auto-pairs
@@ -411,8 +411,7 @@ Core~
 - |g:AutoPairsOpenBalanceBlacklist| (has a buffer variant) (default: [])
     Contains a list of characters that don't trigger opening balance checks
 - |g:AutoPairsFiletypeBlacklist| (default: [])
-    Contains filetypes in which |b:autopairs_enabled| is 0 when entering the
-    file.
+    Filetypes to completely disable auto-pairs in
 
 Whitespace and autocomplete~
 - |g:AutoPairsCompleteOnlyOnSpace| (has a buffer variant) (default: 0)
@@ -982,14 +981,8 @@ The shortcut to toggle |g:AutoPairsMultilineClose|
 Default: []
 
 Defines a set of directories (checked against |getcwd()|) in which the plugin
-is disabled. This is pretty much a utility around `let b:autopairs_enabled = 0`,
-which means the plugin is toggled in the buffer.
-
-It's disabled by default as this means it's possible to load it after the
-fact, where as a complete block wouldn't allow for manually enabling the
-plugin, if desired.
-
-See also |g:AutoPairsShortcutToggle|
+is completely uninitialized. Note |g:AutoPairsShortcutToggle| cannot enable
+autopairs in these directories.
 
 ------------------------------------------------------------------------------
                                                            *b:autopairs_enabled*
@@ -1415,10 +1408,8 @@ behavior and assume the next character is what you want to wrap.
 
 Default: []
 
-List containing filetypes in which autopairs is disabled by default. Note that
-the keybinds and whatnot are loaded due to how the plugin is built up. This
-may change in a future version. The plugin may be manually enabled in spite of
-this blacklist. See |g:AutoPairsShortcutToggle|
+List containing filetypes in which autopairs is completely uninitialized. Note
+|g:AutoPairsShortcutToggle| cannot enable autopairs in these filetypes.
 
 ------------------------------------------------------------------------------
                                                           *b:AutoPairsJumpRegex*
