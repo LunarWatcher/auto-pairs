@@ -1,3 +1,4 @@
+
 # 4.0.0-alpha1
 `let g:AutoPairsVersion = 40000`
 
@@ -22,6 +23,17 @@
 
 ## Meta
 * Removed pre-commit
+
+# 3.0.4
+`let g:AutoPairsVersion = 30063`
+
+## Changed
+* Renamed `autopairs#Variables#_InitVariables` to `autopairs#Variables#InitVariables`, as the API is now more intended for public use
+* `g:AutoPairsFiletypeBlacklist` now contains `"registers"` by default, and fully prevents loading in the buffer
+
+## Documentation
+
+* Documented `autopairs#Variables#InitVariables()`
 
 # 3.0.3
 `let g:AutoPairsVersion = 30062`

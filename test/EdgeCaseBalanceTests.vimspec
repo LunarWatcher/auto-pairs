@@ -1,6 +1,6 @@
 Describe Various edge-cases around balancing when preferring to close
     Before each
-        call autopairs#Variables#_InitVariables()
+        call autopairs#Variables#InitVariables()
         let g:AutoPairsPreferClose = 0
     End
     It should jump )(|) sanely

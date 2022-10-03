@@ -1,6 +1,6 @@
 Describe Complex use of maps
     Before each
-        call autopairs#Variables#_InitVariables()
+        call autopairs#Variables#InitVariables()
     End
     It should ignore invalid keys
         call autopairs#AutoPairsAddPair({"open": "<", "close": ">", "fuckin' key mate": "crash and burn"})

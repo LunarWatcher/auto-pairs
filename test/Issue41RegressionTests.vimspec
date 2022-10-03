@@ -1,7 +1,7 @@
 Describe Regression tests for issue #41
 
     Before each
-        call autopairs#Variables#_InitVariables()
+        call autopairs#Variables#InitVariables()
         new | only!
     End
     It shouldn't be dumb with single quotes

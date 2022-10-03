@@ -11,8 +11,12 @@ fun! s:define(name, default)
     endif
 endfun
 
-" TODO: sort this garbage
 fun! autopairs#Variables#_InitVariables()
+    echoerr "This function has been renamed. Use autopairs#Variables#InitVariables instead (note the missing _)"
+endfun
+
+" TODO: sort this garbage
+fun! autopairs#Variables#InitVariables()
     " Default autopairs
     call s:define("g:AutoPairs", {'(': ')', '[': ']', '{': '}', "'": "'", '"': '"',
                 \ '```': '```', '"""':'"""', "'''":"'''", "`":"`"})
@@ -48,7 +52,7 @@ fun! autopairs#Variables#_InitVariables()
     " (Pro tip: also a great use for autocmds and default-disable rather than
     " plugin configuration. Project .vimrcs work too)
     call s:define('g:AutoPairsDirectoryBlacklist', [])
-    call s:define('g:AutoPairsFiletypeBlacklist', [])
+    call s:define('g:AutoPairsFiletypeBlacklist', ["registers"])
 
     call s:define('g:AutoPairsCompatibleMaps', 0)
 

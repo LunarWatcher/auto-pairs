@@ -18,8 +18,9 @@ Table of Contents                           *autopairs-troubleshooting-contents*
     3. Uninstalling ......................... |autopairs-uninstalling|
         1. Vim views ........................ |autopairs-uninstall-views|
     4. Rust ................................. |autopairs-rust|
-    5. Enter to insert auto-complete ........ |autopairs-autocomplete|
-    6. Test failures (and related errors) ... |autopairs-test-failures|
+    5. Undefined variables .................. |autopairs-undefined|
+    6. Enter to insert auto-complete ........ |autopairs-autocomplete|
+    7. Test failures (and related errors) ... |autopairs-test-failures|
         1. Autocmd and syntax errors ........ |autopairs-typescript-errors|
 
 ==============================================================================
@@ -184,7 +185,41 @@ setting the option, but by letting it be 0, you lose any other defined pairs
 -- including your custom pairs.
 
 ==============================================================================
-5. Enter to insert auto-complete                        *autopairs-autocomplete*
+5. Undefined variables (that clearly exist)                *autopairs-undefined*
+
+With certain configurations, you may run into undefined variables.
+
+Admittedly, this is rare, and primarily applies to places where you'd like to
+append to an existing default, rather than overriding it in its entirety.
+Remember; `let g:AutoPairs<Something> = "example"` is fine, but
+`let g:AutoPairs<Something> += "something else"` is bad if
+`g:AutoPairs<Something>` hasn't already been defined.
+
+AutoPairs do define these on load, but they're not loaded immediately. The
+reason this happens is load order; by default, and unfixably, auto-pairs isn't
+invoked until after the vimrc is loaded.
+
+However, you can cheat the system by calling any autoload function. Which you
+call depends on what variable you're trying to initialise from a default.
+
+For example, if you'd like to add a pair, use |autopairs#AutoPairsDefine|.
+
+If no such function exists, you can explicitly call
+|autopairs#Variables#InitVariables|. However, this is only needed if you don't
+call any other autopairs autoload functions. If you have
+|autopairs#AutoPairsDefine| invoked in your config, you can define whatever
+variable you need _after_ that function call without any problems. Calling
+|autopairs#Variables#InitVariables()| explicitly is more or less a symbolic
+function call equivalent to an empty function, as the function is called when
+the primary autoload script is loaded anyway.
+
+TL;DR: define your additions to the defaults after calling an autoload
+function. This is only necessary when you make changes to an existing variable
+(such as using +=), not when you define it yourself (|=|). Use specific
+methods if available and applicable, |autopairs#Variables#InitVariables|
+otherwise
+==============================================================================
+6. Enter to insert auto-complete                        *autopairs-autocomplete*
 
 See also: https://github.com/LunarWatcher/auto-pairs/issues/66
 
@@ -218,10 +253,10 @@ used to <C-y>, which is a default Vim mapping for completion insertion. Or, of
 course, map completion insertion to an altogether different key.
 
 ==============================================================================
-6. Test failures (and related errors)                  *autopairs-test-failures*
+7. Test failures (and related errors)                  *autopairs-test-failures*
 
 ------------------------------------------------------------------------------
-6.1. TypeScript errors                             *autopairs-typescript-errors*
+7.1. TypeScript errors                             *autopairs-typescript-errors*
 
 Type: Vim bug
 Status: Fixed in later versions of Vim. Test fails can be ignored
@@ -248,6 +283,7 @@ Example of an affected error log: >
 <
 
 Tests failing with this error can safely be ignored
+
 
 
 vim:ft=help

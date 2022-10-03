@@ -88,24 +88,29 @@ is still Vim 8.1 with patch 1114.
 
 ------------------------------------------------------------------------------
                                                        *autopairs-contributing*
+                                                            *autopairs-support*
 Contributing~
 
 If you enjoy the plugin, please consider starring it on GitHub:
         https://github.com/LunarWatcher/auto-pairs
 
-This fork is maintained (and will continue to be maintained). Issues can
-currently be submitted to: https://github.com/LunarWatcher/auto-pairs/issues
+This fork is maintained (and will continue to be maintained unless a better
+option magically appears). Issues can currently be submitted to
+https://github.com/LunarWatcher/auto-pairs/issues
 
 I do, however, keep an eye on the issue tracker in jiangmiao's repo, because
 this fork doesn't have nearly as many users as the original, and many legacy
 bugs still haunt users.
 
-Questions about the plugin can be submitted as an issue, but should preferably
-be submitted on GitHub Discussions, in the repo previously linked (direct
-link: https://github.com/LunarWatcher/auto-pairs/discussions)
+Questions about the plugin not covered by the documentation can be submitted
+as an issue, but should preferably be submitted on GitHub Discussions, in the
+repo previously linked.
+
+Direct link: https://github.com/LunarWatcher/auto-pairs/discussions
 
 Pull requests are also more than welcome, and I'll make sure they don't stick
 around for 6 years without being merged.
+
 ------------------------------------------------------------------------------
                                                            *autopairs-migrating*
 Migrating from jiangmiao~
@@ -410,7 +415,7 @@ Core~
     explicit definition of |b:AutoPairs|
 - |g:AutoPairsOpenBalanceBlacklist| (has a buffer variant) (default: [])
     Contains a list of characters that don't trigger opening balance checks
-- |g:AutoPairsFiletypeBlacklist| (default: [])
+- |g:AutoPairsFiletypeBlacklist| (default: see entry)
     Filetypes to completely disable auto-pairs in
 
 Whitespace and autocomplete~
@@ -1406,7 +1411,7 @@ behavior and assume the next character is what you want to wrap.
                                                   *g:AutoPairsFiletypeBlacklist*
                                                                          array
 
-Default: []
+Default: ["registers"]
 
 List containing filetypes in which autopairs is completely uninitialized. Note
 |g:AutoPairsShortcutToggle| cannot enable autopairs in these filetypes.
@@ -1866,6 +1871,29 @@ to map a key to this function unless:
     1. You want a different movement
     2. You want a second mapping
     3. You're doing scripting involving the function
+
+------------------------------------------------------------------------------
+autopairs#Variables#_InitVariables           *autopairs#Variables#InitVariables*
+                                                          *autopairs-early-init*
+Arguments: none
+
+This function initialises all the global variables auto-pairs uses.
+
+While primarily intended for internal use, it can be used to force load
+auto-pairs' variables. This is more or less entirely intended for object or 
+list variables, where setting the value may override other desired variabels,
+but where the variable doesn't also have a corresponding modifying function.
+
+Because it's an autoload function, unlike the normal load system, it's loaded
+on-demand rather than after the vimrc has loaded. This function is therefore
+the option for extending defaults where other functions aren't defined.
+
+Note that calling this function is not necessary if any other autoload 
+function is involved, including (and probably far more commonly) 
+autopairs#AutoPairsDefine.
+
+See |autopairs-undefined| for a more extended explanation of the why and how.
+
 
 ==============================================================================
 8. Declaring custom pairs                               *autopairs-custom-pairs*

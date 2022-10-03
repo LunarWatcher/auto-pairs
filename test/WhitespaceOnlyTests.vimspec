@@ -1,6 +1,6 @@
 Describe Whitespace-restricted completion
     Before each
-        call autopairs#Variables#_InitVariables()
+        call autopairs#Variables#InitVariables()
         let g:AutoPairsCompleteOnlyOnSpace = 1
     End
     It should support the basic functionality

@@ -1,6 +1,6 @@
 Describe Make sure upgrades work,
     Before each
-        call autopairs#Variables#_InitVariables()
+        call autopairs#Variables#InitVariables()
     End
     It because it should blatantly ignore //n
         let g:AutoPairs = {'{': '}//n'}

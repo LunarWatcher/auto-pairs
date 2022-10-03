@@ -1,6 +1,6 @@
 Describe Backslashes are trash, but
     Before each
-        call autopairs#Variables#_InitVariables()
+        call autopairs#Variables#InitVariables()
     End
     It should escape correctly
         new | only!
