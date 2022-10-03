@@ -1317,9 +1317,6 @@ Default: ["registers"]
 List containing filetypes in which autopairs is completely uninitialized. Note
 |g:AutoPairsShortcutToggle| cannot enable autopairs in these filetypes.
 
-See also |g:AutoPairsAddBlacklistedFiletype| for a default-compatible way to
-add entries
-
 ------------------------------------------------------------------------------
                                                           *b:AutoPairsJumpRegex*
                                                                          regex
