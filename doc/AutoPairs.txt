@@ -1793,6 +1793,8 @@ Note that calling this function is not necessary if any other autoload
 function is involved, including (and probably far more commonly) 
 autopairs#AutoPairsDefine.
 
+See |autopairs-undefined| for a more extended explanation of the why and how.
+
 
 ==============================================================================
 8. Declaring custom pairs                               *autopairs-custom-pairs*
