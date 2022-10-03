@@ -44,7 +44,7 @@ fun! autopairs#Variables#_InitVariables()
     " (Pro tip: also a great use for autocmds and default-disable rather than
     " plugin configuration. Project .vimrcs work too)
     call s:define('g:AutoPairsDirectoryBlacklist', [])
-    call s:define('g:AutoPairsFiletypeBlacklist', [])
+    call s:define('g:AutoPairsFiletypeBlacklist', ["registers"])
 
     call s:define('g:AutoPairsCompatibleMaps', 1)
 

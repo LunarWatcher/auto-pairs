@@ -409,7 +409,7 @@ Core~
     explicit definition of |b:AutoPairs|
 - |g:AutoPairsOpenBalanceBlacklist| (has a buffer variant) (default: [])
     Contains a list of characters that don't trigger opening balance checks
-- |g:AutoPairsFiletypeBlacklist| (default: [])
+- |g:AutoPairsFiletypeBlacklist| (default: see entry)
     Filetypes to completely disable auto-pairs in
 
 Compat~
@@ -1307,7 +1307,7 @@ behavior and assume the next character is what you want to wrap.
                                                   *g:AutoPairsFiletypeBlacklist*
                                                                          array
 
-Default: []
+Default: ["registers"]
 
 List containing filetypes in which autopairs is completely uninitialized. Note
 |g:AutoPairsShortcutToggle| cannot enable autopairs in these filetypes.
