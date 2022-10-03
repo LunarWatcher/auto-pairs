@@ -46,7 +46,7 @@ fun! autopairs#Insert#checkBalance(open, close, opt, before, after, afterline, o
     endif
 
     " Krasjet: do not complete the closing pair until pairs are balanced
-    if a:open !~# b:autopairs_open_blacklist
+    if a:open !~# b:autopairs_balance_blacklist
         if b:AutoPairsStringHandlingMode == 1 && autopairs#Strings#isInString()
             " We only need to address mode == 1 here.
             return strClose <= strOpen

@@ -34,4 +34,4 @@ The changelog loosely uses the [keepachangelog](https://keepachangelog.com/en/1.
 
 GitHub automatically builds tests when you commit in a PR (though new contributors need to have the run manually approved in order to start, because GitHub said so). The tests always have to pass. If some core functionality was changed that means the failing test(s) need changes, these must be made for the PR to be approved.
 
-Adding tests isn't required, but is very welcome. This lets us automatically verify auto-pairs more extensively, and make sure "obscure" parts don't break when changes are made later. Tests also help us avoid shipping a broken version of auto-pairs.
+Adding tests is highly encouraged, and only required for bug fixes. Regression tests are extremely important for ensuring bugs don't happen again later.

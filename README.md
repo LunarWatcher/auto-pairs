@@ -1,5 +1,7 @@
 # Auto Pairs
+
 [![Tests](https://github.com/LunarWatcher/auto-pairs/actions/workflows/tests.yml/badge.svg)](https://github.com/LunarWatcher/auto-pairs/actions/workflows/tests.yml)
+[![Minimum Vim version 8.1 patch 1114](https://img.shields.io/badge/Vim-8.1%201--1114%20or%20newer-%23FFC0CB?logo=vim&labelColor=019833)](//github.com/vim/vim)
 
 Insert or delete brackets, parens, and quotes in pair: a maintained fork of [jiangmiao/auto-pairs](https://github.com/jiangmiao/auto-pairs)
 
@@ -7,7 +9,14 @@ Insert or delete brackets, parens, and quotes in pair: a maintained fork of [jia
 
 If you're migrating from jiangmiao's version, it's highly recommended that you read `:h autopairs-migrating` after installing. There have been a number of breaking changes made in this fork, as well as changes to default behavior. See the migration guide for important differences that are may affect your workflow.
 
+## 4.0.0 note
+
+Early adopters of v4.0.0 may use the develop-4.0.0 branch instead.
+
+However, because this is a development branch, it'll eventually be merged into the master branch. When this happens, a notice will be issued to switch back to the master branch. The 4.0.0 branch will be temporarily preserved to allow for updates with as little friction as possible.
+
 ## Installation
+
 
 **NOTE:** Auto-pairs currently requires at least vim 8.1 with patch 1114. See [#37](https://github.com/LunarWatcher/auto-pairs/discussions/37)
 
@@ -23,22 +32,14 @@ To use experimental changes before they're deployed, use:
 Plug 'LunarWatcher/auto-pairs', {'branch': 'develop'}
 ```
 
-The develop branch contains improvements to the master branch. Note that this does not include the changes for 4.0.0; see the section below.
+The develop branch contains improvements to the master branch. For the experimental 4.0.0 upgrade (you're here!), use:
 
-**Note:** I highly recommend using `let g:AutoPairsCompatibleMaps = 0` with this plugin. Setting it to 0 changes various mappings to use a control-based variant rather than a meta-based variant. This is to prevent issues with various alt combinations also being letters on the keyboard layout, as well as keeping things consistent if new maps are added (new maps will largely not use meta-based keybinds).
-
-
-
-### 4.0.0 rewrite
-
-v3.0.0 introduced a few years of feature requests and necessary bugfixes. Jumping into an existing system, there's a lot of suboptimal code and features that're blocked, largely due to technical debt. 4.0.0 aims to get rid of the tech debt, improve performance, and continue to improve features.
-
-4.0.0 is currently a long-term project. Features will still be added to the master branch, currently on 3.x.x, until 4.0.0 is getting ready.
-
-To use the 4.0.0 rewrite, use:
 ```vim
 Plug 'LunarWatcher/auto-pairs', {'branch': 'develop-4.0.0'}
 ```
+
+**Note:** As of 4.0.0, `let g:AutoPairsCompatibleMaps = 0` is default. Set the variable to 1 to use jiangmiao-compatible keybinds.
+
 
 
 ## Running tests (not required)
@@ -66,6 +67,7 @@ At this point, there's far too many differences to list all of them. Aside remov
 * QOL improvements for matching
 * Balance checks with advanced modes (See `:h g:AutoPairsStringHandlingMode`)
 * ... Lots of bugfixes and general improvements
+* Better standards
 * Support and continued development :)
 
 The entire list is too long to place in its entirety here -- the documentation should cover all the variables, so reading it should give you a complete idea of the changes.

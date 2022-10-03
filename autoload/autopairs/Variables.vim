@@ -1,3 +1,7 @@
+if !has('nvim') && has('vimscript-4')
+    scriptversion 4
+endif
+
 fun! s:define(name, default)
     " g:AutoPairsForceDefine is a variable meant for tests.
     " It's undocumented because it shouldn't be used outside testing,
@@ -50,7 +54,7 @@ fun! autopairs#Variables#InitVariables()
     call s:define('g:AutoPairsDirectoryBlacklist', [])
     call s:define('g:AutoPairsFiletypeBlacklist', ["registers"])
 
-    call s:define('g:AutoPairsCompatibleMaps', 1)
+    call s:define('g:AutoPairsCompatibleMaps', 0)
 
     " Olivia: set to 0 based on my own personal biases
     call s:define('g:AutoPairsMapBS', 0)
@@ -74,6 +78,8 @@ fun! autopairs#Variables#InitVariables()
     " Variable controlling whether or not to require a space or EOL to complete
     " bracket pairs. Extension off Krasjet.
     call s:define('g:AutoPairsCompleteOnlyOnSpace', 0)
+    call s:define('g:AutoPairsAutoBuildSpaceWhitelist', 1)
+    call s:define('g:AutoPairsDefaultSpaceWhitelist', '')
 
     call s:define('g:AutoPairsShortcutJump', g:AutoPairsCompatibleMaps ? '<M-n>' : '<C-p><C-s>')
 
@@ -98,6 +104,7 @@ fun! autopairs#Variables#InitVariables()
     call s:define('g:AutoPairsSingleQuoteExpandFor', 'fbr')
 
     call s:define('g:AutoPairsAutoLineBreak', [])
+    call s:define('g:AutoPairsAutoBreakBefore', [])
 
     call s:define('g:AutoPairsCarefulStringExpansion', 1)
     call s:define('g:AutoPairsQuotes', ["'", '"'])
@@ -124,11 +131,7 @@ fun! autopairs#Variables#InitVariables()
     call s:define("g:AutoPairsBSAfter", 1)
     call s:define("g:AutoPairsBSIn", 1)
 
-    if exists('g:AutoPairsEnableMove')
-        echom "g:AutoPairsEnableMove has been deprecated. If you set it to 1, you may remove it."
-                    \ . " If you set it to 0, let g:AutoPairsMoveExpression = '' to disable move again."
-                    \ . "  See the documentation for both variables for more details."
-    endif
+    call s:define("g:AutoPairsSyncAutoBreakOptions", 0)
 endfun
 
 
@@ -136,17 +139,19 @@ fun! autopairs#Variables#_InitBufferVariables()
     call s:define('b:autopairs_enabled', 1)
     call s:define('b:AutoPairs', autopairs#AutoPairsDefaultPairs())
     call s:define('b:AutoPairsQuoteClosingChar', copy(g:AutoPairsQuoteClosingChar))
-    call s:define('b:AutoPairsNextCharWhitelist', copy(g:AutoPairsNextCharWhitelist))
     call s:define('b:AutoPairsOpenBalanceBlacklist', copy(g:AutoPairsOpenBalanceBlacklist))
     call s:define('b:AutoPairsSingleQuoteBalanceCheck', g:AutoPairsSingleQuoteBalanceCheck)
     call s:define('b:AutoPairsMoveCharacter', g:AutoPairsMoveCharacter)
+
     call s:define('b:AutoPairsCompleteOnlyOnSpace', g:AutoPairsCompleteOnlyOnSpace)
+    call s:define('b:AutoPairsAutoBuildSpaceWhitelist', g:AutoPairsAutoBuildSpaceWhitelist)
+    call s:define('b:AutoPairsNextCharWhitelist', copy(g:AutoPairsNextCharWhitelist))
+
     call s:define('b:AutoPairsFlyMode', g:AutoPairsFlyMode)
     call s:define('b:AutoPairsNoJump', g:AutoPairsNoJump)
     call s:define('b:AutoPairsSearchCloseAfterSpace', g:AutoPairsSearchCloseAfterSpace)
     call s:define('b:AutoPairsSingleQuoteMode', g:AutoPairsSingleQuoteMode)
     call s:define('b:AutoPairsSingleQuoteExpandFor', g:AutoPairsSingleQuoteExpandFor)
-    call s:define('b:AutoPairsAutoLineBreak', g:AutoPairsAutoLineBreak)
     call s:define('b:AutoPairsCarefulStringExpansion', g:AutoPairsCarefulStringExpansion)
     call s:define('b:AutoPairsQuotes', g:AutoPairsQuotes)
     call s:define('b:AutoPairsFlyModeList', g:AutoPairsFlyModeList)
@@ -177,4 +182,13 @@ fun! autopairs#Variables#_InitBufferVariables()
     call s:define("b:AutoPairsShortcutIgnore", g:AutoPairsShortcutIgnore)
 
     call s:define("b:AutoPairsIgnoreSingle", 0)
+    call s:define("b:AutoPairsSyncAutoBreakOptions", g:AutoPairsSyncAutoBreakOptions)
+
+    " Linebreaks
+    call s:define('b:AutoPairsAutoLineBreak', g:AutoPairsAutoLineBreak)
+    if !b:AutoPairsSyncAutoBreakOptions
+        call s:define('b:AutoPairsAutoBreakBefore', g:AutoPairsAutoBreakBefore)
+    else
+        let b:AutoPairsAutoBreakBefore = b:AutoPairsAutoLineBreak
+    endif
 endfun

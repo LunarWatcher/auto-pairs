@@ -1,0 +1,39 @@
+Describe Auto-break settings
+    Before each
+        call autopairs#Variables#_InitVariables()
+    End
+    It should sync options
+        let g:AutoPairsSyncAutoBreakOptions = 1
+        let g:AutoPairsAutoBreakBefore = ['{', '"""']
+        let g:AutoPairsAutoLineBreak = ['[']
+        new | only!
+
+        call Expect(b:AutoPairsAutoBreakBefore).to_equal(g:AutoPairsAutoLineBreak)
+        call Expect(b:AutoPairsAutoLineBreak).to_equal(g:AutoPairsAutoLineBreak)
+    End
+    It should break before
+
+        let g:AutoPairsAutoBreakBefore = ['{']
+        new | only!
+        call Expect("func {").ToMatch('func \n{}')
+        call Expect("func (").ToMatch('func ()') " Control test to make sure not everything gets expanded
+    End
+    It should break after
+        let g:AutoPairsAutoLineBreak = ['{']
+        new | only!
+        call Expect("func {").ToMatch('func {\n\n}')
+        call Expect("func (").ToMatch('func ()')
+    End
+    It should break on both with sync
+        let g:AutoPairsSyncAutoBreakOptions = 1
+        let g:AutoPairsAutoLineBreak = ['{']
+        new | only!
+        call Expect("func {").ToMatch('func \n{\n\n}')
+    End
+    It should break on both without sync
+        let g:AutoPairsAutoLineBreak = ['{']
+        let g:AutoPairsAutoBreakBefore = ['{']
+        new | only!
+        call Expect("func {").ToMatch('func \n{\n\n}')
+    End
+End

@@ -1,3 +1,7 @@
+if !has('nvim') && has('vimscript-4')
+    scriptversion 4
+endif
+
 " 7.4.849 support <C-G>U to avoid breaking '.'
 " Issue talk: https://github.com/jiangmiao/auto-pairs/issues/3
 " Vim note: https://github.com/vim/vim/releases/tag/v7.4.849
@@ -7,8 +11,8 @@ else
     let g:autopairs#Strings#Go = ""
 endif
 
-let g:autopairs#Strings#Left = g:autopairs#Strings#Go."\<LEFT>"
-let g:autopairs#Strings#Right = g:autopairs#Strings#Go."\<RIGHT>"
+let g:autopairs#Strings#Left = g:autopairs#Strings#Go.."\<LEFT>"
+let g:autopairs#Strings#Right = g:autopairs#Strings#Go.."\<RIGHT>"
 
 " unicode len
 func! autopairs#Strings#ulen(s)
@@ -44,12 +48,12 @@ func! autopairs#Strings#getline(...)
         let i = line('.')+1
         while i <= n
             let line = getline(i)
-            let after = after.' '.line
+            let after = after .. ' ' .. line
 
             if line !~? '\v^\s*$'
                 break
             end
-            let i = i+1
+            let i += 1
         endwhile
     end
 
@@ -63,7 +67,7 @@ endf
 " split text to two part
 " returns [orig, text_before_open, open]
 func! autopairs#Strings#matchend(text, open)
-    let m = matchstr(a:text, '\V'.a:open.'\v$')
+    let m = matchstr(a:text, '\V' .. a:open .. '\v$')
     if m == ""
         return []
     end
@@ -89,7 +93,7 @@ fun! autopairs#Strings#regexCount(string, pattern)
     endif
     let matches = []
 
-    call substitute('' . a:string, '' . a:pattern, '\=add(matches, submatch(0))[-1]', 'g')
+    call substitute('' .. a:string, '' .. a:pattern, '\=add(matches, submatch(0))[-1]', 'g')
 
     return len(matches)
 endfun
@@ -153,7 +157,7 @@ fun! autopairs#Strings#countHighlightMatches(open, close, opt, highlightGroup)
     let wasLastAString = 0
 
     while offset < last
-        let pos = match(line, '\V' . open, offset)
+        let pos = match(line, '\V' .. open, offset)
         if pos == -1
             break
         endif
@@ -209,7 +213,7 @@ fun! autopairs#Strings#countHighlightMatches(open, close, opt, highlightGroup)
 
         let offset = 0
         while offset < last
-            let pos = match(line, '\V' . a:close, offset)
+            let pos = match(line, '\V' .. a:close, offset)
             if pos == -1
                 break
             endif
@@ -240,7 +244,7 @@ fun! autopairs#Strings#posInGroup(y, x, group)
     if (a:y > len(col('$')))
         return 0
     endif
-    return match(map(synstack(a:y, min([a:x, col('$')])), 'synIDattr(v:val, "name")'), '\c' . a:group) != -1
+    return match(map(synstack(a:y, min([a:x, col('$')])), 'synIDattr(v:val, "name")'), '\c' .. a:group) != -1
 endfun
 
 fun! autopairs#Strings#isInString()

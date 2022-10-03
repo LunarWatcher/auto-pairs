@@ -1,4 +1,4 @@
-*AutoPairs.txt* *autopairs* *AutoPairs*
+*AutoPairs.txt* *autopairs* *AutoPairs* *auto-pairs*
 
 Insert or delete brackets, parens, and quotes in pair (a fork by LunarWatcher)
 
@@ -24,6 +24,9 @@ Table of help documents~
         plugins.
     |AutoPairsTroubleshooting|
         Contains answers to known and common problems with auto-pairs.
+    |AutoPairsHowTo|
+        Contains a set of concrete guides for common auto-pairs
+        configurations.
 
 Note: While the documents aim to contain only categorically relevant info,
 there are cases where this won't happen. There are a number of reasons for
@@ -77,11 +80,11 @@ than a meta (alt)-based one.
 Requirements~
 
 Auto-pairs is fully self-contained. Consequently, it only has one requirement:
-Vim 7.4 or newer.
+Vim 8.1 with patch 1114 or newer.
 
 4.0.0 may require a newer version; the master branch, as well as tags, follow
 3.x.y. Unless you explicitly source the 4.0.0 branch, the minimum requirement
-is 7.4.
+is still Vim 8.1 with patch 1114.
 
 ------------------------------------------------------------------------------
                                                        *autopairs-contributing*
@@ -396,8 +399,6 @@ This list is a table of contents for the options, sorted by categories.
 Core~
 - |g:AutoPairs| (has buffer variant) (default: see the entry)
     Defines what pairs AutoPairs will complete
-- |g:AutoPairsCompleteOnlyOnSpace| (has a buffer variant) (default: 0)
-    Defines whether or not there has to be a space (or EOL) to insert a pair
 - |g:AutoPairsShortcutToggle| (has a buffer variant) (default: see the entry)
     Defines the shortcut for toggling auto-pairs
 - |g:AutoPairsInitHook| (default: 0 (= null))
@@ -416,6 +417,15 @@ Core~
     Contains a list of characters that don't trigger opening balance checks
 - |g:AutoPairsFiletypeBlacklist| (default: see entry)
     Filetypes to completely disable auto-pairs in
+
+Whitespace and autocomplete~
+- |g:AutoPairsCompleteOnlyOnSpace| (has a buffer variant) (default: 0)
+    Defines whether or not there has to be a space (or EOL) to insert a pair.
+- |g:AutoPairsAutoBuildSpaceWhitelist| (has a buffer variant) (default: 1)
+    Whether or not to automatically generate parts of the character whitelist
+- |g:AutoPairsNextCharWhitelist| (has a buffer variant) (default: [])
+    Defines additional characters to add to the list of exceptions for
+    |g:AutoPairsCompleteOnlyOnSpace|
 
 Compat~
 - |g:AutoPairsCompatibleMaps| (default: 1)
@@ -472,15 +482,19 @@ Quote management~
     |g:AutoPairsCarefulStringExpansion|
 
 String and comment management~
-
 - |g:AutoPairsStringHandlingMode| (has a buffer variant) (default: 0)
     How auto-pairs handles strings. HIGHLY EXPERIMENTAL!
-
 
 Insertion behavior~
 - |g:AutoPairsAutoLineBreak| (has a buffer variant) (default: [])
     A set of opening characters that trigger an instant line break (as in
     auto-pairs does the line break after the open character automagically)
+- |g:AutoPairsAutoBreakBefore| (has a buffer variant) (default: [])
+    A set of opening characters that insert a linebreak before the pair.
+- |g:AutoPairsSyncAutoBreakOptions| (has a buffer variant) (default: 0)
+    Whether or not to automatically assign
+    |b:AutoPairsAutoBreakBefore| = |b:AutoPairsAutoLineBreak|
+    Please read the full help entry for limitations!
 
 Balancing~
 - |g:AutoPairsPreferClose| (default: 1)
@@ -672,8 +686,69 @@ Defines whether or not to require a space or end of the line to complete. If
 this is 1 and you try: `{|word`, you'll get `{|word`, rather than `{|}word`
 if this is 0.
 
+Note that there are a few exceptions to this rule, represented as a part of an
+internal variable; |b:autopairs_whitespace_exceptions|
+
 3.0.0-alpha5:~
     renamed from *g:AutoPairsCompleteOnSpace* to |g:AutoPairsCompleteOnlyOnSpace|
+
+------------------------------------------------------------------------------
+                                            *g:AutoPairsAutoBuildSpaceWhitelist*
+                                                                        number
+
+This variable also exists in a buffer variant~
+Default: 1
+
+Whether or not to prepopulate |g:AutoPairsNextCharWhitelist|
+
+------------------------------------------------------------------------------
+                                                  *g:AutoPairsNextCharWhitelist*
+                                                                          list
+
+This variable also exists in a buffer variant~
+Default: [] when |g:AutoPairsAutoBuildSpaceWhitelist| is 0; otherwise, dynamic
+based on close pairs not in *g:AutoPairsQuoteClosingChar* , which is a list of
+characters that count as closing a string. Must not be confused with
+|g:AutoPairsQuotes|, which are currently two different options. This may
+change in the future.
+
+Only takes effect when |g:AutoPairsCompleteOnlyOnSpace| = 1 (particularly,
+when the buffer variant is 1)
+
+Takes any number of characters that act as an exception to only inserting when
+there's whitespace after the cursor. Note that this variable does NOT support
+multiple bytes per exception; this will not change.
+
+Read: ['a', 'd', 'e'] is okay, ['ac', 'dc', 'e'] is not
+
+------------------------------------------------------------------------------
+                                             *b:autopairs_whitespace_exceptions*
+                                                                    [internal]
+
+This variable should not be used directly~
+
+Contains a regex of close pairs that count as an exception to whitespace only
+completion when |g:AutoPairsCompleteOnlyOnSpace| is 1.
+
+This variable should not be used directly. There are two control variables:
+
+* To enable or disable automatic population of close pairs that aren't string,
+    use |g:AutoPairsAutoBuildSpaceWhitelist|
+* To manually add pairs to this list, use |g:AutoPairsNextCharWhitelist|
+------------------------------------------------------------------------------
+                                               *g:AutoPairsOpenBalanceBlacklist*
+                                                                    list[char]
+
+Has a buffer variant~
+Default: []
+
+Contains a list of characters that are exceptions to auto-balancing; i.e.
+pairs that fully ignore the auto-balancing rules.
+
+Similarly to |g:AutoPairsNextCharWhitelist|, this variable only supports
+single characters, and not multibyte values.
+
+Used to populate an internal variable that does the actual heavy lifting.
 
 ------------------------------------------------------------------------------
                                                      *g:AutoPairsShortcutToggle*
@@ -1124,9 +1199,9 @@ means attempts to deal with HTML-like tags using regex simply aren't feasible.
 Default: []
 This variable also exists in a buffer variant.~
 
-Contains a list of opening brackets  that result in an instant linebreak. It's
-empty by default as this is one of the more intrusive options -- make sure you
-want this when you set it.
+Contains a list of opening brackets  that result in an instant linebreak after
+the open character. It's empty by default as this is one of the more intrusive
+options -- make sure you want this when you set it.
 
 Example, assuming '{' is in the list: >
     Input : {|
@@ -1137,6 +1212,44 @@ Example, assuming '{' is in the list: >
 
 Note that the exact cursor and bracket positions may vary. See
 |autopairs-indent-problems| and |indent|.
+
+------------------------------------------------------------------------------
+                                                    *g:AutoPairsAutoBreakBefore*
+                                                                          list
+
+Default: []
+This variable also exists in a buffer variant~
+
+Contains a list of opening brackets that results in an instant linebreak
+before the open character. With great similarity to
+|g:AutoPairsAutoLineBreak|, this option is highly intrusive, and does not come
+with an undo switch.
+
+This is fully compatible with |g:AutoPairsLineBreak|; if both are enabled for
+a given pair, the effects stack.
+
+------------------------------------------------------------------------------
+                                               *g:AutoPairsSyncAutoBreakOptions*
+                                                                          bool
+Default: 0
+This variable also exists in a buffer variant~
+
+Whether or not to sync b:AutoPairsAutoBreakBefore = b:AutoPairsAutoLineBreak
+on buffer creation.
+
+When this has happened, internal pointer logic ensures any changes to either
+list is reflected in the other. However, by initialization logic, any and all
+pairs have to be added to |g:AutoPairsAutoLineBreak| (or its buffer variant).
+When the buffer has initialized, which the pairs are added to is irrelevant,
+because they're actually the same list.
+
+This also means that if, for some reason, you want to split the two lists into
+distinct lists without reloading the buffer, you have to ensure you make
+|g:AutoPairsAutoBreakBefore| a brand new list, or alternatively use |copy|
+
+Also, if this option is set, note that the contents of this variable is
+completely disregarded, and is overwritten if it exists.
+
 ------------------------------------------------------------------------------
                                              *g:AutoPairsCarefulStringExpansion*
                                                                            int
@@ -1174,20 +1287,6 @@ This variable also exists in a buffer variant.~
 Controls what openers trigger |g:AutoPairsCarefulStringExpansion|. Note that
 for implementation reasons, this only works when the open and close characters
 are the same.
-
-------------------------------------------------------------------------------
-                                               *g:AutoPairsOpenBalanceBlacklist*
-                                                                         array
-This variable also exists in a buffer variant.~
-
-Default: []
-
-Blacklist for checking for balance before inserting.
-
-3.0.0-beta3:~
-    * Made the default [], because defaulting to quotes triggered weird
-      behavior, and I can't remember the rationale for adding them in the
-      first place
 
 ------------------------------------------------------------------------------
                                                   *g:AutoPairsMultilineFastWrap*

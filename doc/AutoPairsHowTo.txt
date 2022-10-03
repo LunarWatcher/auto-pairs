@@ -1,0 +1,74 @@
+*AutoPairsHowTo*
+
+==============================================================================
+Table of help documents~
+
+    |AutoPairs.txt|
+    |AutoPairsCompatibility|
+    |AutoPairsTroubleshooting|
+    |AutoPairsHowTo| (you are here)
+
+==============================================================================
+CONTENTS                                              *autopairs-howto-contents*
+
+    About this document ................... |autopairs-howto-about|
+    Requiring whitespace when inserting ... |autopairs-howto-whitespace-only|
+    Contextual pair insertion ............. |autopairs-howto-contextual|
+
+==============================================================================
+About this document                                      *autopairs-howto-about*
+
+This document is for a concrete list of common questions and answers regarding
+commonly asked-about auto-pairs configurations.
+
+Use |autopairs-howto-contents| to navigate the contents of this file.
+If you have anything you feel fits in this document, and that others would
+benefit from, consider opening a PR with your addition. New sections are added
+last, unless they fit better as a subsection. See other sections for examples.
+
+==============================================================================
+Requiring whitespace when inserting            *autopairs-howto-whitespace-only*
+
+Auto-pairs can be configured to only insert when there's whitespace
+immediately after the cursor. This is done by setting: >
+    let g:AutoPairsCompleteOnlyOnSpace = 1
+<
+
+Note that by default, this includes a few exceptions for close pairs. This
+means that if your cursor is ahead of a known close pair, but that isn't a
+quote, completion will still happen. If you do not want this, you can disable
+it: >
+    let g:AutoPairsAutoBuildSpaceWhitelist = 0
+<
+
+Regardless of this option, if you want to add or remove characters that are
+exceptions to requiring whitespace, you can add them to
+|g:AutoPairsNextCharWhitelist|. Note that this variable doesn't support
+multiple bytes; use with caution.
+
+Further reading~
+* |g:AutoPairsAutoBuildSpaceWhitelist|
+* |g:AutoPairsCompleteOnlyOnSpace|
+
+==============================================================================
+Configuring contextual insertion                    *autopairs-howto-contextual*
+
+WARNING: Highly experimental. May have performance consequences.
+
+Auto-pairs has some limited context support, currently only supporting
+strings. |g:AutoPairsStringHandlingMode| has tree legal values.
+
+Given () "|" ), pressing ( at |, the three modes yield:
+
+ 0: No differentiation between comments and code; cross-balancing will occur;
+    default behavior for jiangmiao/auto-pairs. Example output: () "(|" )
+ 1: Content outside the group (i.e. string) gets matched separately from
+    content within. Example output: () "(|)" )
+ 2: No completion; jumping is still supported. Example output:
+    () "(|" ), regardless of whether the ) at the end is there or not
+
+Option 1 comes with the heaviest performance consequences, as it has to check
+each individual character for highlight groups. At the time of writing, this
+function call comes with some significant overhead, and it's unclear why.
+
+vim:ft=help

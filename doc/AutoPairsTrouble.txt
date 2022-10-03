@@ -6,6 +6,7 @@ Table of help documents~
     |AutoPairs.txt|
     |AutoPairsCompatibility|
     |AutoPairsTroubleshooting| (you are here)
+    |AutoPairsHowTo|
 
 ==============================================================================
 Table of Contents                           *autopairs-troubleshooting-contents*
@@ -18,6 +19,9 @@ Table of Contents                           *autopairs-troubleshooting-contents*
         1. Vim views ........................ |autopairs-uninstall-views|
     4. Rust ................................. |autopairs-rust|
     5. Undefined variables .................. |autopairs-undefined|
+    6. Enter to insert auto-complete ........ |autopairs-autocomplete|
+    7. Test failures (and related errors) ... |autopairs-test-failures|
+        1. Autocmd and syntax errors ........ |autopairs-typescript-errors|
 
 ==============================================================================
 1. General troubleshooting                           *autopairs-troubleshooting-general*
@@ -214,5 +218,72 @@ function. This is only necessary when you make changes to an existing variable
 (such as using +=), not when you define it yourself (|=|). Use specific
 methods if available and applicable, |autopairs#Variables#InitVariables|
 otherwise
+==============================================================================
+6. Enter to insert auto-complete                        *autopairs-autocomplete*
+
+See also: https://github.com/LunarWatcher/auto-pairs/issues/66
+
+Due to the way Vim's input system works, if you map `<CR>` to configure
+auto-complete insertions, you can and will see auto-pairs act weirdly if
+|g:AutoPairsMapCR| is set.
+
+There's a large number of auto-complete plugins, and a large number of
+different systems. Several modern auto-complete plugins are additionally
+async, which adds a layer of complexity.
+
+The execution order of auto-pairs and auto-complete plugins, though
+particularly coc.nvim has been demonstrated to do this, isn't deterministic.
+coc's timeout may or may not fire in time for auto-pairs to have completed,
+and if it fires before auto-pairs has a chance to do anything, `pumvisible()`
+or similar isn't viable.
+
+Simply put, the pum may have closed by the time auto-pairs is executed. Simply
+put, there's no easy way to fix this behavior.
+
+Workarounds~
+
+The first option is disabling |g:AutoPairsMapCR|, and changing your map to
+incorporate `\<cr>\<C-r>=autopairs#Keybinds#IgnoreInsertEnter('autopairs#AutoPairsReturn')\<cr>`
+into your mapping. Auto-pairs simply wasn't meant for this type of use, so
+yes, the command is nasty. This has to be as the fallback to the pum being
+visible for a custom `<CR>` map. This is left as an exercise to the reader.
+
+Alternative B... stop using `<CR>` to insert the completion match, and get
+used to <C-y>, which is a default Vim mapping for completion insertion. Or, of
+course, map completion insertion to an altogether different key.
+
+==============================================================================
+7. Test failures (and related errors)                  *autopairs-test-failures*
+
+------------------------------------------------------------------------------
+7.1. TypeScript errors                             *autopairs-typescript-errors*
+
+Type: Vim bug
+Status: Fixed in later versions of Vim. Test fails can be ignored
+
+I've done minimal research into this problem, so not sure whether this is
+exclusively a problem with 
+
+The "Contextual balancing should cooperate with everything should work in
+typescript" test fails in at least Vim 9.0.263, for an unknown reason.
+
+This is a bug in Vim itself, and can only be solved by updating Vim. 9.0.482
+is a known good patch.
+
+Example of an affected error log: >
+    not ok 49 - Contextual balancing should cooperate with everything should work in typescript
+    # function 188() abort dict  Line:1  [ Absolute Line: 34 ]  (/tmp/vwcnP9s/12)
+    # function BufNewFile Autocommands for "*.ts"()  This function is already deleted.
+    # function FileType Autocommands for "*"()  This function is already deleted.
+    # function Syntax Autocommands for "*"()  This function is already deleted.
+    # function function <SNR>21_SynSet()  This function is already deleted.
+    # function script()  This function is already deleted.
+    # 
+    # Vim(source):E484: Can't open file /usr/local/share/vim/vim90/syntax/shared/typescriptcommon.vim
+<
+
+Tests failing with this error can safely be ignored
+
+
 
 vim:ft=help

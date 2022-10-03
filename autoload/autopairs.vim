@@ -17,7 +17,8 @@ endif
 " Current version; not representative of tags or real versions, but purely
 " meant as a number associated with the version. Semantic meaning on the first
 " digit will take place. See the documentation for more details.
-let g:AutoPairsVersion = 30063
+
+let g:AutoPairsVersion = 40000
 
 let s:save_cpo = &cpoptions
 set cpoptions&vim
@@ -105,8 +106,8 @@ fun! autopairs#AutoPairsAddPair(pair, ...)
     endif
 endfun
 
-" default pairs base on filetype
-func! autopairs#AutoPairsDefaultPairs(...)
+" Returns the default set of pairs given the current buffer's filetype
+func! autopairs#AutoPairsDefaultPairs()
     let r = copy(g:AutoPairs)
     if has_key(g:AutoPairsLanguagePairs, &ft)
         for [open, close] in items(g:AutoPairsLanguagePairs[&ft])
@@ -209,7 +210,7 @@ func! autopairs#AutoPairsInsert(key, ...)
             " Krasjet: only insert the closing pair if the next character is a space
             " or a non-quote closing pair, or a whitelisted character (string)
             " Olivia: that ^ if and only if it's desired.
-            if b:AutoPairsCompleteOnlyOnSpace == 1 && afterline[0] =~? '^\v\S' && afterline[0] !~# b:autopairs_next_char_whitelist
+            if b:AutoPairsCompleteOnlyOnSpace == 1 && afterline[0] =~? '^\v\S' && afterline[0] !~# b:autopairs_whitespace_exceptions
                 break
             end
 
@@ -436,12 +437,10 @@ func! autopairs#AutoPairsJump()
     call search('\V' .. b:AutoPairsJumpRegex, 'W')
 endf
 
-" Handles the move feature -- note that the move feature has been disabled by
-" default. DO NOT confuse this for the jump feature.
 func! autopairs#AutoPairsMoveCharacter(key)
     let c = getline(".")[col(".")-1]
     let escaped_key = substitute(a:key, "'", "''", 'g')
-    return "\<DEL>\<ESC>:call search("."'" .. escaped_key .. "'" .. ")\<CR>a" .. c .. "\<LEFT>"
+    return "\<DEL>\<ESC>:call search(" .. "'" .. escaped_key .. "'" .. ")\<CR>a" .. c .. "\<LEFT>"
 endf
 
 " Back insert for flymode.
@@ -560,7 +559,7 @@ endf
 
 func! autopairs#AutoPairsIgnore()
     let b:AutoPairsIgnoreSingle = !b:AutoPairsIgnoreSingle
-    echo (b:AutoPairsIgnoreSingle ? "Skipping next pair" : "Not skipping next pair")
+    echo (b:AutoPairsIgnoreSingle ? "Skipping" : "Not skipping") "next pair"
     return ''
 endfunc
 
@@ -580,7 +579,7 @@ func! autopairs#AutoPairsInit()
     let b:autopairs_saved_pair = [0, 0]
     " Krasjet: only auto-complete if the next character, or characters, is one of
     " these
-    let b:autopairs_next_char_whitelist = []
+    let b:autopairs_whitespace_exceptions = []
     let b:AutoPairsList = []
 
     " Deal with mappings associated with specific pairs

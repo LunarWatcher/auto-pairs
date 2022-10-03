@@ -5,13 +5,11 @@ Describe Complex use of maps
     It should ignore invalid keys
         call autopairs#AutoPairsAddPair({"open": "<", "close": ">", "fuckin' key mate": "crash and burn"})
         new | only!
-        call autopairs#AutoPairsInit()
         call Expect("<").ToMatch("<>")
     End
     It should enable explicit expansion
         call autopairs#AutoPairsAddPair({"open": "<", "close": ">", "mapclose": ']'})
         new | only!
-        call autopairs#AutoPairsInit()
         call Expect("<").ToMatch("<>")
         call Expect('< ]').ToMatch("< >") " This test is a bit weird, but we basically have to force
                                           " the thing to work. <] probably
