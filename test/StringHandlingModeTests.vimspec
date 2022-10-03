@@ -1,6 +1,6 @@
 Describe String handling modes should be different
     Before each
-        call autopairs#Variables#_InitVariables()
+        call autopairs#Variables#InitVariables()
         new | only!
     End
     It should default to 0

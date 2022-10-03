@@ -1,6 +1,6 @@
 Describe Basic tests of pair functionality
     Before each
-        call autopairs#Variables#_InitVariables()
+        call autopairs#Variables#InitVariables()
     End
     It should do basic insertion
         new | only!

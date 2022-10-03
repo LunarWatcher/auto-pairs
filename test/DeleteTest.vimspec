@@ -1,6 +1,6 @@
 Describe <BS> tests
     Before each
-        call autopairs#Variables#_InitVariables()
+        call autopairs#Variables#InitVariables()
         let g:AutoPairsMapBS = 1
     End
     It isn't explicitly made to handle balanced deletion

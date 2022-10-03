@@ -17,6 +17,7 @@ Table of Contents                           *autopairs-troubleshooting-contents*
     3. Uninstalling ......................... |autopairs-uninstalling|
         1. Vim views ........................ |autopairs-uninstall-views|
     4. Rust ................................. |autopairs-rust|
+    5. Undefined variables .................. |autopairs-undefined|
 
 ==============================================================================
 1. General troubleshooting                           *autopairs-troubleshooting-general*
@@ -178,5 +179,40 @@ The Rust plugin sets these pairs: >
 All of which are already enabled by default. You're not losing any pairs by
 setting the option, but by letting it be 0, you lose any other defined pairs
 -- including your custom pairs.
+
+==============================================================================
+5. Undefined variables (that clearly exist)                *autopairs-undefined*
+
+With certain configurations, you may run into undefined variables.
+
+Admittedly, this is rare, and primarily applies to places where you'd like to
+append to an existing default, rather than overriding it in its entirety.
+Remember; `let g:AutoPairs<Something> = "example"` is fine, but
+`let g:AutoPairs<Something> += "something else"` is bad if
+`g:AutoPairs<Something>` hasn't already been defined.
+
+AutoPairs do define these on load, but they're not loaded immediately. The
+reason this happens is load order; by default, and unfixably, auto-pairs isn't
+invoked until after the vimrc is loaded.
+
+However, you can cheat the system by calling any autoload function. Which you
+call depends on what variable you're trying to initialise from a default.
+
+For example, if you'd like to add a pair, use |autopairs#AutoPairsDefine|.
+
+If no such function exists, you can explicitly call
+|autopairs#Variables#InitVariables|. However, this is only needed if you don't
+call any other autopairs autoload functions. If you have
+|autopairs#AutoPairsDefine| invoked in your config, you can define whatever
+variable you need _after_ that function call without any problems. Calling
+|autopairs#Variables#InitVariables()| explicitly is more or less a symbolic
+function call equivalent to an empty function, as the function is called when
+the primary autoload script is loaded anyway.
+
+TL;DR: define your additions to the defaults after calling an autoload
+function. This is only necessary when you make changes to an existing variable
+(such as using +=), not when you define it yourself (|=|). Use specific
+methods if available and applicable, |autopairs#Variables#InitVariables|
+otherwise
 
 vim:ft=help

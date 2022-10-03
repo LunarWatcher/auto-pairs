@@ -17,12 +17,12 @@ endif
 " Current version; not representative of tags or real versions, but purely
 " meant as a number associated with the version. Semantic meaning on the first
 " digit will take place. See the documentation for more details.
-let g:AutoPairsVersion = 30062
+let g:AutoPairsVersion = 30063
 
 let s:save_cpo = &cpoptions
 set cpoptions&vim
 
-call autopairs#Variables#_InitVariables()
+call autopairs#Variables#InitVariables()
 
 fun! autopairs#AutoPairsAddLanguagePair(pair, language)
     if !has_key(a:pair, "open") || !has_key(a:pair, "close")

@@ -1,6 +1,6 @@
 Describe Quote balance magic should work
     Before each
-        call autopairs#Variables#_InitVariables()
+        call autopairs#Variables#InitVariables()
     End
     It should do basic balancing
         let g:AutoPairsMapBS = 0
