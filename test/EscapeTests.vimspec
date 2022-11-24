@@ -34,4 +34,15 @@ Describe Backslashes are trash, but
         call Expect('\\\[').ToMatch('\\\[\]')
         call Expect('\(').ToMatch('\(\)')
     End
+    It should deal with LaTeX backslash fuckery
+        let g:AutoPairs = autopairs#AutoPairsDefine({'\\[': '\]', '\\(': '\)'})
+        let g:AutoPairsMapBS = 1
+        new | only!
+        " Required to fix the formatting
+        set ft=tex
+        call Expect("\\(\<BS>").ToMatch('')
+        call Expect("\\[\<BS>").ToMatch('')
+        call Expect("\\(\<CR>").ToMatch('\(\n\n\)')
+        call Expect("\\[\<CR>").ToMatch('\[\n\n\]')
+    End
 End
