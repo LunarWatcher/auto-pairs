@@ -367,6 +367,9 @@ And finally, other shortcuts defined by auto-pairs:
 All the above can be remapped by using the appropriate configuration variable.
 Setting a configuration variable to "" disables that keybind
 
+Also note that the prefix for most keybinds is <C-p> by default.
+This can be reconfigured with |g:AutoPairsPrefix| if desired or necessitated
+by plugin conflict.
 
 ------------------------------------------------------------------------------
 4.1. Remapping shortcuts                          *autopairs-shortcut-remapping*
@@ -1695,6 +1698,22 @@ defined as a pair, \\[ counts as escaping and \\\[ counts as the backslash
 being escaped. The backslash before the [ is considered a part of the pair.
 See |autopairs-regex-escaping| for an explanation on the double escaping in
 the pair itself.
+
+------------------------------------------------------------------------------
+                                                             *g:AutoPairsPrefix*
+
+Type: keybind string
+Default: <C-p>
+
+Prefix to use for auto-pairs incompatible maps. Only takes effect if
+|g:AutoPairsCompatibleMaps| = 0, as the legacy meta maps don't have any
+prefixes, there's no reason to have it anyway.
+
+Note that this keybind _can_ be blank, but it's recommended to reassign
+|g:AutoPairsMoveExpression| (or disable it). Otherwise, the move system can map
+raw keys, which can and will cause conflicts with typed letters if given the
+opportunity. Should you choose not to, though, you get to live with the
+consequences, if any.
 
 *autopairs-end-of-options* (this tag exists purely for doc editing purposes and
                             has no meaning for the plugin)

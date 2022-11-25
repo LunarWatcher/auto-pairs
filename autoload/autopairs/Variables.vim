@@ -32,6 +32,8 @@ fun! autopairs#Variables#InitVariables()
         \ 'php': {'<?': { 'close': '?>', 'mapclose': ']'}, '<?php': {'close': '?>', 'mapclose': ']'}}
         \ })
 
+    call s:define('g:AutoPairsPrefix', '<C-p>')
+
     " Krasjet: the closing character for quotes, auto completion will be
     " inhibited when the next character is one of these
     call s:define('g:AutoPairsQuoteClosingChar', ['"', "'", '`'])
@@ -68,12 +70,12 @@ fun! autopairs#Variables#InitVariables()
 
     call s:define('g:AutoPairsCenterLine', 1)
 
-    call s:define('g:AutoPairsShortcutToggle', g:AutoPairsCompatibleMaps ? '<M-p>': '<C-p><C-t>')
-    call s:define("g:AutoPairsShortcutIgnore", '<C-p><C-e>')
+    call s:define('g:AutoPairsShortcutToggle', g:AutoPairsCompatibleMaps ? '<M-p>' : g:AutoPairsPrefix .. '<C-t>')
+    call s:define("g:AutoPairsShortcutIgnore", g:AutoPairsPrefix .. '<C-e>')
     call s:define('g:AutoPairsShortcutFastWrap', g:AutoPairsCompatibleMaps ? '<M-e>' : '<C-f>')
 
     call s:define('g:AutoPairsMoveCharacter', "()[]{}\"'")
-    call s:define('g:AutoPairsMoveExpression', '<C-p>%key')
+    call s:define('g:AutoPairsMoveExpression', g:AutoPairsPrefix .. '%key')
 
     " Variable controlling whether or not to require a space or EOL to complete
     " bracket pairs. Extension off Krasjet.
@@ -81,7 +83,7 @@ fun! autopairs#Variables#InitVariables()
     call s:define('g:AutoPairsAutoBuildSpaceWhitelist', 1)
     call s:define('g:AutoPairsDefaultSpaceWhitelist', '')
 
-    call s:define('g:AutoPairsShortcutJump', g:AutoPairsCompatibleMaps ? '<M-n>' : '<C-p><C-s>')
+    call s:define('g:AutoPairsShortcutJump', g:AutoPairsCompatibleMaps ? '<M-n>' : g:AutoPairsPrefix .. '<C-s>')
 
     " Fly mode will for closed pair to jump to closed pair instead of insert.
     " also support AutoPairsBackInsert to insert pairs where jumped.
@@ -91,7 +93,7 @@ fun! autopairs#Variables#InitVariables()
     call s:define('g:AutoPairsMultilineCloseDeleteSpace', 1)
 
     " Work with Fly Mode, insert pair where jumped
-    call s:define('g:AutoPairsShortcutBackInsert', g:AutoPairsCompatibleMaps ? '<M-b>' : '<C-p><C-b>')
+    call s:define('g:AutoPairsShortcutBackInsert', g:AutoPairsCompatibleMaps ? '<M-b>' : g:AutoPairsPrefix .. '<C-b>')
 
     call s:define('g:AutoPairsNoJump', 0)
 
@@ -125,7 +127,7 @@ fun! autopairs#Variables#InitVariables()
     call s:define('g:AutoPairsPreferClose', 1)
 
     call s:define('g:AutoPairsMultilineClose', 0)
-    call s:define('g:AutoPairsShortcutToggleMultilineClose', '<C-p><C-m>')
+    call s:define('g:AutoPairsShortcutToggleMultilineClose', g:AutoPairsPrefix .. '<C-m>')
     call s:define('g:AutoPairsSearchEscape', 1)
 
     call s:define("g:AutoPairsBSAfter", 1)
