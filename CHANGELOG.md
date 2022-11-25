@@ -1,9 +1,7 @@
-
-# 4.0.0-alpha1
+# 4.0.0
 `let g:AutoPairsVersion = 40000`
 
 ## Changed
-
 * `g:AutoPairsCompatibleMaps` is now 0 by default.
 * Added enforcement of scriptversion 4 to all files
 
@@ -12,6 +10,7 @@
 * Missing `...` specifier prevented argument forwarding for IgnoreInsertEnter
 * Missing period for string concatenation seems to have broken the move feature
 * Switched to a variable for universal event ignoring, without overwriting the variable unrecoverably (`exists('##InsertLeavePre')` &lt;3)
+* [parallel-fixed in an unversioned 3.0.x-version] Fixed bad regex management for multibyte pairs ([#71](https://github.com/LunarWatcher/auto-pairs/issues/71))
 
 ## Added
 * Documentation with some basic how-to guides for auto-pairs features. These can technically be figured out by just reading the documentation, but it's easier to compress it into concrete guides.
@@ -20,6 +19,8 @@
 * Tests for both the character whitelist for only completing on space, and the balance check blacklist.
 * Added `g:AutoPairsAutoBreakBefore` and `g:AutoPairsSyncAutoBreakOptions` ([#57](https://github.com/LunarWatcher/auto-pairs/issues/57))
 * `InsertLeavePre` is now ignored
+* Regex pairs are now disabled and made opt-in only ([#53](https://github.com/LunarWatcher/auto-pairs/issues/53))
+* `g:AutoPairsPrefix`, used for switching the default prefix in incompatible map mode.
 
 ## Meta
 * Removed pre-commit
