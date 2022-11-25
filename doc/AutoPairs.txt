@@ -1993,6 +1993,12 @@ Essentially: >
             rather than open. This is largely useful for edge-cases like '',
             where certain characters become invalid after text is typed
             inside the quotes.",
+        "regex": "0/1, whether or not the enclosed pattern is regex. Disabled
+            by default, as most patterns WILL NOT need this set to true. Only
+            exceptionally rare patterns (notably, the vimscript comment
+            pattern) needs full regex support. Note that this applies to both
+            the open and close pairs, so if enabled, the close pair also has
+            to be written in a compatible way."
     }
 <
 

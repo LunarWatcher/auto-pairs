@@ -66,8 +66,9 @@ endf
 
 " split text to two part
 " returns [orig, text_before_open, open]
-func! autopairs#Strings#matchend(text, open)
-    let m = matchstr(a:text, '\V' .. a:open .. '\v$')
+func! autopairs#Strings#matchend(text, open, ...)
+    let opt = get(a:, '1', {'regex': 0})
+    let m = matchstr(a:text, (type(opt) == v:t_number ? a:open : autopairs#Utils#escape(a:open, opt)) .. '\v$')
     if m == ""
         return []
     end
@@ -75,8 +76,9 @@ func! autopairs#Strings#matchend(text, open)
 endf
 
 " returns [orig, close, text_after_close]
-func! autopairs#Strings#matchbegin(text, close)
-    let m = matchstr(a:text, '^\V' .. escape(a:close, '\'))
+func! autopairs#Strings#matchbegin(text, close, ...)
+    let opt = get(a:, '1', {'regex': 0})
+    let m = matchstr(a:text, '^' .. (type(opt) == v:t_number ? a:open : autopairs#Utils#escape(a:close, opt)) .. '\v$')
     if m == ""
         return []
     end
@@ -114,6 +116,7 @@ endfun
 fun! autopairs#Strings#countHighlightMatches(open, close, opt, highlightGroup)
     let close = a:close
     let open = a:opt["balancebyclose"] ? close : a:open
+    let regex = a:opt["regex"]
 
     let lineNum = line('.')
     " TODO: Add a counter for some increased multiline stuff
@@ -123,15 +126,15 @@ fun! autopairs#Strings#countHighlightMatches(open, close, opt, highlightGroup)
         let [before, after, afterline] = autopairs#Strings#getline()
 
         if open == close
-            let openPre = count(before, open)
-            let openPost = count(after, open)
+            let openPre = regex ? autopairs#Strings#regexCount(before, autopairs#Utils#escape(open, a:opt)) : count(before, open)
+            let openPost = regex ? autopairs#Strings#regexCount(after, autopairs#Utils#escape(open, a:opt)) : count(after, open)
             let closePre = 0
             let closePost = 0
         else
-            let openPre = autopairs#Strings#regexCount(before, open)
-            let openPost = autopairs#Strings#regexCount(after, open)
-            let closePre = count(before, close)
-            let closePost = count(after, close)
+            let openPre = regex ? autopairs#Strings#regexCount(before, autopairs#Utils#escape(open, a:opt)) : count(before, open)
+            let openPost = regex ? autopairs#Strings#regexCount(after, autopairs#Utils#escape(open, a:opt)) : count(after, open)
+            let closePre = regex ? autopairs#Strings#regexCount(before, autopairs#Utils#escape(close, a:opt)) : count(before, close)
+            let closePost = regex ? autopairs#Strings#regexCount(after, autopairs#Utils#escape(close, a:opt)) : count(after, close)
         endif
 
         return [closePre, openPre, closePost, openPost, 0, 0, closePre + closePost, openPre + openPost]
@@ -157,7 +160,7 @@ fun! autopairs#Strings#countHighlightMatches(open, close, opt, highlightGroup)
     let wasLastAString = 0
 
     while offset < last
-        let pos = match(line, '\V' .. open, offset)
+        let pos = match(line, autopairs#Utils#escape(open, a:opt), offset)
         if pos == -1
             break
         endif
@@ -213,7 +216,7 @@ fun! autopairs#Strings#countHighlightMatches(open, close, opt, highlightGroup)
 
         let offset = 0
         while offset < last
-            let pos = match(line, '\V' .. a:close, offset)
+            let pos = match(line, autopairs#Utils#escape(a:close, a:opt), offset)
             if pos == -1
                 break
             endif

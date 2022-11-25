@@ -73,7 +73,8 @@ fun! autopairs#Keybinds#mapPairKeybinds()
                     \ 'alwaysmapdefaultclose': 1,
                     \ 'delete': 1, 'multiline': 1,
                     \ 'passiveclose': 1,
-                    \ 'balancebyclose': 0 }
+                    \ 'balancebyclose': 0,
+                    \ 'regex': 0}
         " Default: set key = c
         let opt['key'] = c
 
@@ -112,6 +113,7 @@ fun! autopairs#Keybinds#mapPairKeybinds()
             let opt["alwaysmapdefaultclose"] = get(close, 'alwaysmapdefaultclose', 1)
             let opt["passiveclose"] = get(close, "passiveclose", 1)
             let opt["balancebyclose"] = get(close, "balancebyclose", 0)
+            let opt["regex"] = get(close, "regex", 0)
         endif
 
         call autopairs#AutoPairsMap(o)
@@ -170,11 +172,11 @@ fun! autopairs#Keybinds#mapPairKeybinds()
         "         double-quotes are possible
         if open == "'" && open == close
             if b:AutoPairsSingleQuoteMode == -1
-                let item[0] = '\v\zs'''
+                let item[0] = '\zs'''
             elseif b:AutoPairsSingleQuoteMode == 0
-                let item[0] = '\v(' .. b:AutoPairsSingleQuotePrefixGroup .. ')\zs'''
+                let item[0] = '(' .. b:AutoPairsSingleQuotePrefixGroup .. ')\zs'''
             elseif b:AutoPairsSingleQuoteMode == 1
-                let item[0] = '\v(' .. b:AutoPairsSingleQuotePrefixGroup .. ')\w?\zs'''
+                let item[0] = '(' .. b:AutoPairsSingleQuotePrefixGroup .. ')\w?\zs'''
             elseif b:AutoPairsSingleQuoteMode == 2
                 " Note that g:AutoPairsSingleQuoteExpandFor is a separate
                 " group to make sure prefix conditions still hold. This means
@@ -183,12 +185,13 @@ fun! autopairs#Keybinds#mapPairKeybinds()
                 " Largely quality of life; can be worked around with
                 " |b:AutoPairsSingleQuotePrefixGroup| and mode == 0 if other
                 " behavior is desired.
-                let item[0] = '\v(' .. b:AutoPairsSingleQuotePrefixGroup .. ')[' .. b:AutoPairsSingleQuoteExpandFor .. ']?\zs'''
+                let item[0] = '(' .. b:AutoPairsSingleQuotePrefixGroup .. ')[' .. b:AutoPairsSingleQuoteExpandFor .. ']?\zs'''
             else
                 echoerr 'Invalid b:AutoPairsSingleQuoteMode: ' .. b:AutoPairsSingleQuoteMode
                     \ .. ". Only -1, 0, 1, and 2 are allowed values.."
             endif
-            let opt["balancebyclose"] = 1
+            let item[2]["balancebyclose"] = 1
+            let item[2]["regex"] = 1
         end
     endfor
 endfun

@@ -27,8 +27,8 @@ fun! autopairs#Variables#InitVariables()
         \ "erlang": {'<<': '>>'},
         \ "tex": {'``': "''", '$': '$'},
         \ "html": {'<': '>'},
-        \ 'vim': {'\v(^\s*\zs"\ze|".*"\s*\zs"\ze$|^(\s*[a-zA-Z]+\s*([a-zA-Z]*\s*\=\s*)?)@!(\s*\zs"\ze((\\\"|[^"])*$)@=))': {"close": '', 'mapclose': 0}},
-        \ 'rust': {'\w\zs<': '>', '&\zs''': ''},
+        \ 'vim': {'(^\s*\zs"\ze|".*"\s*\zs"\ze$|^(\s*[a-zA-Z]+\s*([a-zA-Z]*\s*\=\s*)?)@!(\s*\zs"\ze((\\\"|[^"])*$)@=))': {"close": '', 'mapclose': 0, 'regex': 1}},
+        \ 'rust': {'\w\zs<': {'close': '>', 'regex': 1}, '&\zs''': {'close': '', 'regex': 1}},
         \ 'php': {'<?': { 'close': '?>', 'mapclose': ']'}, '<?php': {'close': '?>', 'mapclose': ']'}}
         \ })
 

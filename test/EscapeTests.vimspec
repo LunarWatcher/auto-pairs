@@ -26,7 +26,7 @@ Describe Backslashes are trash, but
         call Expect('\\{').ToMatch('\\{}')
     End
     It should work with pairs starting with a backslash
-        let g:AutoPairs = autopairs#AutoPairsDefine({'\\[': '\]', '\\(': '\)'})
+        let g:AutoPairs = autopairs#AutoPairsDefine({'\[': '\]', '\(': '\)'})
         new | only!
         call Expect('[').ToMatch('[]')
         call Expect('\[').ToMatch('\[\]')
@@ -35,7 +35,7 @@ Describe Backslashes are trash, but
         call Expect('\(').ToMatch('\(\)')
     End
     It should deal with LaTeX backslash fuckery
-        let g:AutoPairs = autopairs#AutoPairsDefine({'\\[': '\]', '\\(': '\)'})
+        let g:AutoPairs = autopairs#AutoPairsDefine({'\[': '\]', '\(': '\)'})
         let g:AutoPairsMapBS = 1
         new | only!
         " Required to fix the formatting

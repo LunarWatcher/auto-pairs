@@ -159,8 +159,12 @@ func! autopairs#AutoPairsInsert(key, ...)
     " Check open pairs {{{
     " TODO: maybe move this to another file?
     for [open, close, opt] in b:AutoPairsList
-        let ms = autopairs#Strings#matchend(before .. a:key, open)
-        let m = matchstr(afterline, '^\v\s*\zs\V' .. escape(close, '\'))
+        let ms = autopairs#Strings#matchend(before .. a:key, open, opt)
+        let m = matchstr(afterline, '^\v\s*\zs' .. autopairs#Utils#escape(close, opt))
+        if (close == '''') 
+            echom open close opt
+            echom "Line: " before .. a:key
+        endif
 
         if len(ms) > 0
             let target = ms[1]
@@ -258,8 +262,8 @@ func! autopairs#AutoPairsDelete()
                 continue
             endif
             let rest_of_line = opt['multiline'] ? after : ig
-            let b = matchstr(before, '\V' .. open .. '\v\s?$')
-            let a = matchstr(rest_of_line, '^\v\s*\V' .. escape(close, '\'))
+            let b = matchstr(before, autopairs#Utils#escape(open, opt) .. '\v\s?$')
+            let a = matchstr(rest_of_line, '^\v\s*' .. autopairs#Utils#escape(close, opt))
 
             if b != '' && a != ''
                 if b[-1:-1] == ' '
@@ -284,12 +288,12 @@ func! autopairs#AutoPairsDelete()
             if (close == '')
                 continue
             endif
-            let m = autopairs#Strings#matchend(before, '\V' .. open .. '\v\s*' .. '\V' .. escape(close, '\') .. '\v$')
+            let m = autopairs#Strings#matchend(before, autopairs#Utils#escape(open, opt) .. '\v\s*' .. autopairs#Utils#escape(close, opt) .. '\v$', 0)
 
             if len(m) > 0
                 return autopairs#Strings#backspace(m[2])
             elseif opt["multiline"] && b:AutoPairsMultilineBackspace
-                let m = matchstr(before, '^\v\s*\V' .. escape(close, '\'))
+                let m = matchstr(before, '^\v\s*' .. autopairs#Utils#escape(close, opt))
                 if m != ''
                     let b = ""
                     let offset = 1
@@ -301,7 +305,7 @@ func! autopairs#AutoPairsDelete()
                             return "\<BS>"
                         endif
                     endwhile
-                    let a = matchstr(getline(line('.') - offset), '\V' .. open .. '\v\s*$') .. ' '
+                    let a = matchstr(getline(line('.') - offset), autopairs#Utils#escape(open, opt) .. '\v\s*$') .. ' '
                     if a != ' '
                         return autopairs#Strings#backspace(a) .. autopairs#Strings#backspace(b) .. autopairs#Strings#backspace(m)
                     endif
@@ -338,8 +342,9 @@ func! autopairs#AutoPairsFastWrap(...)
 
             let match = []
             let esc = substitute(close, "'", "''", "g")
-            let esc = substitute(esc, '\', '\\\\', "g")
+            let esc = escape(esc, '\')
 
+            " TODO: Wtf is this for?
             let res = substitute(after, '^\V' .. esc, '\=add(match, submatch(0))', '')
 
             if len(match) > 0 && len(match[0]) > length
@@ -372,9 +377,9 @@ func! autopairs#AutoPairsFastWrap(...)
             if close == ''
                 continue
             end
-            if after =~ '^\s*\V' .. open
+            if after =~ '\v^\s*' .. autopairs#Utils#escape(open, opt)
                 if open == close && count(before, open) % 2 != 0
-                            \ && before =~ '\V' .. open .. '\v.*$' && after =~ '^\V' .. escape(close, '\')
+                            \ && before =~ autopairs#Utils#escape(open, opt) .. '\v.*$' && after =~ '^' .. autopairs#Utils#escape(close, opt)
                     break
                 endif
 
@@ -382,7 +387,7 @@ func! autopairs#AutoPairsFastWrap(...)
                 " Search goes for the first one rather than the logical option
                 " -- the last one. This is only a problem when open == close,
                 "  which means in the case of quotes.
-                if open == close && after =~ '^\v\s+\V' .. escape(close, '\')
+                if open == close && after =~ '^\v\s+' .. autopairs#Utils#escape(close, opt)
                     call search(close, 'We')
                 endif
                 normal! p
@@ -499,7 +504,7 @@ func! autopairs#AutoPairsReturn()
         " \V<open>\v is basically escaping. Makes sure ( isn't considered the
         " start of a group, which would yield incorrect results.
         " Used to prevent fuckups
-        if before =~ '\V' .. open .. '\v' .. (b:AutoPairsReturnOnEmptyOnly ? '\s*' : '.*') .. '$' && afterline =~ '^\s*\V' .. escape(close, '\')
+        if before =~ autopairs#Utils#escape(open, opt) .. '\v' .. (b:AutoPairsReturnOnEmptyOnly ? '\s*' : '.*') .. '$' && afterline =~ '^\s*' .. autopairs#Utils#escape(close, opt)
             if b:AutoPairsCarefulStringExpansion && index(b:AutoPairsQuotes, open) != -1 && count(before, open) % 2 == 0
                 return ""
             endif
@@ -525,7 +530,7 @@ func! autopairs#AutoPairsSpace()
         if close == ''
             continue
         end
-        if before =~ '\V' .. open .. '\v$' && after =~ '^\V' .. escape(close, '\')
+        if before =~ autopairs#Utils#escape(open, opt) .. '\v$' && after =~ '^' .. autopairs#Utils#escape(close, opt)
             if close =~ '\v^[''"`]$'
                 return "\<SPACE>"
             else
