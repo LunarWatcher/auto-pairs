@@ -1166,11 +1166,11 @@ Used with |g:AutoPairsSingleQuoteMode| = 2
 Default: >
     {
         \ "erlang": {'<<': '>>'},
-        \ "tex": {'``': "''" },
+        \ "tex": {'``': "''", '$': '$'},
         \ "html": {'<': '>'},
-        \ 'vim': {'\v(^\s*\zs"\ze|".*"\s*\zs"\ze$|^(\s*[a-zA-Z]+\s*([a-zA-Z]*\s*\=\s*)?)@!(\s*\zs"\ze((\\\"|[^"])*$)@=))': ''},
-        \ 'rust': {'\w\zs<': '>', '&\zs''': ''},
-        \ 'php': {'<?': '?>//k]', '<?php': '?>//k]'}
+        \ 'vim': {'(^\s*\zs"\ze|".*"\s*\zs"\ze$|^(\s*[a-zA-Z]+\s*([a-zA-Z]*\s*\=\s*)?)@!(\s*\zs"\ze((\\\"|[^"])*$)@=))': {"close": '', 'mapclose': 0, 'regex': 1}},
+        \ 'rust': {'\w\zs<': {'close': '>', 'regex': 1}, '&\zs''': {'close': '', 'regex': 1}},
+        \ 'php': {'<?': { 'close': '?>', 'mapclose': ']'}, '<?php': {'close': '?>', 'mapclose': ']'}}
         \ }
 <
 
@@ -1693,12 +1693,6 @@ character(s) may have been escaped. The internal check is for \<pair> and
 not \\<pair>: this means \[ doesn't insert the close pair, but \\[ does insert
 ].
 
-Modified multibyte functionality in 3.0.0-beta12 means that if '\\[': '\]' is
-defined as a pair, \\[ counts as escaping and \\\[ counts as the backslash
-being escaped. The backslash before the [ is considered a part of the pair.
-See |autopairs-regex-escaping| for an explanation on the double escaping in
-the pair itself.
-
 ------------------------------------------------------------------------------
                                                              *g:AutoPairsPrefix*
 
@@ -1986,7 +1980,7 @@ While undefined keys have no effect, missing required will throw errors.
 
 *autopairs-open* *autopairs-close* *autopairs-passiveopen*
 *autopairs-passiveclose* *autopairs-mapclose* *autopairs-mapopen*
-*autopairs-alwaysmapdefault*
+*autopairs-alwaysmapdefault* *autopairs-regex*
 
 Essentially: >
     {
