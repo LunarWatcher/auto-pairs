@@ -1,0 +1,34 @@
+Describe TeX pairs should work
+    " Note: the tests in this file (as well as any others requiring
+    " specific filetypes) need to have unique filenames. Otherwise,
+    " settings are preserved and tests fail
+    Before each
+        call autopairs#Variables#InitVariables()
+    End
+    It should work with pairs starting with a backslash
+        new TexBackslashBase.tex | only!
+        call Expect(&ft).to_equal('tex')
+
+        call Expect('[').ToMatch('[]')
+        call Expect('\[').ToMatch('\[\]')
+        call Expect('\\[').ToMatch('\\[')
+        call Expect('\\\[').ToMatch('\\\[\]')
+        call Expect('\(').ToMatch('\(\)')
+    End
+    It should handle BS appropriately
+        let g:AutoPairsMapBS = 1
+        new TexBSBase.tex | only!
+        call Expect(&ft).to_equal('tex')
+        call Expect(b:AutoPairsMapBS).to_equal(1)
+
+        call Expect("\\(\<BS>").ToMatch('')
+        call Expect("\\[\<BS>").ToMatch('')
+    End
+    It should handle CR appropriately
+        new TexCRBase.tex | only!
+        call Expect(&ft).to_equal('tex')
+
+        call Expect("\\(\<CR>").ToMatch('\(\n\n\)')
+        call Expect("\\[\<CR>").ToMatch('\[\n\n\]')
+    End
+End

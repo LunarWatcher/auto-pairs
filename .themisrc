@@ -3,6 +3,11 @@ let g:CachePairs = autopairs#AutoPairsDefine({})
 let g:AutoPairsForceDefine = 69420
 let g:Assert = themis#helper("assert")
 
+" Some plugin apparently changes the tex filetype
+" to plaintex, which breaks stuff:tm:
+" This ensures it doesn't
+let g:tex_flavor = 'latex'
+
 syntax on
 filetype plugin indent on
 set noswapfile
