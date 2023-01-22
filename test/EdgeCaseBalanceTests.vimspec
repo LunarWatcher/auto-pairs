@@ -12,4 +12,9 @@ Describe Various edge-cases around balancing when preferring to close
         call Expect("()").ToMatch("()")
         call Expect(")(").ToMatch(")()")
     End
+    It should handle quotes properly
+        new | only!
+        call Expect(" \"foo").ToMatch(" \"foo\"")
+        call Expect(" \"foo\<esc>0i\"").ToMatch("\"\" \"foo\"")
+    End
 End
