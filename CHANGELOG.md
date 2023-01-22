@@ -7,6 +7,9 @@
 
 ## Documentation
 * Added docs for `<CR>` incompatibilities
+* Documentation with some basic how-to guides for auto-pairs features. These can technically be figured out by just reading the documentation, but it's easier to compress it into concrete guides.
+* Documentation for Krasjet's space-only completion exceptions, and first-class support for it.
+* Documentation and first-class support for Krasjet's balance blacklist
 
 ## Fixed
 * Minimum Vim version is now correctly listed as 8.1 patch 1114; I severely misread the minimum required version before.
@@ -16,19 +19,18 @@
 * [parallel-fixed in an unversioned 3.0.x-version] Fixed bad regex management for multibyte pairs ([#71](https://github.com/LunarWatcher/auto-pairs/issues/71))
 
 ## Added
-* Documentation with some basic how-to guides for auto-pairs features. These can technically be figured out by just reading the documentation, but it's easier to compress it into concrete guides.
-* Documentation for Krasjet's space-only completion exceptions, and first-class support for it.
-* Documentation and first-class support for Krasjet's balance blacklist
 * Tests for both the character whitelist for only completing on space, and the balance check blacklist.
 * Added `g:AutoPairsAutoBreakBefore` and `g:AutoPairsSyncAutoBreakOptions` ([#57](https://github.com/LunarWatcher/auto-pairs/issues/57))
 * `InsertLeavePre` is now ignored
 * Regex pairs are now disabled and made opt-in only ([#53](https://github.com/LunarWatcher/auto-pairs/issues/53))
 * `g:AutoPairsPrefix`, used for switching the default prefix in incompatible map mode.
-* The LaTeX pairs `\[\]` and `\(\)` are supported out of the box
-* **Breaking:** regex is now disabled by default, and requires a manual parameter. See `:h autopairs-pair-object`
+* The LaTeX pairs `\[\]` and `\(\)` are supported out of the box for the `tex` filetype
+* **Breaking:** regex is now disabled by default, and requires a manual parameter. See `:h autopairs-pair-object`. 
+* The auto-pairs compatible maps prefix can now be adjusted with `g:AutoPairsPrefix` ([#48](https://github.com/LunarWatcher/auto-pairs/discussions/48), [#70](https://github.com/LunarWatcher/auto-pairs/issues/70))
 
 ## Meta
 * Removed pre-commit
+* Added a test to catch duplicate helptags
 
 # 3.0.4
 `let g:AutoPairsVersion = 30063`

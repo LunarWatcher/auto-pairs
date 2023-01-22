@@ -1,0 +1,13 @@
+Describe Fast wrap
+    Before each
+        call autopairs#Variables#InitVariables()
+    End
+    It should work
+        new | only!
+        call Expect("test\<esc>0i(\<C-f>").ToMatch("(test)")
+    End
+    It should work with multibyte pairs
+        new | only!
+        call Expect("test\<esc>0i" .. '"""' .. "\<C-f>").ToMatch('"""test"""')
+    End
+End
