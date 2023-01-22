@@ -13,6 +13,7 @@ Table of Contents                               *autopairs-compatibility-content
 
     1. vim-visual-multi ............... |vm-autopairs| |autopairs-visual-multi|
     2. Telescope ...................... |autopairs-telescope|
+    3. Plugins interfering with <CR> .. |autopairs-incompatible-cr|
 
 ================================================================================
 1. vim-visual-multi                          *vm-autopairs* *autopairs-visual-multi*
@@ -84,5 +85,15 @@ at this point set, which may have unintended consequences. >
 
 [1]: https://github.com/neovim/neovim/issues/14798
 [2]: https://github.com/LunarWatcher/auto-pairs/issues/34
+
+================================================================================
+3. Plugins incompatible with <CR>                      *autopairs-incompatible-cr*
+
+This is just a list of plugins. For a problem description, see
+|autopairs-bad-cr|.
+
+* https://github.com/JuliaEditorSupport/julia-vim
+    Prints the previous `<CR>` as a literal string by using `feedkeys()`.
+    Relevant issue: https://github.com/JuliaEditorSupport/julia-vim/issues/289
 
 vim:ft=help

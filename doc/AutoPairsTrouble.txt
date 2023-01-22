@@ -22,6 +22,7 @@ Table of Contents                           *autopairs-troubleshooting-contents*
     6. Enter to insert auto-complete ........ |autopairs-autocomplete|
     7. Test failures (and related errors) ... |autopairs-test-failures|
         1. Autocmd and syntax errors ........ |autopairs-typescript-errors|
+    8. Weird auto-pairs stuff on <CR> ....... |autopairs-bad-cr|
 
 ==============================================================================
 1. General troubleshooting                           *autopairs-troubleshooting-general*
@@ -284,6 +285,108 @@ Example of an affected error log: >
 
 Tests failing with this error can safely be ignored
 
+==============================================================================
+8. Weird output on <CR>                                       *autopairs-bad-cr*
 
+Before troubleshooting yourself, take a look at |autopairs-incompatible-cr|
+for a list of known problem plugins, and compare it to your installed plugins.
+The next paragraph contains a description of the general reason why this
+happens, and it's worth a read.
+
+These issues are a royal pain in the ass, and there isn't one guaranteed root
+cause. Certain keys in insert mode are highly prone to mapping conflicts,
+especially when obscure use is involved. There's many examples of this, but
+the TL;DR: is: if auto-pairs maps `<CR>` first, it can be overwritten by a
+plugin that doesn't respect auto-pairs execution context, consequently
+printing the map value as a string literal.
+
+The overwhelming majority of conflicts happen as a result of a bad
+compatibility system, where the rest of the map is assumed to be a string
+literal, or otherwise executable with |:normal|, |:exec|, |feedkeys()|, or similar.
+The problem is due to auto-pairs' use of |<SNR>|, which many plugins fail to
+account for in their mapping compatibility systems, some times by error and
+some times by design, resulting in weird output.
+
+I've experienced first-hand how annoying it is to try to debug this, and I've
+erroneously blamed the wrong plugins. There's one bug report about auto-pairs
+that I still don't understand, because I was wrong in believing it was
+coc.nvim's fault.
+
+The correct way to diagnose this is to first check `:verbose imap <cr>`
+If this yields anything other than auto-pairs, you've found your root cause.
+Consider opening an issue if the plugin isn't already present in
+|autopairs-incompatible-cr| so it can be tracked. Also, consider opening an
+issue in the plugin you've found's repo (assuming there isn't one already) to
+let them know in case it's something they can fix.
+
+If it only yields auto-pairs, there should be two `<SNR>`s. Here's one
+example: >
+    i  <CR>        &@<SNR>129_AutoPairsOldCRWrapper73<SNR>129_AutoPairsReturn
+        Last set from ~\vimfiles\plugged\auto-pairs\autoload\autopairs\Keybinds.vim line 245
+<
+Again, if you see a reference to any other plugin than auto-pairs, you've
+already found the culprit. 
+
+Your output will vary in terms of the exact numbers.
+`<SNR>129_AutoPairsReturn` does not have to be checked. This is a short code
+for auto-pairs' own function. The interesting bit is
+`<SNR>129_AutoPairsOldCRWrapper73`. Again, adjusting this command for
+different numbers, run: >
+    imap <SNR>129_AutoPairsOldCRWrapper73
+<
+You generally don't get tab auto-completion for this particular function for
+whatever reason, so pay attention to what you write.
+
+Again, if the plugin isn't present in |autopairs-incompatible-cr|, please open
+an issue to let me know. If auto-pairs eats the map, it's not always easy to
+tell which plugin is at fault. Could be auto-pairs, could be the other plugin,
+could be both.
+
+TL;DR:
+1. Run imap <CR>
+2. If the output mentions a different plugin in the buffer map, jump to step 4
+3. If the output mentions auto-pairs, run >
+    imap <SNR>1234_AutoPairsOldCRWrapper1234
+<
+   The exact numbers will vary. See the output you got from imap <CR>.
+   If this is undefined, jump to step 6
+4. Check |autopairs-incompatible-cr| for the plugin. If it's there, go to
+mitigations.
+5. Bug reports (ensure there aren't bug reports for the applicable plugins
+    already):
+    * Open one in the auto-pairs repo regardless of whether you did step 2 or
+      3. I'm trying to map these for commonalities, which requires me to be
+      aware of plugins.
+    * If you didn't do step 3, open a bug report in the other plugin's repo as
+      well. There's no guarantee this will ever result in a fix, but it's a
+      good pointer to identify whether or not this is a bug with the other
+      plugin.
+    * If you're in doubt about which plugin is to blame, open an issue in
+      auto-pairs' repo, and I'll try to help figure it out
+
+Mitigations~
+
+There are ways to deal with this in the short term, but there's never really a
+good way to do this.
+
+The best option is if there's a way to fix it in code, in which case it'll go
+away and be all good.
+
+If there isn't, or you need a fix urgently, you have a few choices:
+1. Disable auto-pairs' `<CR>` mapping
+2. Disable the `<CR>` mapping of the other plugin
+3. If disabling isn't an option, or you for some reason figure that this is
+the last straw for the other plugin, you can uninstall the other plugin plugin.
+4. Uninstall auto-pairs
+5. Create your own function for mapping `<CR>`. Note that this may be easier
+    said than done in some cases. Make sure to disable all plugin mapping of
+    `<CR>`, as buffer maps take precedence over global maps.
+
+    There's no easy way to guide you through this, as the exact function
+    depends on what plugins you have, the order you'd like to execute them in,
+    the conditions you have available, the output types, etc.
+
+    This also requires you to be reasonably familiar with vimscript, for
+    obvious reasons.
 
 vim:ft=help
