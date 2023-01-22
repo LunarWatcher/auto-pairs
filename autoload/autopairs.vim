@@ -161,10 +161,10 @@ func! autopairs#AutoPairsInsert(key, ...)
     for [open, close, opt] in b:AutoPairsList
         let ms = autopairs#Strings#matchend(before .. a:key, open, opt)
         let m = matchstr(afterline, '^\v\s*\zs' .. autopairs#Utils#escape(close, opt))
-        if (close == '''') 
-            echom open close opt
-            echom "Line: " before .. a:key
-        endif
+        "if (close == '''') 
+            "echom open close opt
+            "echom "Line: " before .. a:key
+        "endif
 
         if len(ms) > 0
             let target = ms[1]
