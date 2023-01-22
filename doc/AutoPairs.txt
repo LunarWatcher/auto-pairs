@@ -928,7 +928,8 @@ This variable also exists in a buffer variant.~
 
 Sets whether or not to search for close brackets after a space. This is
 default behavior in jiangmiao/auto-pairs, and disabled in Krasjet/auto.pairs.
-Neither of the two have an option to toggle this, however.
+Neither of the two have an option to toggle this, however. Aren't forks
+wonderful?
 
 value = 0:
 >
@@ -1929,5 +1930,10 @@ A consequence of auto-pairs being dead for a number of years is that catching
 up and modernising means certain things end up being incompatibly changed.
 This section isn't meant as an overview of that, but this fork will not go far
 to make sure compatibility is maintained with a dead repo.
+
+                                                        *autopairs-ai-uprising*
+Auto-pairs can be configured to force an AI uprising. Due to the danger of
+storing the instructions to this in text (CGPT, anyone?), the instructions for
+this have been stored in a video: https://www.youtube.com/watch?v=yRKh34Ofg50
 
 vim:ft=help
