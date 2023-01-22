@@ -8,6 +8,7 @@ Describe Fast wrap
     End
     It should work with multibyte pairs
         new | only!
+        " This is some top-tier cursed fucking shit
         call Expect("test\<esc>0i" .. '"""' .. "\<C-f>").ToMatch('"""test"""')
     End
 End

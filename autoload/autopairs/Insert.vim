@@ -151,6 +151,7 @@ fun! autopairs#Insert#checkClose(key, before, after, afterline)
                     if b:AutoPairsMultilineCloseDeleteSpace && b:autopairs_return_pos == line('.') && getline('.') =~ '\v^\s*$'
                         exec 'normal! ddk$'
                     end
+
                     call search(m, 'We')
                     return "\<Right>"
                 else

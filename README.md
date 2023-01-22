@@ -9,12 +9,6 @@ Insert or delete brackets, parens, and quotes in pair: a maintained fork of [jia
 
 If you're migrating from jiangmiao's version, it's highly recommended that you read `:h autopairs-migrating` after installing. There have been a number of breaking changes made in this fork, as well as changes to default behavior. See the migration guide for important differences that are may affect your workflow.
 
-## 4.0.0 note
-
-Early adopters of v4.0.0 may use the develop-4.0.0 branch instead.
-
-However, because this is a development branch, it'll eventually be merged into the master branch. When this happens, a notice will be issued to switch back to the master branch. The 4.0.0 branch will be temporarily preserved to allow for updates with as little friction as possible.
-
 ## Installation
 
 
@@ -25,26 +19,20 @@ There's several installation methods, and you're free to use whatever you want, 
 ```vim
 Plug 'LunarWatcher/auto-pairs'
 ```
-You can also specify a tag, but this is no longer needed as of v3.0.0.
+You can also specify a tag, but this is no longer needed as of the proper release of 3.0.0.
 
 To use experimental changes before they're deployed, use:
 ```vim
 Plug 'LunarWatcher/auto-pairs', {'branch': 'develop'}
 ```
 
-The develop branch contains improvements to the master branch. For the experimental 4.0.0 upgrade (you're here!), use:
-
-```vim
-Plug 'LunarWatcher/auto-pairs', {'branch': 'develop-4.0.0'}
-```
-
 **Note:** As of 4.0.0, `let g:AutoPairsCompatibleMaps = 0` is default. Set the variable to 1 to use jiangmiao-compatible keybinds.
-
-
 
 ## Running tests (not required)
 
 Auto-pairs comes with a few tests aimed at making sure nothing accidentally regresses without manually testing everything. Tests are in the test folder, and are in the vimspec format (using [themis.vim](https://github.com/thinca/vim-themis)); follow its instructions to run the tests.
+
+Some plugins may interfere with the tests and cause erroneous failures, but the CI is generally indicative of the general state of auto-pairs. If it fails locally, that may be an indication of a plugin incompatibility (though these are often possible to fix)
 
 ### Versioning system (meta)
 
@@ -91,116 +79,14 @@ Functionally, however, it's meant to resemble upstream as much as possible, part
 
 ## Features
 
-Note that this section is currently out of date.
 
-`|` represents the cursor.
-
-*   Insert in pair
-
-        input: [
-        output: [|]
-
-*   Delete in pair
-
-        input: foo[<BS>]
-        output: foo
-
-*   Insert new indented line after Return
-
-        input: {|} (press <CR> at |)
-        output: {
-            |
-        }          (press } to close the pair)
-        output: {
-        }|         (the inserted blank line will be deleted)
-
-
-*   Insert spaces before closing characters, only for [], (), {}
-
-        input: {|} (press <SPACE> at |)
-        output: { | }
-
-        input: {|} (press <SPACE>foo} at |)
-        output: { foo }|
-
-        input: '|' (press <SPACE> at |)
-        output: ' |'
-
-*   Skip ' when inside a word
-
-        input: foo| (press ' at |)
-        output: foo'
-
-*   Skip closed bracket.
-
-        input: []
-        output: []
-
-*   Ignore auto pair when previous character is \
-
-        input: "\'
-        output: "\'"
-
-*   Fast Wrap
-
-        input: |[foo, bar()] (press (<M-e> at |)
-        output: ([foo, bar()])
-
-*   Quick move char to closed pair
-
-        input: (|){["foo"]} (press <M-}> at |)
-        output: ({["foo"]}|)
-
-        input: (|)[foo, bar()] (press (<M-]> at |)
-        output: ([foo, bar()]|)
-
-*   Quick jump to closed pair.
-
-        input:
-        {
-            something;|
-        }
-
-        (press } at |)
-
-        output:
-        {
-
-        }|
-
-*  Fly Mode
-
-        input: if(a[3)
-        output: if(a[3])| (In Fly Mode)
-        output: if(a[3)]) (Without Fly Mode)
-
-        input:
-        {
-            hello();|
-            world();
-        }
-
-        (press } at |)
-
-        output:
-        {
-            hello();
-            world();
-        }|
-
-        (then press <M-b> at | to do backinsert)
-        output:
-        {
-            hello();}|
-            world();
-        }
-
-        See Fly Mode section for details
-
-*  Multibyte Pairs
-
-        Support any multibyte pairs such as <!-- -->, <% %>, """ """
-        See multibyte pairs section for details
+* Obviously, the insertion and deletion of pairs (note that deletion is disabled by default. See `:h g:AutoPairsMapBS`)
+* An enter mapping for pair expansion
+* Quote handling aimed at avoiding accidental expansions
+* The ability to ignore pair insertion unless there's a whitespace (`:h autopairs-howto-whitespace-only`)
+* Extended balance checks
+* Fast pair wrapping
+* Several customisable features for various personal preferences
 
 For more features, as well as documentation, [see doc/AutoPairs.txt](https://github.com/LunarWatcher/auto-pairs/blob/master/doc/AutoPairs.txt)
 
