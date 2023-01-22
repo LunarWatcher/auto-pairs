@@ -5,6 +5,9 @@
 * `g:AutoPairsCompatibleMaps` is now 0 by default.
 * Added enforcement of scriptversion 4 to all files
 
+## Documentation
+* Added docs for `<CR>` incompatibilities
+
 ## Fixed
 * Minimum Vim version is now correctly listed as 8.1 patch 1114; I severely misread the minimum required version before.
 * Missing `...` specifier prevented argument forwarding for IgnoreInsertEnter
@@ -21,6 +24,8 @@
 * `InsertLeavePre` is now ignored
 * Regex pairs are now disabled and made opt-in only ([#53](https://github.com/LunarWatcher/auto-pairs/issues/53))
 * `g:AutoPairsPrefix`, used for switching the default prefix in incompatible map mode.
+* The LaTeX pairs `\[\]` and `\(\)` are supported out of the box
+* **Breaking:** regex is now disabled by default, and requires a manual parameter. See `:h autopairs-pair-object`
 
 ## Meta
 * Removed pre-commit
