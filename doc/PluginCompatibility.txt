@@ -37,7 +37,7 @@ vague, the implementation details are unclear and therefore not implemented.
 
 That being said, due to the use of keybinds that do conflict with the plugin,
 such as |<cr>| and potentially others, depending on various mapping details,
-VM may produce warnings. It's adviced that you suppress these, as they're
+VM may produce warnings. It's advised that you suppress these, as they're
 unavoidable at the time of writing. The warnings may be suppressed with: >
     let g:VM_show_warnings = 0
 <

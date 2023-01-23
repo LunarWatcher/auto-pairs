@@ -26,7 +26,7 @@ To use experimental changes before they're deployed, use:
 Plug 'LunarWatcher/auto-pairs', {'branch': 'develop'}
 ```
 
-**Note:** As of 4.0.0, `let g:AutoPairsCompatibleMaps = 0` is default. Set the variable to 1 to use jiangmiao-compatible keybinds.
+**Note:** As of 4.0.0, `let g:AutoPairsCompatibleMaps = 0` is the default. Set the variable to 1 to use jiangmiao-compatible keybinds.
 
 ## Running tests (not required)
 
@@ -71,6 +71,7 @@ Functionally, however, it's meant to resemble upstream as much as possible, part
 * Updating the plugin with long-requested features
 * ... and with new ones.
 * Increased customizability
+
 
 ## Non-goals
 * Being a drop-in snippet replacement -- use UltiSnips or lexima.vim instead.

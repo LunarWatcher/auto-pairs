@@ -1179,7 +1179,7 @@ jiangmiao/auto-pairs.
 
 DO NOT MODIFY
 This variable is a constant per version, and exists for compatibility reasons.
-Do not set this variable yourself. This canc and will have unintended
+Do not set this variable yourself. This can and will have unintended
 consequences.
 
 Defines the current version. Note that while this is largely intended to
@@ -1738,7 +1738,7 @@ This function initialises all the global variables auto-pairs uses.
 
 While primarily intended for internal use, it can be used to force load
 auto-pairs' variables. This is more or less entirely intended for object or 
-list variables, where setting the value may override other desired variabels,
+list variables, where setting the value may override other desired variables
 but where the variable doesn't also have a corresponding modifying function.
 
 Because it's an autoload function, unlike the normal load system, it's loaded

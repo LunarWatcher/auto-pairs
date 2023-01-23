@@ -224,34 +224,15 @@ otherwise
 
 See also: https://github.com/LunarWatcher/auto-pairs/issues/66
 
-Due to the way Vim's input system works, if you map `<CR>` to configure
-auto-complete insertions, you can and will see auto-pairs act weirdly if
-|g:AutoPairsMapCR| is set.
+There's no known reason why auto-pairs misbehaves when <CR> is remapped to
+allow for `<CR>` to pick an autocomplete option. See the linked issue
+for debug instructions that would help me narrow this down if you're currently
+running into this issue.
 
-There's a large number of auto-complete plugins, and a large number of
-different systems. Several modern auto-complete plugins are additionally
-async, which adds a layer of complexity.
-
-The execution order of auto-pairs and auto-complete plugins, though
-particularly coc.nvim has been demonstrated to do this, isn't deterministic.
-coc's timeout may or may not fire in time for auto-pairs to have completed,
-and if it fires before auto-pairs has a chance to do anything, `pumvisible()`
-or similar isn't viable.
-
-Simply put, the pum may have closed by the time auto-pairs is executed. Simply
-put, there's no easy way to fix this behavior.
-
-Workarounds~
-
-The first option is disabling |g:AutoPairsMapCR|, and changing your map to
-incorporate `\<cr>\<C-r>=autopairs#Keybinds#IgnoreInsertEnter('autopairs#AutoPairsReturn')\<cr>`
-into your mapping. Auto-pairs simply wasn't meant for this type of use, so
-yes, the command is nasty. This has to be as the fallback to the pum being
-visible for a custom `<CR>` map. This is left as an exercise to the reader.
-
-Alternative B... stop using `<CR>` to insert the completion match, and get
-used to <C-y>, which is a default Vim mapping for completion insertion. Or, of
-course, map completion insertion to an altogether different key.
+Note that there previously was an incorrect explanation for the error both
+in this section of the help document, and the issue. That explanation was
+based on a blatant misunderstanding. See also |autopairs-bad-cr| for a general
+problem description, as well as roughly the same troubleshooting steps
 
 ==============================================================================
 7. Test failures (and related errors)                  *autopairs-test-failures*
