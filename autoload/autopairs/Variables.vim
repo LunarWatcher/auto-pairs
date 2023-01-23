@@ -11,10 +11,6 @@ fun! s:define(name, default)
     endif
 endfun
 
-fun! autopairs#Variables#_InitVariables()
-    echoerr "This function has been renamed. Use autopairs#Variables#InitVariables instead (note the missing _)"
-endfun
-
 " TODO: sort this garbage
 fun! autopairs#Variables#InitVariables()
     " Default autopairs

@@ -198,54 +198,28 @@ endfun
 
 fun! autopairs#Keybinds#mapKeys()
 
-    " TODO: decode this comment
-    " for auto-pairs starts with 'a', so the priority is higher than supertab and vim-endwise
+    " This bit of code attempts to be compatible with other plugins.
+    " It isn't always successful (:h autopairs-bad-cr), which is
+    " overwhelmingly caused by other plugins doing weird shit with their
+    " functions, in a way that often expects dedicated `<CR>` access.
     "
-    " vim-endwise doesn't support <Plug>AutoPairsReturn
-    " when use <Plug>AutoPairsReturn will cause <Plug> isn't expanded
-    "
-    " supertab doesn't support <SID>AutoPairsReturn
-    " when use <SID>AutoPairsReturn  will cause Duplicated <CR>
-    "
-    " and when load after vim-endwise will cause unexpected endwise inserted.
-    " so always load AutoPairs at last
-
-    " Buffer level keys mapping
-    " comptible with other plugin
+    " This leads to incompatibilities, some of which were previously listed in
+    " a comment here, but have been moved to :h autopairs-incompatible-cr, at
+    " least for plugins that have a confirmed incompatibility
     if b:AutoPairsMapCR
-        if v:version == 703 && has('patch32') || v:version > 703
-            " VIM 7.3 supports advancer maparg which could get <expr> info
-            " then auto-pairs could remap <CR> in any case.
-            let info = maparg(g:AutoPairsCRKey, 'i', 0, 1)
-            if empty(info)
-                " Not _entirely_ sure if this should be <CR> or
-                " g:AutoPairsCRKey.
-                let old_cr = '<CR>'
-                let is_expr = 0
-            else
-                let old_cr = info['rhs']
-                let old_cr = autopairs#Keybinds#ExpandMap(old_cr)
-                let old_cr = substitute(old_cr, '<SID>', '<SNR>' .. info['sid'] .. '_', 'g')
-                let is_expr = info['expr']
-                let wrapper_name = '<SID>AutoPairsOldCRWrapper73'
-            endif
+        " VIM 7.3 supports the advanced maparg, which can get <expr> info
+        let info = maparg(g:AutoPairsCRKey, 'i', 0, 1)
+        if empty(info)
+            " Not _entirely_ sure if this should be <CR> or
+            " g:AutoPairsCRKey.
+            let old_cr = '<CR>'
+            let is_expr = 0
         else
-            " VIM version less than 7.3
-            " the mapping's <expr> info is lost, so guess it is expr or not, it's
-            " not accurate.
-            let old_cr = maparg(b:AutoPairsCRKey, 'i')
-            if old_cr == ''
-                let old_cr = '<CR>'
-                let is_expr = 0
-            else
-                let old_cr = autopairs#Keybinds#ExpandMap(old_cr)
-                " old_cr contain (, I guess the old cr is in expr mode
-                let is_expr = old_cr =~ '\V(' && toupper(old_cr) !~ '\V<C-R>'
-
-                " The old_cr start with " it must be in expr mode
-                let is_expr = is_expr || old_cr =~ '\v^"'
-                let wrapper_name = '<SID>AutoPairsOldCRWrapper'
-            endif
+            let old_cr = info['rhs']
+            let old_cr = autopairs#Keybinds#ExpandMap(old_cr)
+            let old_cr = substitute(old_cr, '<SID>', '<SNR>' .. info['sid'] .. '_', 'g')
+            let is_expr = info['expr']
+            let wrapper_name = '<SID>AutoPairsOldCRWrapper73'
         endif
 
         if old_cr !~ 'AutoPairsReturn'
@@ -273,16 +247,9 @@ fun! autopairs#Keybinds#mapKeys()
     end
 
     if b:AutoPairsMapSpace
-        " Try to respect abbreviations on a <SPACE>
-        let do_abbrev = ""
-        " neovim appears to set v:version to 800, so it should be compatible
-        " with this.
-        " Admittedly, probably not compatible with the same version checks,
-        " but hey, it's fine.
-        if v:version == 703 && has("patch489") || v:version > 703
-            let do_abbrev = "<C-]>"
-        endif
-        execute 'inoremap <buffer> <silent> <SPACE> ' .. do_abbrev .. '<C-R>=autopairs#AutoPairsSpace()<CR>'
+
+        " <C-]> is required to respect abbreviations
+        execute 'inoremap <buffer> <silent> <SPACE> <C-]><C-R>=autopairs#AutoPairsSpace()<CR>'
     end
 
     if b:AutoPairsShortcutFastWrap != ''

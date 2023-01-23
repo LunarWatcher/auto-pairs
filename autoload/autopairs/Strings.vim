@@ -2,14 +2,11 @@ if !has('nvim') && has('vimscript-4')
     scriptversion 4
 endif
 
-" 7.4.849 support <C-G>U to avoid breaking '.'
-" Issue talk: https://github.com/jiangmiao/auto-pairs/issues/3
-" Vim note: https://github.com/vim/vim/releases/tag/v7.4.849
-if v:version > 704 || v:version == 704 && has("patch849")
-    let g:autopairs#Strings#Go = "\<C-G>U"
-else
-    let g:autopairs#Strings#Go = ""
-endif
+
+" This statement previously had a version check, but it has been removed as
+" that check isn't necessary anymore. A newer version is enforced, so this is
+" guaranteed supported
+let g:autopairs#Strings#Go = "\<C-G>U"
 
 let g:autopairs#Strings#Left = g:autopairs#Strings#Go.."\<LEFT>"
 let g:autopairs#Strings#Right = g:autopairs#Strings#Go.."\<RIGHT>"
