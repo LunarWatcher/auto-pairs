@@ -18,10 +18,17 @@ TL;DR: update before you continue, and check that you're able to verify it.
 This template outlines a number of points. You're not required to follow this template,
 but the bits mentioned in the template are required. If we're missing a clear description,
 or steps to reproduce, or other important context, the issue may be closed until we get it.
+
+Also, make sure you try to check if the problem you're experiencing was intentional. Some commits
+may have changes that appear as bugs, but that aren't. One recent example is the flip of 
+`g:AutoPairsCompatibleMaps` from 1 to 0, which may make it seem like the mappings have broken, when
+the reality is that the default has changed.
 -->
 
 **OS** (name + version; i.e. Linux Mint 20, Windows 10 2004, Macos Big Sur, etc.):
+
 **What vim? (+ version)** (i.e. vim, gvim, nvim, nvim-qt, mvim, ...):
+
 **Reproduced in other variants of Vim?** (Optional):
 
 **Autopairs config** (if applicable):
