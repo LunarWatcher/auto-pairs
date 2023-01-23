@@ -51,4 +51,5 @@ if exists('g:VM_plugins_compatibilty') || exists('*vm#maps#init')
         \})
 endif
 
+echom "WARNING: the 4.0.0 branch has been discontinued, as 4.0.0 has been merged into master. Switch to master, develop, or a tagged release to continue getting updates (and to make this warning go away)"
 " vim:sw=4:expandtab
