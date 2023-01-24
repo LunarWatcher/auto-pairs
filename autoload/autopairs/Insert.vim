@@ -145,7 +145,7 @@ fun! autopairs#Insert#checkClose(key, before, after, afterline)
             " This may check multiline depending on something.
             " Still not entirely sure what this brings to the table that the
             " other clause doesn't
-            let m = matchstr(a:after, '\v^\s*\zs\V' .. escape(close, '\'))
+            let m = matchstr(a:after, '\v^\s*\zs\V' .. autopairs#Utils#escape(close, opt))
             if m != ''
                 if opt['multiline']
                     if b:AutoPairsMultilineCloseDeleteSpace && b:autopairs_return_pos == line('.') && getline('.') =~ '\v^\s*$'

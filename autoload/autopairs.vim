@@ -342,7 +342,7 @@ func! autopairs#AutoPairsFastWrap(...)
 
             let match = []
             let esc = substitute(close, "'", "''", "g")
-            let esc = escape(esc, '\')
+            let esc = autopairs#Utils#escape(esc, opt)
 
             " TODO: Wtf is this for?
             let res = substitute(after, '^\V' .. esc, '\=add(match, submatch(0))', '')
