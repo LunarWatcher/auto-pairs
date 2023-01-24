@@ -1313,7 +1313,7 @@ See also: |\v|, |\V|
                                                      *g:AutoPairsCompatibleMaps*
                                                                            int
 
-Default: 1
+Default: 0
 
 This variable defines whether or not to use backwards-compatible maps.
 
