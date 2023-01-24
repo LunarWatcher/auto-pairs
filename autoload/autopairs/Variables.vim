@@ -21,7 +21,7 @@ fun! autopairs#Variables#InitVariables()
     " The last paragraph of the help is extremely important.
     call s:define("g:AutoPairsLanguagePairs", {
         \ "erlang": {'<<': '>>'},
-        \ "tex": {'``': "''", '$': '$', '\[': '\]', '\(': '\)'},
+        \ "tex": {'``': "''", '$': '$', '\[': {'close': '\]', 'mapclose': 0}, '\(': {'close': '\)', 'mapclose': 0}},
         \ "html": {'<': '>'},
         \ 'vim': {'(^\s*\zs"\ze|".*"\s*\zs"\ze$|^(\s*[a-zA-Z]+\s*([a-zA-Z]*\s*\=\s*)?)@!(\s*\zs"\ze((\\\"|[^"])*$)@=))': {"close": '', 'mapclose': 0, 'regex': 1}},
         \ 'rust': {'\w\zs<': {'close': '>', 'regex': 1}, '&\zs''': {'close': '', 'regex': 1}},

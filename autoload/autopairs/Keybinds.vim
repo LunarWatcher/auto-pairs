@@ -87,10 +87,12 @@ fun! autopairs#Keybinds#mapPairKeybinds()
         if type(close) == v:t_dict
             " We have a brand fucking new object!
             " Let's handle mappings first
+            let mapDefaultClose = 1
             if (has_key(close, "mapclose"))
                 let mc = close["mapclose"]
                 if type(mc) == v:t_number
                     let opt["mapclose"] = mc
+                    let mapDefaultClose = 0
                 else
                     let opt["key"] = mc
                     " This is largely a compat util; if the key is empty, it's
@@ -110,7 +112,8 @@ fun! autopairs#Keybinds#mapPairKeybinds()
             if has_key(close, "delete")
                 let opt["delete"] = close["delete"]
             endif
-            let opt["alwaysmapdefaultclose"] = get(close, 'alwaysmapdefaultclose', 1)
+
+            let opt["alwaysmapdefaultclose"] = get(close, 'alwaysmapdefaultclose', mapDefaultClose)
             let opt["passiveclose"] = get(close, "passiveclose", 1)
             let opt["balancebyclose"] = get(close, "balancebyclose", 0)
             let opt["regex"] = get(close, "regex", 0)

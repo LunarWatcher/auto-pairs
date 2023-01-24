@@ -1,11 +1,18 @@
+# 4.0.2
+`g:AutoPairsVersion = 40002`
+
+## Changed
+* Setting `mapclose = 0` now makes `alwaysmapdefaultclose` default to 0 instead of 1
+* The LaTeX pairs no longer jump by default
+
 # 4.0.1
-`let g:AutopairsVersion = 40001`
+`g:AutoPairsVersion = 40001`
 
 ## Fixed
 * Missing escape ([#74](https://github.com/LunarWatcher/auto-pairs/issues/74))
 
 # 4.0.0
-`let g:AutoPairsVersion = 40000`
+`g:AutoPairsVersion = 40000`
 
 ## Changed
 * `g:AutoPairsCompatibleMaps` is now 0 by default.
@@ -39,7 +46,7 @@
 * Added a test to catch duplicate helptags
 
 # 3.0.4
-`let g:AutoPairsVersion = 30063`
+`g:AutoPairsVersion = 30063`
 
 ## Changed
 * Renamed `autopairs#Variables#_InitVariables` to `autopairs#Variables#InitVariables`, as the API is now more intended for public use
@@ -50,13 +57,13 @@
 * Documented `autopairs#Variables#InitVariables()`
 
 # 3.0.3
-`let g:AutoPairsVersion = 30062`
+`g:AutoPairsVersion = 30062`
 
 ## Changed
 * Enabled experimental autocmd by default; preparing for the eventual deprecation of it
 
 # 3.0.2
-`let g:AutoPairsVersion = 30061`
+`g:AutoPairsVersion = 30061`
 
 ## Meta
 * Cleaned up the help documents to, hopefully, be easier to navigate.
@@ -73,7 +80,7 @@
 * Duplicate tags in help docs ([#59](https://github.com/LunarWatcher/auto-pairs/pull/59))
 
 # 3.0.1
-`let g:AutoPairsVersion = 30060`
+`g:AutoPairsVersion = 30060`
 
 ## Fixed
 * Annoying escape problem ([#52](https://github.com/LunarWatcher/auto-pairs/discussions/52))
@@ -87,7 +94,7 @@
 No changes; Purely a symbolic packaging for 3.0.0-beta13.
 
 # 3.0.0-beta13
-`let g:AutoPairsVersion = 30058`
+`g:AutoPairsVersion = 30058`
 
 ## Meta
 * Code cleanup
@@ -98,7 +105,7 @@ No changes; Purely a symbolic packaging for 3.0.0-beta13.
 * More tests (including tests to cover single skip)
 
 # 3.0.0-beta12
-`let g:AutoPairsVersion = 30057`
+`g:AutoPairsVersion = 30057`
 
 ## Fixed
 * Better escape handing ([jiangmiao#325](https://github.com/jiangmiao/auto-pairs/issues/325))
@@ -114,7 +121,7 @@ No changes; Purely a symbolic packaging for 3.0.0-beta13.
 * `g:AutoPairsShortcutMultilineClose`
 
 # 3.0.0-beta11
-`let g:AutoPairsVersion = 30056`
+`g:AutoPairsVersion = 30056`
 
 ## Fixed
 * Close pair balance checks weren't up to date with new balance systems
@@ -143,13 +150,13 @@ No changes; Purely a symbolic packaging for 3.0.0-beta13.
 * `g:AutoPairsShortcutMultilineClose`
 
 # 3.0.0-beta10
-`let g:AutoPairsVersion = 30055`
+`g:AutoPairsVersion = 30055`
 
 * Some docs
 * Accidental debug logging
 
 # 3.0.0-beta9
-`let g:AutoPairsVersion = 30054`
+`g:AutoPairsVersion = 30054`
 
 ## Fixed
 * Broken open == close balance check ([#30](https://github.com/LunarWatcher/auto-pairs/issues/30))
@@ -157,7 +164,7 @@ No changes; Purely a symbolic packaging for 3.0.0-beta13.
 * Fix no ft edge-case for syntax checking
 
 # 3.0.0-beta8
-`let g:AutoPairsVersion = 30053`
+`g:AutoPairsVersion = 30053`
 
 ## Added
 * [Meta] Testing

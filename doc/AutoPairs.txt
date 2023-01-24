@@ -1834,7 +1834,10 @@ Essentially: >
             filetype variable. Optional, only used with AutoPairsAddPair"],
         "mapclose": "if int, enable or disable. If string, the keybind used
             to trigger the pair (specifically jump logic).
-            Optional, defaults to 1 and auto-resolve",
+            Optional, defaults to 1 and auto-resolve. Note that if this is set
+            to 0, alwaysmapdefaultclose is also set to 0 unless overridden.
+            Effectively, this acts as the primary control for all close
+            mapping",
         "delete": "int; whether or not to allow deletion. Forcibly set to 1
             for pairs with an empty close, for implementation reasons. Still
             requires deletion to be enabled to have an effect",
