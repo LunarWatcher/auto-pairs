@@ -31,4 +31,8 @@ Describe TeX pairs should work
         call Expect("\\(\<CR>").ToMatch('\(\n\n\)')
         call Expect("\\[\<CR>").ToMatch('\[\n\n\]')
     End
+    It should handle jumps
+        new TexJumpBase.tex | only!
+        call Expect('\(\').ToMatch('\(\)')
+    End
 End

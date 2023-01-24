@@ -118,7 +118,7 @@ fun! autopairs#Insert#checkClose(key, before, after, afterline)
             " Krasjet: do not search for the closing pair if spaces are in between
             " Olivia: Add override for people who want this (like me)
             " Note: this only checks the current line
-            let m = matchstr(a:afterline, searchRegex .. escape(close, '\'))
+            let m = matchstr(a:afterline, searchRegex .. autopairs#Utils#escape(close, opt))
             if m != ''
                 " Krasjet: only jump across the closing pair if pairs are balanced
                 let balance = autopairs#Insert#checkBalance(open, close, opt, a:before, a:after, a:afterline, {}, 1)
@@ -130,7 +130,7 @@ fun! autopairs#Insert#checkClose(key, before, after, afterline)
                 if b:AutoPairsNoJump == 1 || index(b:AutoPairsJumpBlacklist, close) != -1
                     return a:key
                 endif
-                if a:before =~ '\V' .. open .. '\v\s*$' && m[0] =~ '\v\s'
+                if a:before =~ '\V' .. autopairs#Utils#escape(open, opt) .. '\v\s*$' && m[0] =~ '\v\s'
                     " remove the space we inserted if the text in pairs is blank
                     return "\<DEL>" .. autopairs#Strings#right(m[1:])
                 else
