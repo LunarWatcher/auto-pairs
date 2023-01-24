@@ -18,7 +18,7 @@ endif
 " meant as a number associated with the version. Semantic meaning on the first
 " digit will take place. See the documentation for more details.
 
-let g:AutoPairsVersion = 40000
+let g:AutoPairsVersion = 40001
 
 let s:save_cpo = &cpoptions
 set cpoptions&vim

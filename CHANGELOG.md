@@ -1,3 +1,9 @@
+# 4.0.1
+`let g:AutopairsVersion = 40001`
+
+## Fixed
+* Missing escape ([#74](https://github.com/LunarWatcher/auto-pairs/issues/74))
+
 # 4.0.0
 `let g:AutoPairsVersion = 40000`
 
