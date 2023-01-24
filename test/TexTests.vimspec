@@ -34,5 +34,6 @@ Describe TeX pairs should work
     It should handle jumps
         new TexJumpBase.tex | only!
         call Expect('\(\').ToMatch('\(\)')
+        call Expect('\[\').ToMatch('\[\]')
     End
 End
