@@ -51,9 +51,19 @@ Describe Whitespace-restricted completion
         new | only!
         call Expect("ab\<esc>0i(").ToMatch('(ab')
         call Expect("'Henlo (").ToMatch("'Henlo ()'")
+        call Expect("여우\<esc>0i(").ToMatch('()여우')
 
         let b:AutoPairsSpaceCompletionRegex = '[abcdef]'
         call Expect("fox\<esc>0i(").ToMatch('(fox')
         call Expect("wolf\<esc>0i(").ToMatch('()wolf')
+        call Expect("Fox\<esc>0i(").ToMatch('(Fox')
+        call Expect("Wolf\<esc>0i(").ToMatch('()Wolf')
+
+        let b:AutoPairsSpaceCompletionRegex = '[[:lower:][:upper:]0-9]'
+        call Expect("fox\<esc>0i(").ToMatch('(fox')
+        call Expect("wolf\<esc>0i(").ToMatch('(wolf')
+        call Expect("æøå\<esc>0i(").ToMatch('(æøå')
+        call Expect("Æøå\<esc>0i(").ToMatch('(Æøå')
+        call Expect("여우\<esc>0i(").ToMatch('(여우')
     End
 End

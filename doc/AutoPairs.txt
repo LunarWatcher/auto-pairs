@@ -585,7 +585,16 @@ Example:~
 Expanding only on non-alphanumeric characters (... in the English alphabet): >
     let g:AutoPairsSpaceCompletionRegex = '\w'
 <
+Alternatively, if non-english letters are used: >
+    let g:AutoPairsSpaceCompletionRegex = '[[:lower:][:upper:]0-9]'
+<
 
+But do note the caveats of both |[:upper:]| and |[:lower:]|. That said, Vim is
+good at dealing with unicode, all things considered, so they should usually be
+good enough. Both [:upper:] and [:lower:] seem redundant, but many groups
+(including both of these) blatantly disregard the case insensitive flag,
+meaning both are required in spite of the regex fundamentally being
+case-insensitive
 
 ------------------------------------------------------------------------------
                                             *g:AutoPairsAutoBuildSpaceWhitelist*
