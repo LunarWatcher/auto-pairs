@@ -76,6 +76,7 @@ fun! autopairs#Variables#InitVariables()
     " Variable controlling whether or not to require a space or EOL to complete
     " bracket pairs. Extension off Krasjet.
     call s:define('g:AutoPairsCompleteOnlyOnSpace', 0)
+    call s:define('g:AutoPairsSpaceCompletionRegex', '\S')
     call s:define('g:AutoPairsAutoBuildSpaceWhitelist', 1)
     call s:define('g:AutoPairsDefaultSpaceWhitelist', '')
 
@@ -142,6 +143,7 @@ fun! autopairs#Variables#_InitBufferVariables()
     call s:define('b:AutoPairsMoveCharacter', g:AutoPairsMoveCharacter)
 
     call s:define('b:AutoPairsCompleteOnlyOnSpace', g:AutoPairsCompleteOnlyOnSpace)
+    call s:define('b:AutoPairsSpaceCompletionRegex', g:AutoPairsSpaceCompletionRegex)
     call s:define('b:AutoPairsAutoBuildSpaceWhitelist', g:AutoPairsAutoBuildSpaceWhitelist)
     call s:define('b:AutoPairsNextCharWhitelist', copy(g:AutoPairsNextCharWhitelist))
 

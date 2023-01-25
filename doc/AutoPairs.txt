@@ -288,6 +288,8 @@ Core~
 Whitespace and autocomplete~
 - |g:AutoPairsCompleteOnlyOnSpace| (has a buffer variant) (default: 0)
     Defines whether or not there has to be a space (or EOL) to insert a pair.
+- |g:AutoPairsSpaceCompletionRegex| (has a buffer variant) (default: \S)
+    Defines the regex to use when |g:AutoPairsCompleteOnlyOnSpace| is 1
 - |g:AutoPairsAutoBuildSpaceWhitelist| (has a buffer variant) (default: 1)
     Whether or not to automatically generate parts of the character whitelist
 - |g:AutoPairsNextCharWhitelist| (has a buffer variant) (default: [])
@@ -564,6 +566,26 @@ internal variable; |b:autopairs_whitespace_exceptions|
 
 3.0.0-alpha5:~
     renamed from *g:AutoPairsCompleteOnSpace* to |g:AutoPairsCompleteOnlyOnSpace|
+
+------------------------------------------------------------------------------
+                                               *g:AutoPairsSpaceCompletionRegex*
+
+This variable also exists in a buffer variant.~
+
+Default: '\S'
+Note: the value is prefixed with ^|\v| for internal processing reasons, but
+this means the regex is very magic by default, and checks characters
+immediately after the cursor. Also note that the regex is processed
+case-insensitively, and has to evaluate to true to prevent expansion.
+
+Only takes effect if |g:AutoPairsCompleteOnlyOnSpace| is 1. Again, note that
+|b:autopairs_whitespace_exceptions| applies.
+
+Example:~
+Expanding only on non-alphanumeric characters (... in the English alphabet): >
+    let g:AutoPairsSpaceCompletionRegex = '\w'
+<
+
 
 ------------------------------------------------------------------------------
                                             *g:AutoPairsAutoBuildSpaceWhitelist*

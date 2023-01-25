@@ -5,6 +5,9 @@
 * Setting `mapclose = 0` now makes `alwaysmapdefaultclose` default to 0 instead of 1
 * The LaTeX pairs no longer jump by default
 
+## Added
+* `g:AutoPairsSpaceCompletionRegex` ([#75 followups](https://github.com/LunarWatcher/auto-pairs/issues/75#issuecomment-1403772146))
+
 # 4.0.1
 `g:AutoPairsVersion = 40001`
 

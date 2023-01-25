@@ -5,12 +5,15 @@ Describe Whitespace-restricted completion
     End
     It should support the basic functionality
         new | only!
+        " Control test for later
+        call Expect("'Henlo (").ToMatch("'Henlo ('")
 
         call Expect("[").ToMatch("[]")
         call Expect("[[").ToMatch("[[]]")
         call Expect("[a\<left>[").ToMatch("[[a]")
         let b:AutoPairsCompleteOnlyOnSpace = 0
         call Expect("[a\<left>[").ToMatch("[[]a]")
+
     End
     It should support fully disabling the whitelist
         let g:AutoPairsAutoBuildSpaceWhitelist = 0
@@ -42,5 +45,15 @@ Describe Whitespace-restricted completion
 
         call Expect("[a\<left>[").ToMatch("[[]a]")
         call Expect("[b\<left>[").ToMatch("[[b]")
+    End
+    It should support a flexible regex
+        let g:AutoPairsSpaceCompletionRegex = '\w'
+        new | only!
+        call Expect("ab\<esc>0i(").ToMatch('(ab')
+        call Expect("'Henlo (").ToMatch("'Henlo ()'")
+
+        let b:AutoPairsSpaceCompletionRegex = '[abcdef]'
+        call Expect("fox\<esc>0i(").ToMatch('(fox')
+        call Expect("wolf\<esc>0i(").ToMatch('()wolf')
     End
 End
