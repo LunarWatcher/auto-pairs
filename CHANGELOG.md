@@ -8,6 +8,9 @@
 ## Added
 * `g:AutoPairsSpaceCompletionRegex` ([#75 followups](https://github.com/LunarWatcher/auto-pairs/issues/75#issuecomment-1403772146))
 
+## Docs
+* Described the exact reason for [#66](https://github.com/LunarWatcher/auto-pairs/issues/66) in `:h autopairs-autocomplete-cr`
+
 # 4.0.1
 `g:AutoPairsVersion = 40001`
 

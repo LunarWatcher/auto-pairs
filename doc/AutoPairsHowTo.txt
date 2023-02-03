@@ -92,18 +92,40 @@ compatible with that flag.
 ==============================================================================
 Using <CR> for autocomplete                          *autopairs-autocomplete-cr*
 
-If you absolutely need to use <CR> rather than |complete_CTRL-Y| to select
-from your autocomplete menu, you have to disable the auto-pairs CR map, and
-deal with it yourself: 
+Due to how Vim's input system works, the conditional used by many plugins for
+`<CR>` autocomplete insertion does not take effect on auto-pairs' function,
+combining async weirdness with a function thinking it's doing its job. The
+separate execution means auto-pairs always executes, rather than just
+executing in the fallback condition, which it's easy to assume the mapping
+should be part of.
+
+Admittedly, there are relatively few cases where this is triggered. JavaScript
+files seem far more prone to bugs than any other file, at least with coc.nvim
+
+Workarounds~
+
+Use Ctrl-Y (strongly recommended)~
+A workaround for this is to just use |complete_CTRL-Y| rather than CR, and
+leave CR to auto-pairs.
+
+Ctrl-Y has first-class support in Vim, and generally generally doesn't
+conflict with anything. It also matches the other default completion keybinds,
+making them a great option for consistency.
+
+Map <CR> manually~
+If you absolutely need to use <CR> rather than |complete_CTRL-Y| to
+select from your autocomplete menu, you have to disable the auto-pairs CR map,
+and deal with it yourself: 
 
 With the current recommendation for coc.nvim's map, the else condition has to
 be modified to include \<Plug>AutopairsReturn after <CR>: >
     let g:AutoPairsMapCR = 0
     inoremap <silent><expr> <cr> coc#pum#visible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<Plug>AutoPairsReturn"
 <
-
-Otherwise, while using the default system, the conditional will not prevent
-auto-pairs from running, as both SNRs are executed separately.
+Note that other autocomplete plugins have other commands; see their respective
+documentation for the source template to copy-pasta. I also recommend checking
+coc.nvim's documentation for a template to copy-pasta, as the one kept here
+will not be kept up-to-date.
 
 
 vim:ft=help
