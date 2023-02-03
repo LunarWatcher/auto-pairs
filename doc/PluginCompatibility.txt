@@ -92,8 +92,15 @@ at this point set, which may have unintended consequences. >
 This is just a list of plugins. For a problem description, see
 |autopairs-bad-cr|.
 
-* https://github.com/JuliaEditorSupport/julia-vim
-    Prints the previous `<CR>` as a literal string by using `feedkeys()`.
+* https://github.com/JuliaEditorSupport/julia-vim 
+    Won't fix~
+    Prints the previous `<CR>` as a literal string by using `feedkeys()`. 
     Relevant issue: https://github.com/JuliaEditorSupport/julia-vim/issues/289
+* https://github.com/neoclide/coc.nvim (and other autocomplete)
+    Workarounds exist~
+    Has several different bugs related to `<CR>` maps made by the user. The
+    plugin itself does not define anything causing incompatibilities. For
+    compatible maps, see |autopairs-autocomplete-cr|
+    Alternatively, use |complete_CTRL-Y| instead of <CR>
 
 vim:ft=help

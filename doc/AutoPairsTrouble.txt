@@ -370,4 +370,6 @@ the last straw for the other plugin, you can uninstall the other plugin plugin.
     This also requires you to be reasonably familiar with vimscript, for
     obvious reasons.
 
+    See also |autopairs-autocomplete-cr|
+
 vim:ft=help

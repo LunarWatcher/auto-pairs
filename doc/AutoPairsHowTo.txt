@@ -11,10 +11,11 @@ Table of help documents~
 ==============================================================================
 CONTENTS                                              *autopairs-howto-contents*
 
-    About this document ................... |autopairs-howto-about|
-    Requiring whitespace when inserting ... |autopairs-howto-whitespace-only|
-    Contextual pair insertion ............. |autopairs-howto-contextual|
-    Regex-based pairs ..................... |autopairs-adding-regex-pairs|
+    About this document .......................... |autopairs-howto-about|
+    Requiring whitespace when inserting .......... |autopairs-howto-whitespace-only|
+    Contextual pair insertion .................... |autopairs-howto-contextual|
+    Regex-based pairs ............................ |autopairs-adding-regex-pairs|
+    Using <CR> for the autocomplete popup ........ |autopairs-autocomplete-cr|
 
 ==============================================================================
 About this document                                      *autopairs-howto-about*
@@ -87,5 +88,22 @@ disabled, as it is by default.
 Also note that poorly designed pairs can and will result in various regex
 errors. The regexes are interpreted using |\v|, and need to be written to be
 compatible with that flag.
+
+==============================================================================
+Using <CR> for autocomplete                          *autopairs-autocomplete-cr*
+
+If you absolutely need to use <CR> rather than |complete_CTRL-Y| to select
+from your autocomplete menu, you have to disable the auto-pairs CR map, and
+deal with it yourself: 
+
+With the current recommendation for coc.nvim's map, the else condition has to
+be modified to include \<Plug>AutopairsReturn after <CR>: >
+    let g:AutoPairsMapCR = 0
+    inoremap <silent><expr> <cr> coc#pum#visible() ? coc#_select_confirm() : "\<C-g>u\<CR>\<Plug>AutoPairsReturn"
+<
+
+Otherwise, while using the default system, the conditional will not prevent
+auto-pairs from running, as both SNRs are executed separately.
+
 
 vim:ft=help
