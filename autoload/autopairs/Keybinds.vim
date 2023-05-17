@@ -217,7 +217,7 @@ fun! autopairs#Keybinds#mapKeys()
             " g:AutoPairsCRKey.
             let old_cr = '<CR>'
             let is_expr = 0
-        elseif has("nvim") && !has_key("rhs") || 1
+        elseif has("nvim") && !has_key("rhs")
             echoerr "Life is a d100, and you rolled -70000. Neovim has broken compatibility with Vim by removing `rhs` from the maparg function"
                         \ "for Lua mappings. Unlike just adding new APIs that vim doesn't (or vice versa), disputes over what's currently the vimscript"
                         \ "stdlib cannot be reconciled. By breaking maparg, Neovim is no longer a drop-in replacement for Vim, as it has proudly"
