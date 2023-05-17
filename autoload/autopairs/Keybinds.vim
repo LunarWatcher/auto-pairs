@@ -217,6 +217,20 @@ fun! autopairs#Keybinds#mapKeys()
             " g:AutoPairsCRKey.
             let old_cr = '<CR>'
             let is_expr = 0
+        elseif has("nvim") && !has_key("rhs") || 1
+            echoerr "Life is a d100, and you rolled -70000. Neovim has broken compatibility with Vim by removing `rhs` from the maparg function"
+                        \ "for Lua mappings. Unlike just adding new APIs that vim doesn't (or vice versa), disputes over what's currently the vimscript"
+                        \ "stdlib cannot be reconciled. By breaking maparg, Neovim is no longer a drop-in replacement for Vim, as it has proudly"
+                        \ "bragged about for years."
+                        \ "While this doesn't inherently pose a problem, your config, directly or indirectly, maps `<cr>` as a Lua keybind."
+                        \ "This keybind results in rhs not being populated, making it too much of a pain in the ass to fix."
+                        \ "Auto-pairs, both this fork and the original, were designed for Vim. While there are things in place to help with nvim compatibility,"
+                        \ "requiring an entire separate system for mapping compatibly if Lua is involved is not going to be one of them."
+                        \ "As a Vim main, I'm not familiar enough with Neovim to make this work, and continuing to maintain support for Neovim, an editor"
+                        \ "that keeps breaking support in stable functions, is not sustainable work-wise."
+            echoerr "To make this message go away, `let g:AutoPairsMapCR = 0`, upgrade to normal Vim, or use a different plugin."
+            echoerr "If you'd like to see this change, tell the nvim devs to fix maparg: https://github.com/neovim/neovim/issues/23666"
+            return
         else
             let old_cr = info['rhs']
             let old_cr = autopairs#Keybinds#ExpandMap(old_cr)

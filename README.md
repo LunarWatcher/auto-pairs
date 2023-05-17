@@ -5,6 +5,12 @@
 
 Insert or delete brackets, parens, and quotes in pair: a maintained fork of [jiangmiao/auto-pairs](https://github.com/jiangmiao/auto-pairs)
 
+## Neovim is no longer supported
+
+**Branch note:** this is a preemptive commit to save me work if (or rather, when) neovim confirms it's breaking `maparg`. Until this is merged into master, this policy does not apply.
+
+Due to nvim's decision to [break compatibility in `maparg`](https://github.com/neovim/neovim/issues/23666), nvim is no longer supported. Auto-pairs may still work, but if it's broken because of Neovim, it will not be fixed. Consider [upgrading to modern Vim](https://www.vim.org/download.php) instead.
+
 ## Note to migrating users
 
 If you're migrating from jiangmiao's version, it's highly recommended that you read `:h autopairs-migrating` after installing. There have been a number of breaking changes made in this fork, as well as changes to default behavior. See the migration guide for important differences that are may affect your workflow.
