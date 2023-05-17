@@ -27,7 +27,8 @@ the reality is that the default has changed.
 
 **OS** (name + version; i.e. Linux Mint 20, Windows 10 2004, Macos Big Sur, etc.):
 
-**What vim? (+ version)** (i.e. vim, gvim, nvim, nvim-qt, mvim, ...):
+<!-- Note for nvim users: nvim support is deprecated. Do not submit a bug report for nvim-only bugs. If you can't reproduce the bug in any other vim, the bug will not be addressed. -->
+**What vim? (+ version)** (i.e. vim, gvim, mvim, ...): 
 
 **Reproduced in other variants of Vim?** (Optional):
 
