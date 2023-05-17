@@ -212,7 +212,7 @@ fun! autopairs#Keybinds#mapKeys()
     if b:AutoPairsMapCR
         " VIM 7.3 supports the advanced maparg, which can get <expr> info
         let info = maparg(g:AutoPairsCRKey, 'i', 0, 1)
-        echom info
+        echom "maparg returned" info
         if empty(info)
             " Not _entirely_ sure if this should be <CR> or
             " g:AutoPairsCRKey.
