@@ -218,11 +218,28 @@ fun! autopairs#Keybinds#mapKeys()
             let old_cr = '<CR>'
             let is_expr = 0
         else
-            let old_cr = info['rhs']
-            let old_cr = autopairs#Keybinds#ExpandMap(old_cr)
-            let old_cr = substitute(old_cr, '<SID>', '<SNR>' .. info['sid'] .. '_', 'g')
-            let is_expr = info['expr']
-            let wrapper_name = '<SID>AutoPairsOldCRWrapper73'
+            if (!has_key(info, "rhs")) 
+                " Incompatible nvim Lua map; abort.
+                " Setting old_cr to AutoPairsReturn ensures the next step
+                " ignores it
+                let old_cr = "AutoPairsReturn"
+                " Toggling this switch ensures this message is produced once
+                " per session.
+                let g:AutoPairsMapCR = 0
+                echoerr "You're using a version of nvim where maparg is broken. Due to this bug (or intentional move, we're yet to see which it is),"
+                            \ "auto-pairs will now disable g:AutoPairsMapCR, as this conflict cannot be fixed due to the Lua-centric approach taken"
+                            \ "by Neovim's developers. See :h autopairs-autocomplete-cr for workarounds. Note that the exact instructions may vary depending"
+                            \ "on which plugins are involved."
+                            \ "See https://github.com/neovim/neovim/issues/23666 for the current status on fixing this bug. `let g:AutoPairsMapCR = 0` to disable this error,"
+                            \ "or reconfigure the other plugin attempting to map `<CR>` to use another key (or not to map it at all)."
+
+            else
+                let old_cr = info['rhs']
+                let old_cr = autopairs#Keybinds#ExpandMap(old_cr)
+                let old_cr = substitute(old_cr, '<SID>', '<SNR>' .. info['sid'] .. '_', 'g')
+                let is_expr = info['expr']
+                let wrapper_name = '<SID>AutoPairsOldCRWrapper73'
+            endif
         endif
 
         if old_cr !~ 'AutoPairsReturn'
