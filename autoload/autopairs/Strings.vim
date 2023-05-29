@@ -75,7 +75,7 @@ endf
 " returns [orig, close, text_after_close]
 func! autopairs#Strings#matchbegin(text, close, ...)
     let opt = get(a:, '1', {'regex': 0})
-    let m = matchstr(a:text, '^' .. (type(opt) == v:t_number ? a:open : autopairs#Utils#escape(a:close, opt)) .. '\v$')
+    let m = matchstr(a:text, '^' .. (type(opt) == v:t_number ? a:close : autopairs#Utils#escape(a:close, opt)) .. '\v$')
     if m == ""
         return []
     end
