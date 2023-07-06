@@ -12,7 +12,7 @@ endfunction
 
 function! autopairs#Keybinds#IgnoreInsertEnterCmd(cmd) abort
     call autopairs#Keybinds#SetEventignore()
-    normal a:cmd
+    exec a:cmd
     call autopairs#Keybinds#ResetEventignore()
     return ''
 endfunction
@@ -294,8 +294,7 @@ fun! autopairs#Keybinds#mapKeys()
 
     if b:AutoPairsShortcutJump != ''
         " execute 'inoremap <buffer> <silent> ' .. b:AutoPairsShortcutJump .. ' <cmd>set eventignore+=InsertEnter,InsertLeavePre,InsertLeave<CR><ESC>:call autopairs#AutoPairsJump()<CR>a<cmd>set eventignore-=InsertEnter,InsertLeavePre,InsertLeave<CR>'
-        execute 'inoremap <buffer> <silent> ' .. b:AutoPairsShortcutJump .. ' <C-r>=autopairs#Keybinds#IgnoreInsertEnterCmd("<ESC>:call autopairs#AutoPairsJump()<CR>a")'
-        execute 'inoremap <buffer> <silent> ' .. b:AutoPairsShortcutJump .. ' <cmd>call autopairs#AutoPairsJump()<CR>'
+        execute 'inoremap <buffer> <silent> ' .. b:AutoPairsShortcutJump .. " <esc>:call autopairs#Keybinds#IgnoreInsertEnterCmd(\":call autopairs#AutoPairsJump()\")\<CR>a"
         execute 'noremap <buffer> <silent> ' .. b:AutoPairsShortcutJump .. ' :call autopairs#AutoPairsJump()<CR>'
     end
 

@@ -1,0 +1,40 @@
+" Context: these tests are for https://github.com/jiangmiao/auto-pairs/issues/367#issuecomment-1621760390
+" Which reported that  AutoPairsJumpShortcut left the cursor before rather
+" than after.
+Describe Jump keybind (regression)
+    Before each
+        call autopairs#Variables#InitVariables()
+    End
+    It should deal with single pairs
+        new | only!
+        normal! i[] 
+        normal! 0
+
+        exec "normal i\<C-p>\<C-s>"
+        call Expect(col(".")).to_equal(3 - 1)
+    End
+    It should deal with multiple pairs
+        new | only!
+        normal! i[ ( {  } ) ]
+        normal! 0
+
+        call Expect(col(".")).to_equal(1)
+        call Expect(col("$")).to_equal(13)
+
+        " -1 is required to deal with weird offset shit caused by col('.')
+        " This test is by no means pretty, but it does the trick.
+        exec "normal i\<C-p>\<C-s>"
+        call Expect(col(".")).to_equal(9 - 1)
+
+        " The position has to be reset for each sweep to make sure it doesn't
+        " get screwed over further by one-off bullshit. Otherwise, thank to
+        " the offsets introduced along the way, this will pile up and result
+        " in the previously jumped character to be jumped to - again.
+        exec "normal 0i\<C-p>\<C-s>\<C-p>\<C-s>"
+        call Expect(col(".")).to_equal(11 - 1)
+
+        exec "normal 0i\<C-p>\<C-s>\<C-p>\<C-s>\<C-p>\<C-s>"
+        call Expect(col(".")).to_equal(13 - 1)
+
+    End
+End
