@@ -11,11 +11,21 @@ fun! s:define(name, default)
     endif
 endfun
 
+fun! s:generateKeybindString(keybind)
+    if g:AutoPairsDefaultDisableKeybinds == 1
+        return ""
+    else
+        return a:keybind
+    endif
+endfun
+
 " TODO: sort this garbage
 fun! autopairs#Variables#InitVariables()
     " Default autopairs
     call s:define("g:AutoPairs", {'(': ')', '[': ']', '{': '}', "'": "'", '"': '"',
                 \ '```': '```', '"""':'"""', "'''":"'''", "`":"`"})
+
+    call s:define("g:AutoPairsDefaultDisableKeybinds", 0)
 
     " Defines language-specific pairs. Please read the documentation before using!
     " The last paragraph of the help is extremely important.
@@ -28,7 +38,7 @@ fun! autopairs#Variables#InitVariables()
         \ 'php': {'<?': { 'close': '?>', 'mapclose': ']'}, '<?php': {'close': '?>', 'mapclose': ']'}}
         \ })
 
-    call s:define('g:AutoPairsPrefix', '<C-p>')
+    call s:define('g:AutoPairsPrefix', s:generateKeybindString('<C-p>'))
 
     " Krasjet: the closing character for quotes, auto completion will be
     " inhibited when the next character is one of these
@@ -66,12 +76,12 @@ fun! autopairs#Variables#InitVariables()
 
     call s:define('g:AutoPairsCenterLine', 1)
 
-    call s:define('g:AutoPairsShortcutToggle', g:AutoPairsCompatibleMaps ? '<M-p>' : g:AutoPairsPrefix .. '<C-t>')
-    call s:define("g:AutoPairsShortcutIgnore", g:AutoPairsPrefix .. '<C-e>')
-    call s:define('g:AutoPairsShortcutFastWrap', g:AutoPairsCompatibleMaps ? '<M-e>' : '<C-f>')
+    call s:define('g:AutoPairsShortcutToggle', s:generateKeybindString(g:AutoPairsCompatibleMaps ? '<M-p>' : g:AutoPairsPrefix .. '<C-t>'))
+    call s:define("g:AutoPairsShortcutIgnore", s:generateKeybindString(g:AutoPairsPrefix .. '<C-e>'))
+    call s:define('g:AutoPairsShortcutFastWrap', s:generateKeybindString(g:AutoPairsCompatibleMaps ? '<M-e>' : '<C-f>'))
 
     call s:define('g:AutoPairsMoveCharacter', "()[]{}\"'")
-    call s:define('g:AutoPairsMoveExpression', g:AutoPairsPrefix .. '%key')
+    call s:define('g:AutoPairsMoveExpression', s:generateKeybindString(g:AutoPairsPrefix .. '%key'))
 
     " Variable controlling whether or not to require a space or EOL to complete
     " bracket pairs. Extension off Krasjet.
@@ -80,7 +90,7 @@ fun! autopairs#Variables#InitVariables()
     call s:define('g:AutoPairsAutoBuildSpaceWhitelist', 1)
     call s:define('g:AutoPairsDefaultSpaceWhitelist', '')
 
-    call s:define('g:AutoPairsShortcutJump', g:AutoPairsCompatibleMaps ? '<M-n>' : g:AutoPairsPrefix .. '<C-s>')
+    call s:define('g:AutoPairsShortcutJump', s:generateKeybindString(g:AutoPairsCompatibleMaps ? '<M-n>' : g:AutoPairsPrefix .. '<C-s>'))
 
     " Fly mode will for closed pair to jump to closed pair instead of insert.
     " also support AutoPairsBackInsert to insert pairs where jumped.
@@ -90,7 +100,7 @@ fun! autopairs#Variables#InitVariables()
     call s:define('g:AutoPairsMultilineCloseDeleteSpace', 1)
 
     " Work with Fly Mode, insert pair where jumped
-    call s:define('g:AutoPairsShortcutBackInsert', g:AutoPairsCompatibleMaps ? '<M-b>' : g:AutoPairsPrefix .. '<C-b>')
+    call s:define('g:AutoPairsShortcutBackInsert', s:generateKeybindString(g:AutoPairsCompatibleMaps ? '<M-b>' : g:AutoPairsPrefix .. '<C-b>'))
 
     call s:define('g:AutoPairsNoJump', 0)
 
@@ -124,7 +134,7 @@ fun! autopairs#Variables#InitVariables()
     call s:define('g:AutoPairsPreferClose', 1)
 
     call s:define('g:AutoPairsMultilineClose', 0)
-    call s:define('g:AutoPairsShortcutToggleMultilineClose', g:AutoPairsPrefix .. '<C-m>')
+    call s:define('g:AutoPairsShortcutToggleMultilineClose', s:generateKeybindString(g:AutoPairsPrefix .. '<C-m>'))
     call s:define('g:AutoPairsSearchEscape', 1)
 
     call s:define("g:AutoPairsBSAfter", 1)

@@ -1584,6 +1584,19 @@ raw keys, which can and will cause conflicts with typed letters if given the
 opportunity. Should you choose not to, though, you get to live with the
 consequences, if any.
 
+------------------------------------------------------------------------------
+                                             *g:AutoPairsDefaultDisableKeybinds*
+
+Type: bool
+Default: 0
+
+
+Whether or not to disable keybinds by default.
+
+This variable default initialises all keybind-related variables to an empty
+string, unless they're manually initialised by the user. Consequently, this
+will not override user-defined settings.
+
 *autopairs-end-of-options* (this tag exists purely for doc editing purposes and
                             has no meaning for the plugin)
 ==============================================================================
