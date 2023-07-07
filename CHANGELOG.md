@@ -1,12 +1,16 @@
 # 4.0.2
 `g:AutoPairsVersion = 40002`
 
+## Fixed
+* Made sure the AutoPairsJump keybind in insert mode ends up after the cursor ([upstream/#367](https://github.com/jiangmiao/auto-pairs/issues/367) (comment))
+
 ## Changed
 * Setting `mapclose = 0` now makes `alwaysmapdefaultclose` default to 0 instead of 1
 * The LaTeX pairs no longer jump by default
 
 ## Added
 * `g:AutoPairsSpaceCompletionRegex` ([#75 followups](https://github.com/LunarWatcher/auto-pairs/issues/75#issuecomment-1403772146))
+* `g:AutoPairsDefaultDisableKeybinds` ([upstream/#367](https://github.com/jiangmiao/auto-pairs/issues/367) (comment)) for default-blanking the various keybind variables
 
 ## Docs
 * Described the exact reason for [#66](https://github.com/LunarWatcher/auto-pairs/issues/66) in `:h autopairs-autocomplete-cr`
