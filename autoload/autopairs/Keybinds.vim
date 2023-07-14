@@ -263,7 +263,7 @@ fun! autopairs#Keybinds#mapKeys()
     " Still use <buffer> level mapping for <BS> <SPACE>
     if b:AutoPairsMapBS
         " Use <C-R> instead of <expr> for issue #14 sometimes press BS output strange words
-        execute 'inoremap <buffer> <silent> <BS> <C-R>=autopairs#AutoPairsDelete()<CR>'
+        execute 'inoremap <buffer> <silent> <expr> <BS> autopairs#AutoPairsDelete()'
     end
 
     if b:AutoPairsMapSpace

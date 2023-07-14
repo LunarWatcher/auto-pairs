@@ -553,7 +553,7 @@ func! autopairs#AutoPairsMap(key, ...)
     if l:explicit && len(maparg(key, "i")) != 0
         return
     endif
-    execute 'inoremap <buffer> <silent>' key "<C-R>=autopairs#AutoPairsInsert('" .. escaped_key .. "')<cr>"
+    execute 'inoremap <buffer> <silent> <expr>' key "autopairs#AutoPairsInsert('" .. escaped_key .. "')"
 endf
 
 func! autopairs#AutoPairsToggle()
