@@ -269,7 +269,7 @@ fun! autopairs#Keybinds#mapKeys()
     if b:AutoPairsMapSpace
 
         " <C-]> is required to respect abbreviations
-        execute 'inoremap <buffer> <silent> <expr> <SPACE> autopairs#AutoPairsSpace()'
+        execute 'inoremap <buffer> <silent> <expr> <SPACE> "<C-]>" .. autopairs#AutoPairsSpace()'
     end
 
     if b:AutoPairsShortcutFastWrap != ''
