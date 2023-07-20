@@ -553,7 +553,9 @@ func! autopairs#AutoPairsMap(key, ...)
     if l:explicit && len(maparg(key, "i")) != 0
         return
     endif
-    execute 'inoremap <buffer> <silent> <expr>' key "autopairs#AutoPairsInsert('" .. escaped_key .. "')"
+
+    " Grace: <Cmd> runs a command without leaving insert mode, so we don't need to feed 'i'
+    execute 'inoremap <buffer> <silent>' key "<Cmd>call feedkeys(autopairs#AutoPairsInsert('" .. escaped_key .. "'), 'ni')<CR>"
 endf
 
 func! autopairs#AutoPairsToggle()
