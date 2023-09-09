@@ -1,14 +1,14 @@
-*AutoPairs.txt* *autopairs* *AutoPairs* *auto-pairs*
+*AutoPairs.txt*     Plugin for automatically inserting brackets, parentheses, and other pairs
+*autopairs* *AutoPairs* *auto-pairs*
 
 Insert or delete brackets, parens, and quotes in pair (a fork by LunarWatcher)
 
-Author:  jiangmiao
-Fork: LunarWatcher (Olivia)
+Original author:  jiangmiao
+Maintainer: LunarWatcher (Olivia)
 License: MIT
-URL: https://github.com/jiangmiao/auto-pairs
-Fork URL: https://github.com/LunarWatcher/auto-pairs (bugs, feature requests,
-                                                      and pull requests go
-                                                      here)
+URL: https://github.com/LunarWatcher/auto-pairs 
+    (bugs, feature requests, questions, and pull requests go here)
+
 Changelog: https://github.com/LunarWatcher/auto-pairs/blob/master/CHANGELOG.md
 
 ==============================================================================
