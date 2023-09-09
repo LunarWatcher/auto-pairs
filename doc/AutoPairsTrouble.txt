@@ -1,4 +1,5 @@
-*autopairs-troubleshooting* *AutoPairsTroubleshooting* *AutoPairsTrouble*
+*autopairs-troubleshooting*   Trouble-shooting document for |autopairs|
+*AutoPairsTroubleshooting* *AutoPairsTrouble*
 
 ==============================================================================
 Table of help documents~

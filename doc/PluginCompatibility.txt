@@ -1,4 +1,5 @@
-*AutoPairsCompatibility* *autopairs-compatbility* *auto-pairs-compat*
+*AutoPairsCompatibility*    Repository of plugins with known incompatibilities with |autopairs|
+*autopairs-compatbility* *auto-pairs-compat*
 
 ==============================================================================
 Table of help documents~

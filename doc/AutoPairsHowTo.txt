@@ -1,4 +1,4 @@
-*AutoPairsHowTo*
+*AutoPairsHowTo*            A list of how-to guides for auto-pairs
 
 ==============================================================================
 Table of help documents~
