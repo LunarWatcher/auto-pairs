@@ -1,0 +1,52 @@
+name: Report a bug
+description: File a bug report
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Before reporting
+        Make sure you've tested on the latest version of auto-pairs, and that you've read the trouble-shooting guide (AutoPairsTrouble.txt, `:h autopairs-troubleshooting`) to see if your issue is already well-known. Searching existing issues is also recommended.
+        ## Environment information
+  - type: input
+    validations:
+      required: true
+    attributes:
+      label: OS version
+      placeholder: Linux Mint 20, Windows 10, etc.
+  - type: input
+    validations:
+      required: true
+    attributes:
+      label: Vim version (and distribution)
+      placeholder: Vim 9.0.1234, nvim v0.7, ...
+  - type: textarea
+    validations:
+      required: false
+    attributes:
+      label: Autopairs config
+  - type: markdown
+    attributes:
+      value: |
+        ## Describe the bug
+        Remember to be detailed.
+  - type: textarea
+    validations:
+      required: true
+    attributes:
+      label: Describe the bug
+      description: Desribe the bug here
+  - type: textarea
+    validations:
+      required: true
+    attributes:
+      label: Steps to reproduce
+      description: Describe what you did to trigger the bug, and the steps required to reproduce it. 
+  - type: textarea
+    validations:
+      required: false
+    attributes:
+      label: Other information
+      description: Anything else important not covered by the other fields can go here.
+
+
