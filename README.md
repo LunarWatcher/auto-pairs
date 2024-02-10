@@ -19,7 +19,7 @@ There's several installation methods, and you're free to use whatever you want, 
 ```vim
 Plug 'LunarWatcher/auto-pairs'
 ```
-You can also specify a tag, but this is no longer needed as of the proper release of 3.0.0.
+You can also specify a tag, but this is no longer needed as of the release of 3.0.0.
 
 To use experimental changes before they're deployed, use:
 ```vim

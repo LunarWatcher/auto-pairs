@@ -14,6 +14,7 @@
 
 ## Docs
 * Described the exact reason for [#66](https://github.com/LunarWatcher/auto-pairs/issues/66) in `:h autopairs-autocomplete-cr`
+* Documented variable initialisation and function call order issues ([#84](https://github.com/LunarWatcher/auto-pairs/issues/84))
 
 # 4.0.1
 `g:AutoPairsVersion = 40001`
