@@ -1584,6 +1584,21 @@ raw keys, which can and will cause conflicts with typed letters if given the
 opportunity. Should you choose not to, though, you get to live with the
 consequences, if any.
 
+WARNING: This variable must be declared before calling any auto-pairs
+functions. See |autopairs-config-changes-broken| for more details.
+
+TL;DR: 
+Correct: >
+    let g:AutoPairsPrefix = '<some keybind here>'
+    let g:AutoPairs = autopairs#AutoPairsDefine({ ... some definitions here })
+<
+Incorrect: >
+    let g:AutoPairs = autopairs#AutoPairsDefine({ ... some definitions here })
+    let g:AutoPairsPrefix = '<some keybind here>'
+<
+
+Note that this applies to any of auto-pairs' functions.
+
 ------------------------------------------------------------------------------
                                              *g:AutoPairsDefaultDisableKeybinds*
 
@@ -1713,6 +1728,9 @@ don't want to use the standards, go ahead and omit this function.
 Additionally, if you want to add new types after loading, you need to use
 |autopairs#AutoPairsMap()|
 
+WARNING: Functions must be called after config variable declarations. See
+|autopairs-config-changes-broken|
+
 ------------------------------------------------------------------------------
 AutoPairsDefine()          *autopairs#AutoPairsDefine()* *autopairs-copy-defaults*
 Arguments: (pairs[, pairs_to_remove])
@@ -1738,6 +1756,10 @@ parts of the plugin has been moved to an autoload file. As outlined in
 files are loaded when `autopair#` functions are called. This means using, for
 an instance, `autopairs#AutoPairsDefine` loads the file and makes the function
 valid.
+
+WARNING: Functions must be called after config variable declarations. This
+means g:AutoPairs has to be the variable defined last in many cases. See
+|autopairs-config-changes-broken| for more information
 
 ------------------------------------------------------------------------------
 AutoPairsMap()                     *autopairs#AutoPairsMap()* *auto-pairs-map-key*

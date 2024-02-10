@@ -24,6 +24,7 @@ Table of Contents                           *autopairs-troubleshooting-contents*
     7. Test failures (and related errors) ... |autopairs-test-failures|
         1. Autocmd and syntax errors ........ |autopairs-typescript-errors|
     8. Weird auto-pairs stuff on <CR> ....... |autopairs-bad-cr|
+    9. Config changes not taking effect ..... |autopairs-config-changes-broken|
 
 ==============================================================================
 1. General troubleshooting                           *autopairs-troubleshooting-general*
@@ -372,5 +373,58 @@ the last straw for the other plugin, you can uninstall the other plugin plugin.
     obvious reasons.
 
     See also |autopairs-autocomplete-cr|
+
+==============================================================================
+9. Config changes not taking effect            *autopairs-config-changes-broken*
+
+TL;DR:~
+
+Correct: >
+    let g:AutoPairsPrefix = '<some keybind here>'
+    let g:AutoPairs = autopairs#AutoPairsDefine({ ... some definitions here })
+<
+Incorrect: >
+    let g:AutoPairs = autopairs#AutoPairsDefine({ ... some definitions here })
+    let g:AutoPairsPrefix = '<some keybind here>'
+<
+This applies to any of auto-pairs' functions, generally identified by the
+`autopairs#` prefix.
+
+Long version~
+If you're making changes to auto-pairs' config variables and seeing it not
+take effect, you're probably running into an initialisation order problem.
+This particularly applies to |g:AutoPairsPrefix|, but may exist in other
+places as well. To avoid running into these problems, it's recommended to
+initialise variables before calling any of auto-pairs' functions.
+
+If any functions are called before variables are declared, this results in
+certain internal variables being initialised in a way that makes it difficult
+to change afterwards. Taking |g:AutoPairsPrefix| as an example, consider: >
+    let g:AutoPairs = autopairs#AutoPairsDefine({ ... some definitions here })
+    let g:AutoPairsPrefix = '<some keybind here>'
+<
+
+In this case, all the defaults are initialised after the g:AutoPairsDefine
+call. While this usually isn't a problem, all the keybind initialisations
+depend on the value of |g:AutoPairsPrefix|. Because it isn't defined prior to
+the function call, the function defines it as the default value. When
+|g:AutoPairsPrefix| then is defined after the function call, the variable
+initialisation function is not called again (and even if it was, it would
+not change anything, as the dependent variables are assumed to be initialised
+by the user, and won't be reinitialised).
+
+Simply put, if you're seeing this problem, it's caused by variables depending
+on other variables during initialisation, and the value of the variable is
+copied at the time of initialisation.
+
+This means that, as the TL;DR: stated, you need to call `autopairs#` functions
+after initialising the variables you're interested in, and not before. That
+way, when the variable initialisation happens, dependent variables are
+initialised correctly.
+
+See also~
+* https://github.com/LunarWatcher/auto-pairs/issues/84
+  The issue also contains a practical demonstration of this happening in
+  practice.
 
 vim:ft=help
