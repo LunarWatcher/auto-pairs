@@ -1122,7 +1122,7 @@ before the open character. With great similarity to
 |g:AutoPairsAutoLineBreak|, this option is highly intrusive, and does not come
 with an undo switch.
 
-This is fully compatible with |g:AutoPairsLineBreak|; if both are enabled for
+This is fully compatible with |g:AutoPairsAutoLineBreak|; if both are enabled for
 a given pair, the effects stack.
 
 ------------------------------------------------------------------------------
