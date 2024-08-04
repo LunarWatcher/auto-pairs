@@ -1,3 +1,9 @@
+# 4.0.3
+`g:AutoPairsVersion = 40003`
+
+## Fixed
+* Made `g:AutoPairsExperimentalAutocmd` actually reflect the new default-enabled state
+
 # 4.0.2
 `g:AutoPairsVersion = 40002`
 

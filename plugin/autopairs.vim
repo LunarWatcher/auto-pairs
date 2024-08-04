@@ -14,7 +14,7 @@ endif
 
 let g:AutoPairsLoaded = 1
 
-if exists('g:AutoPairsExperimentalAutocmd') && g:AutoPairsExperimentalAutocmd
+if !exists('g:AutoPairsExperimentalAutocmd') || g:AutoPairsExperimentalAutocmd
     au BufWinEnter * :call autopairs#AutoPairsTryInit()
 else
     au BufEnter * :call autopairs#AutoPairsTryInit()

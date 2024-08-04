@@ -5,9 +5,25 @@
 
 Insert or delete brackets, parens, and quotes in pair: a maintained fork of [jiangmiao/auto-pairs](https://github.com/jiangmiao/auto-pairs)
 
-## Note to migrating users
+## Nvim warning 
+Note that this is **not** (yet) a statement saying nvim is unsupported. It continues having support - as long as it doesn't break built-in vimscript features. If this breaking continues, nvim will lose support when enough core features break.
 
-If you're migrating from jiangmiao's version, it's highly recommended that you read `:h autopairs-migrating` after installing. There have been a number of breaking changes made in this fork, as well as changes to default behavior. See the migration guide for important differences that are may affect your workflow.
+---
+
+This plugin is first and foremost a Vim plugin. Nvim support is only maintained by nvim being compatible with vim in the ways that matter - that being in the well-established vimscript functions powering the plugin.
+
+At the time of writing of this warning, there are two major bugs introduced by nvim incompatibility with elementary and well-established Vimscript functions. One of these bugs were fixed and later regressed. The other was reported [over a year ago at the time of writing,](https://github.com/neovim/neovim/issues/23666), which builds on a [doc bug report](https://github.com/neovim/neovim/issues/22399) written 1.5 years ago, and remains untouched in spite of being significant for plugin support.
+
+The timeline on the regression is still unclear, but it isn't important. This is a symptom of nvim no longer maintaining compatibility with core vim features. 
+
+If you want to use this plugin with nvim, note that there can and will be bugs caused by Nvim introducing incompatibilities into well-established functions - both intentionally and accidentally. If these are breaking for your use, you can:
+
+1. Upgrade to Vim
+2. Switch to an nvim-specific plugin
+
+Nvim is no longer a drop-in replacement for Vim, and hasn't been for quite some time. This forces a split in the Nvim and Vim plugin ecosystems as well. This is purely Nvim's fault - not for adding new features on top of Vim, but for breaking long-standing, built-in vimscript functions that have been around longer than nvim has existed.
+
+
 
 ## Installation
 
@@ -27,6 +43,10 @@ Plug 'LunarWatcher/auto-pairs', {'branch': 'develop'}
 ```
 
 **Note:** As of 4.0.0, `let g:AutoPairsCompatibleMaps = 0` is the default. Set the variable to 1 to use jiangmiao-compatible keybinds.
+
+### Note to migrating users
+
+If you're migrating from jiangmiao's version, it's highly recommended that you read `:h autopairs-migrating` after installing. There have been a number of breaking changes made in this fork, as well as changes to default behavior. See the migration guide for important differences that are may affect your workflow.
 
 ## Running tests (not required)
 
