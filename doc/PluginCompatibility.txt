@@ -12,12 +12,14 @@ Table of help documents~
 ================================================================================
 Table of Contents                               *autopairs-compatibility-contents*
 
-    1. vim-visual-multi ............... |vm-autopairs| |autopairs-visual-multi|
-    2. Telescope ...................... |autopairs-telescope|
-    3. Plugins interfering with <CR> .. |autopairs-incompatible-cr|
+    1. vim-visual-multi ......................... |vm-autopairs|
+    2. Telescope ................................ |autopairs-telescope|
+    3. Plugins incompatible with <CR> ........... |autopairs-incompatible-cr|
+    4. The entirety of nvim ..................... |autopairs-nvim|
 
 ================================================================================
-1. vim-visual-multi                          *vm-autopairs* *autopairs-visual-multi*
+1. vim-visual-multi                                                 *vm-autopairs*
+                                                          *autopairs-visual-multi*
 
 COMPATIBILITY STATUS
 Poor (requires hacks)
@@ -51,12 +53,13 @@ it makes no practical difference.
                                                              *telescope-autopairs*
 
 COMPATIBILITY STATUS
-Currently good
+Borked
 
 Known bug #1: auto-pairs runs in terminal buffers~
-FIXED
-Update to 0.6.0 or newer
----
+This was initially fixed by upgrading to 0.6.0. In later versions of Vim, this
+bug has regressed. See |autopairs-nvim|
+
+
 Auto-pairs doesn't work in Telescope, by design. The same goes for terminal
 buffers in Vim and Neovim.
 
@@ -103,5 +106,32 @@ This is just a list of plugins. For a problem description, see
     plugin itself does not define anything causing incompatibilities. For
     compatible maps, see |autopairs-autocomplete-cr|
     Alternatively, use |complete_CTRL-Y| instead of <CR>
+
+================================================================================
+4. The entirety of nvim                                           *autopairs-nvim*
+
+COMPATIBILITY STATUS
+Unreliable
+
+Nvim has introduced several bugs that misbehave with well-established vimscript
+functions (that also predate nvim itself).
+While nvim retains some support for now, these bugs can break elementary
+functionality in auto-pairs, and working around them is both tedious, annoying,
+and incredibly pointless when the problem is nvim breaking well-defined
+vimscript functions.
+
+If you run into problems, I strongly suggest upgrading to Vim. If not, you may
+need to find another auto-pair plugin if you run into nvim-specific bugs caused
+by nvim breaking existing stuff.
+
+Note that nvim bugs are still being fixed when possible - but all current nvim
+bugs are caused by nvim itself, and cannot be trivially worked around.
+
+Known problems~
+* https://github.com/LunarWatcher/auto-pairs/issues/78
+    UPSTREAM BUG
+    https://github.com/neovim/neovim/issues/23666 (no response for over 1.5 years)
+* https://github.com/LunarWatcher/auto-pairs/issues/34 (Fixed - later regressed)
+    See |autopairs-telescope|
 
 vim:ft=help

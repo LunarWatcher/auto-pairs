@@ -151,6 +151,21 @@ there's a keyboard shortcut to toggle auto-pairs.
 TL;DR: auto-pairs isn't perfect by design, but it can be disabled when it
 makes a bad call on completion or balancing.
 
+General advice~
+
+This fork has grown _significantly_ since it was forked from upstream jiangmiao,
+with a lot of changes and a lot of config. There's also multiple documentation
+files, because there's a lot of documentation.
+
+If you're wondering how to do something, take a look at |AutoPairsHowTo|. This
+also serves as a bit of a TL;DR: to the extensive documentation in this
+document for common questions.
+
+If you've run into problems, take a look at |AutoPairsTrouble|. 
+You can also ask questions or report bugs over on GitHub - see
+|autopairs-contributing|. This also helps me make the documentation (and
+especially |AutoPairsHowTo|) more useful.
+
 ==============================================================================
 2. Features                                                 *autopairs-features*
 
@@ -190,39 +205,39 @@ Key: <M-b>) to jump back and insert closed pair.
 The most situation maybe you want to insert single closed pair in the string,
 such as: >
 
-    ")"
+")"
 
 Fly Mode is disabled by default. To enable Fly Mode, add following to your
 .vimrc: >
-    let g:AutoPairsFlyMode = 1
+let g:AutoPairsFlyMode = 1
 
 Default options: >
-    let g:AutoPairsFlyMode = 0
-    let g:AutoPairsShortcutBackInsert = '<C-p><C-b>'
+let g:AutoPairsFlyMode = 0
+let g:AutoPairsShortcutBackInsert = '<C-p><C-b>'
 
 
 ==============================================================================
 4. Shortcuts                                               *autopairs-shortcuts*
 
 Shortcuts relying on central keys:
-    <CR>    : Insert new indented line after return if cursor in blank brackets
-              or quotes. (|g:AutoPairsCRKey|, |g:AutoPairsMapCR|)
-    <BS>    : Delete brackets in pair (|g:AutoPairsMapBS|)
-    <Space> : Insert spaces around a recently inserted pair (|g:AutoPairsMapSpace|)
+<CR>    : Insert new indented line after return if cursor in blank brackets
+          or quotes. (|g:AutoPairsCRKey|, |g:AutoPairsMapCR|)
+<BS>    : Delete brackets in pair (|g:AutoPairsMapBS|)
+<Space> : Insert spaces around a recently inserted pair (|g:AutoPairsMapSpace|)
 
 
 These are also defined, but may be one of two variants. See
 |g:AutoPairsCompatibleMaps|:
-    <C-p><C-t> or <M-p>: Toggle Autopairs (|g:AutoPairsShortcutToggle|)
-    <C-f>      or <M-e>: Fast Wrap (|g:AutoPairsShortcutFastWrap|)
-    <C-p><C-j> or <M-n>: Jump to next closed pair (|g:AutoPairsShortcutJump|)
-    <C-p><C-b> or <M-b>: BackInsert (|g:AutoPairsShortcutBackInsert|)
+<C-p><C-t> or <M-p>: Toggle Autopairs (|g:AutoPairsShortcutToggle|)
+<C-f>      or <M-e>: Fast Wrap (|g:AutoPairsShortcutFastWrap|)
+<C-p><C-j> or <M-n>: Jump to next closed pair (|g:AutoPairsShortcutJump|)
+<C-p><C-b> or <M-b>: BackInsert (|g:AutoPairsShortcutBackInsert|)
 
 And finally, other shortcuts defined by auto-pairs:
-    <C-p>%key          : Move to closed pair (where the pair is represented by
-                         %key). For the list of valid `%key`s, see
-                         |g:AutoPairsMoveCharacter|.
-                         Configurable through |g:AutoPairsMoveExpression|
+<C-p>%key          : Move to closed pair (where the pair is represented by
+                     %key). For the list of valid `%key`s, see
+                     |g:AutoPairsMoveCharacter|.
+                     Configurable through |g:AutoPairsMoveExpression|
 
 All the above can be remapped by using the appropriate configuration variable.
 Setting a configuration variable to "" disables that keybind

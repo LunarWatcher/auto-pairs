@@ -35,3 +35,11 @@ The changelog loosely uses the [keepachangelog](https://keepachangelog.com/en/1.
 GitHub automatically builds tests when you commit in a PR (though new contributors need to have the run manually approved in order to start, because GitHub said so). The tests always have to pass. If some core functionality was changed that means the failing test(s) need changes, these must be made for the PR to be approved.
 
 Adding tests is highly encouraged, and only required for bug fixes. Regression tests are extremely important for ensuring bugs don't happen again later.
+
+### Documentation
+
+When required, adding or updating documentation is considered a priority. This has grown into a fairly large plugin, and good docs is how it remains understandable for the users. This primarily applies to `AutoPairs.txt`, as `AutoPairsHowTo` and `AutoPairsTrouble` are, well, much more vaguely defined in terms of what's included. The latter two are much more on a per-case basis, and are therefore not required nor expected.
+
+There isn't a formal spec for how the documentation must be formatted, but the relevant standards are defined in a modeline. Textwidth=80, and the headers align visually when concealed to the line. Don't overthink it too much - copying the general style of other similar sections is more than good enough. There's many things that don't have a fixed standard either, because stuff has changed as the document has expanded.
+
+For optional help writing the help file, [I have another plugin](https://github.com/LunarWatcher/helpwriter.vim) (Note: requires vim 9.x, and is not compatible with nvim) that helps with some of these tasks. Using this plugin is NOT required, but it is useful in some cases. It automatically deals with alignment, adds utilities for  generating both types of header separators, and has a keybind for regenerating the Table of Contents. If not, you'll just have to do it manually.
