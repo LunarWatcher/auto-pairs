@@ -8,6 +8,10 @@
 ## Fixed
 * Made `g:AutoPairsExperimentalAutocmd` actually reflect the new default-enabled state
 
+## Docs
+* Added compat note on nvim directly to `AutoPairsCompatibility`
+* Minor tweaks to the migration docs
+
 # 4.0.2
 `g:AutoPairsVersion = 40002`
 
