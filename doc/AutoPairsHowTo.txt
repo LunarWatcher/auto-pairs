@@ -11,11 +11,14 @@ Table of help documents~
 ==============================================================================
 CONTENTS                                              *autopairs-howto-contents*
 
-    About this document .......................... |autopairs-howto-about|
-    Requiring whitespace when inserting .......... |autopairs-howto-whitespace-only|
-    Contextual pair insertion .................... |autopairs-howto-contextual|
-    Regex-based pairs ............................ |autopairs-adding-regex-pairs|
-    Using <CR> for the autocomplete popup ........ |autopairs-autocomplete-cr|
+    About this document ................................ |autopairs-howto-about|
+    Requiring whitespace when inserting ................ |autopairs-howto-whitespace-only|
+    Configuring contextual insertion ................... |autopairs-howto-contextual|
+    Adding regex pairs ................................. |autopairs-adding-regex-pairs|
+    Using <CR> for autocomplete ........................ |autopairs-autocomplete-cr|
+    Using non-<BS> keys for deleting pairs ............. |autopairs-non-bs-deletion|
+        1. Alternative keys ............................ |autopairs-delete-other-key|
+        2. Using <C-w>, <Delete>, or similar ........... |autopairs-delete-other-action|
 
 ==============================================================================
 About this document                                      *autopairs-howto-about*
@@ -127,5 +130,87 @@ documentation for the source template to copy-pasta. I also recommend checking
 coc.nvim's documentation for a template to copy-pasta, as the one kept here
 will not be kept up-to-date.
 
+================================================================================
+Using non-<BS> keys for deleting pairs                 *autopairs-non-bs-deletion*
+
+This section describes two scenarios:
+
+1. Using alternative keys instead of <BS>
+2. Using other strokes (such as <C-w> or <Delete>) to trigger pair deletion
+
+--------------------------------------------------------------------------------
+1. Alternative keys                                   *autopairs-delete-other-key*
+
+For using an alternate key that acts identically to <BS>, you can recursively
+remap that key to <BS>: >
+    imap <somekey> <BS>
+<
+
+Note that, for pair deletion to work, |g:AutoPairsMapBS| MUST be set to 1. At
+the time of writing, if you want to remap that other key to be the only trigger,
+you need to do so with a bit more involved map: >
+    inoremap <silent> <somekey> <C-R>=autopairs#AutoPairsDelete()<CR>
+<
+
+--------------------------------------------------------------------------------
+2. Using <C-w>, <Delete>, or similar               *autopairs-delete-other-action*
+
+
+In some cases, you may want pair deletion to work with keys other than <BS>.
+For convenience, auto-pairs lets you define ✨ special maps ✨ to work with
+these. autopairs#AutoPairsDelete() accepts a single argument with the default
+action to take if not deleting pairs. Using this does not affect how the pairs
+are deleted, but it changes what default action to take for that map if pair
+deletions aren't applicable. 
+
+If you were to use method 1 for <C-w>, for example, it would delete pairs, but
+it would also convert <C-w> into a glorified <BS> that no longer deletes entire
+words like one might expect.
+
+If, for example, you want to map `<C-w>` to delete pairs if possible, but
+without affecting your ability to use it to delete words, you'd use[^1]: >
+    inoremap <silent><expr> <C-w> autopairs#AutoPairsDelete("\<C-w>")
+<
+
+If you have >
+    (|)
+<
+and now press <C-w>, the pair will be deleted. But if you have: >
+    (Hello|)
+<
+
+and press <C-w>, you get: >
+    (|)
+<
+Again, as expected from <C-w>. 
+
+Note that the keybind needs to be present in both the string and in the keymap
+itself. The action actually taken by auto-pairs is dictated by the string, and
+not the keybind the function is called in.
+
+WARNING: Using this with <Delete> will result in unintuitive behaviour around
+deletion. If you have the following scenario: >
+    ()|[]
+<
+And use <Delete> as a special pair delete key, it will NOT delete the pair in
+front of the cursor. After pressing <Delete>, you'll have: >
+    |[]
+<
+... or exactly the same thing <BS> would've done. This is the case for all
+alternate actions.
+
+While you can remap <Delete>, this unintuitive behaviour means I don't recommend
+doing so. Forward-looking deletions may come at some point in the future, but
+are not currently planned. If you want it, consider opening a PR.
+
+Associated FR:~
+    https://github.com/LunarWatcher/auto-pairs/issues/90
+
+Section footnotes~
+[^1]: Why <expr> here, but not in the previous section, you ask?
+    
+    I have no fucking clue. <C-R>= refused to cooperate with the string
+    argument, and incorrectly claims autopairs#AutoPairsDelete does not exist.
+    <expr> does not have this issue, but requires dropping <C-R>.
 
 vim:ft=help

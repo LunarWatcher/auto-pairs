@@ -1,8 +1,9 @@
-# 4.0.3
+# 4.1.0
 `g:AutoPairsVersion = 40003`
 
 ## Added 
-* Support for arbitrary underlying deletion keybinds ([#90](https://github.com/LunarWatcher/auto-pairs/issues/90))
+* Support for arbitrary underlying deletion keybinds when deleting pairs ([#90](https://github.com/LunarWatcher/auto-pairs/issues/90))
+    - This does not affect the default deletion keybinds, which still default to `<BS>`. This is only relevant if you want to delete pairs with other forms of deletion.
 
 ## Fixed
 * Made `g:AutoPairsExperimentalAutocmd` actually reflect the new default-enabled state
