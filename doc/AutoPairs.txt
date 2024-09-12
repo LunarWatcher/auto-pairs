@@ -774,7 +774,7 @@ Default: 0
 
 Map <BS> to delete brackets and quotes in pair, executes:
 
-    inoremap <buffer> <silent> <BS> <C-R>=autopairs#AutoPairsDelete()<CR>
+    inoremap <buffer> <silent> <BS> <C-R>=autopairs#AutoPairsReturn()<CR>
 
 ------------------------------------------------------------------------------
                                                  *g:AutoPairsMultilineBackspace*
