@@ -16,8 +16,8 @@ Describe Complex use of maps
                                           " sends some random signal crap
         call Expect("<\<Delete>]").ToMatch("<]")
         %d
-        exec "normal i<\<ESC>"
-        exec "normal ^\<Right>i>\<ESC>"
+        exec "normal i<"
+        exec "normal ^\<Right>i>"
         call Expect('').CheckBuff("<>")
     End
 End

@@ -21,17 +21,42 @@ Describe <BS> tests
         call autopairs#AutoPairsInit()
 
         call Expect("()\<BS>").ToMatch("")
-        let b:AutoPairsBSAfter = 0
-
-        call Expect("()\<BS>").ToMatch("(")
-    End
-    It should delete in when instructed
-        new | only!
-        call autopairs#AutoPairsInit()
-
-        call Expect("(\<BS>").ToMatch("")
         let b:AutoPairsBSIn = 0
         call Expect("(\<BS>").ToMatch(")")
+    End
+    It should allow mapping other default events
+        new | only!
+        call autopairs#AutoPairsInit()
+        inoremap <silent><expr> <Delete> autopairs#AutoPairsDelete("\<Delete>")
+        inoremap <silent><expr> <C-w> autopairs#AutoPairsDelete("\<C-w>")
+
+        call Expect("(\<Delete>").ToMatch("")
+        " This is sort of dumb, but eh, it's an edge-case
+        call Expect("()\<Delete>").ToMatch("")
+
+
+        call Expect("(\<C-w>").ToMatch("")
+        call Expect("()\<C-w>").ToMatch("")
+        call Expect("Word Two\<C-w>").ToMatch("Word ")
+
+        call Expect("(Hello\<Ignore>\<C-w>").ToMatch("()")
+        call Expect("(Hello\<Ignore>\<C-w>\<Ignore>\<C-w>").ToMatch("")
+        " Just for good measure
+        call Expect("[(Hello\<Ignore>\<C-w>\<Ignore>\<C-w>").ToMatch("[]")
+
+        iunmap <C-w>
+        iunmap <Delete>
+    End
+    " Not sure if this is strictly speaking necessary or not
+    It should not break <BS> with other maps
+        inoremap <silent><expr> <Delete> autopairs#AutoPairsDelete("\<Delete>")
+        inoremap <silent><expr> <C-w> autopairs#AutoPairsDelete("\<C-w>")
+
+        call Expect("(\<BS>").ToMatch("")
+        call Expect("[\<BS>").ToMatch("")
+
+        iunmap <C-w>
+        iunmap <Delete>
     End
 
 End
