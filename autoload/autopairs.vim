@@ -247,10 +247,11 @@ func! autopairs#AutoPairsInsert(key, ...)
     return a:key
 endf
 
-func! autopairs#AutoPairsDelete()
+func! autopairs#AutoPairsDelete(...)
+    let fallbackEvent = get(a:, 1, "\<BS>")
     if !b:autopairs_enabled || b:AutoPairsIgnoreSingle
         let b:AutoPairsIgnoreSingle = 0
-        return "\<BS>"
+        return fallbackEvent
     end
 
     let [before, after, ig] = autopairs#Strings#getline(b:AutoPairsMultilineBackspace)
@@ -270,7 +271,7 @@ func! autopairs#AutoPairsDelete()
                     if a[0] == ' '
                         return "\<BS>\<DELETE>"
                     else
-                        return "\<BS>"
+                        return fallbackEvent
                     end
                 end
                 return autopairs#Strings#backspace(b) .. autopairs#Strings#delete(a)
@@ -302,7 +303,7 @@ func! autopairs#AutoPairsDelete()
                         let b ..= getline(line('.') - offset) .. ' '
                         let offset += 1
                         if (line('.') - offset <= 0)
-                            return "\<BS>"
+                            return fallbackEvent
                         endif
                     endwhile
                     let a = matchstr(getline(line('.') - offset), autopairs#Utils#escape(open, opt) .. '\v\s*$') .. ' '
@@ -313,7 +314,7 @@ func! autopairs#AutoPairsDelete()
             end
         endfor
     endif
-    return "\<BS>"
+    return fallbackEvent
 endf
 
 " Fast wrap the word in brackets

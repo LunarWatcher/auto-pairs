@@ -1,6 +1,9 @@
 # 4.0.3
 `g:AutoPairsVersion = 40003`
 
+## Added 
+* Support for arbitrary underlying deletion keybinds ([#90](https://github.com/LunarWatcher/auto-pairs/issues/90))
+
 ## Fixed
 * Made `g:AutoPairsExperimentalAutocmd` actually reflect the new default-enabled state
 
