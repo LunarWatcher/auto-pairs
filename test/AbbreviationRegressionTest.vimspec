@@ -1,0 +1,33 @@
+Describe Abbreviations should work with weird stuff
+    Before each
+        call autopairs#Variables#InitVariables()
+    End
+    After each
+        abclear
+    End
+    It should work with pairs at the start [#93]
+        new | only!
+        abbr (a Test
+
+        call Expect("(a").ToMatch("Test)")
+        call Expect("(a ").ToMatch("Test )")
+    End
+    It should work with pairs at the end [#93]
+        new | only!
+        abbr a( Test
+
+        " I don't understand why the previous test doesn't need a trigger,
+        " but this one does. Really weird and inconsistent behaviour,
+        " and I wasn't able to reproduce this with my config (and I don't use
+        " abbreviations, so all that shit should be default)
+        call Expect("a( ").ToMatch("Test )")
+    End
+    It should work with balanced pairs in the middle [#93]
+        new | only!
+        " Not sure why these need to be balanced to keep abbr from throwing an
+        " E474
+        abbr a(b) Test
+
+        call Expect("a(b) ").ToMatch("Test ")
+    End
+End

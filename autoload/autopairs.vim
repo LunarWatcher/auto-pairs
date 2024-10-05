@@ -18,7 +18,7 @@ endif
 " meant as a number associated with the version. Semantic meaning on the first
 " digit will take place. See the documentation for more details.
 
-let g:AutoPairsVersion = 40003
+let g:AutoPairsVersion = 40004
 
 let s:save_cpo = &cpoptions
 set cpoptions&vim
@@ -554,7 +554,7 @@ func! autopairs#AutoPairsMap(key, ...)
     if l:explicit && len(maparg(key, "i")) != 0
         return
     endif
-    execute 'inoremap <buffer> <silent>' key "<C-R>=autopairs#AutoPairsInsert('" .. escaped_key .. "')<cr>"
+    execute 'inoremap <buffer> <silent>' key "<C-]><C-R>=autopairs#AutoPairsInsert('" .. escaped_key .. "')<cr>"
 endf
 
 func! autopairs#AutoPairsToggle()

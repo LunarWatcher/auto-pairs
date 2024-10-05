@@ -1,3 +1,9 @@
+# [Unreleased]
+`g:AutoPairsVersion = 40004`
+
+## Fixed
+* Abbreviations with pairs ([#93](https://github.com/LunarWatcher/auto-pairs/issues/93))
+
 # 4.1.0
 `g:AutoPairsVersion = 40003`
 
