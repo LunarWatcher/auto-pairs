@@ -28,6 +28,8 @@ Nvim is no longer a drop-in replacement for Vim, and hasn't been for quite some 
 ## Installation
 
 
+### Using a Vim package manager
+
 **NOTE:** Auto-pairs currently requires at least vim 8.1 with patch 1114. See [#37](https://github.com/LunarWatcher/auto-pairs/discussions/37)
 
 There's several installation methods, and you're free to use whatever you want, but I personally cannot recommend [vim-plug](https://github.com/junegunn/vim-plug) enough, in part because of the previous line of text. Installation, if you expect a more or less working variant, should be done with:
@@ -43,6 +45,14 @@ Plug 'LunarWatcher/auto-pairs', {'branch': 'develop'}
 ```
 
 **Note:** As of 4.0.0, `let g:AutoPairsCompatibleMaps = 0` is the default. Set the variable to 1 to use jiangmiao-compatible keybinds.
+
+### Using distro package managers
+
+Note that using Vim package managers is the recommended option, as this allows for easier updates (in my biased opinion). If you still prefer, some Linux distros have packages for the plugin:
+
+* Ubuntu, Debian, and derivatives: `vim-autopairs` (Package sources: [Ubuntu](https://launchpad.net/ubuntu/+source/vim-autopairs), [Debian](https://packages.debian.org/search?searchon=names&keywords=vim-autopairs))
+
+**Note:** I do not maintain these packages.
 
 ### Note to migrating users
 
