@@ -249,7 +249,11 @@ fun! autopairs#Keybinds#mapKeys()
                 let old_cr = wrapper_name
             end
             " Always silent mapping
-            execute 'imap <script> <buffer> <silent> ' .. b:AutoPairsCRKey .. ' ' ..old_cr..'<SID>AutoPairsReturn'
+            if g:AutoPairsAvoidSIDMaps
+                execute 'imap <buffer> <silent> ' .. b:AutoPairsCRKey .. ' ' .. old_cr .. '<C-r>=autopairs#Keybinds#IgnoreInsertEnter("autopairs#AutoPairsReturn")<cr>'
+            else
+                execute 'imap <script> <buffer> <silent> ' .. b:AutoPairsCRKey .. ' ' ..old_cr..'<SID>AutoPairsReturn'
+            endif
         endif
     endif
 

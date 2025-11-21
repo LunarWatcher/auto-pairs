@@ -1,0 +1,30 @@
+Describe Avoiding SID-based maps should not break <CR>
+    Before each
+        call autopairs#Variables#InitVariables()
+    End
+    It should still cause line breaks
+        let g:AutoPairsAvoidSIDMaps = 1
+        new | only!
+        call Expect("func {\<CR>").ToMatch('func {\n\n}')
+    End
+    It should cooperate with other <cr> maps
+        let g:AutoPairsAvoidSIDMaps = 1
+        set sw=2
+        set et
+        new | only!
+
+        fun! g:CRSidRemapCallback()
+            let g:TestPassed=1
+            return "\n"
+        endfun!
+
+        imap <buffer> <CR> <C-r>=g:CRSidRemapCallback()<cr>
+        
+        unlet b:autopairs_loaded
+        call autopairs#AutoPairsTryInit()
+        verbose imap <CR>
+        call Expect("func {\<CR>").ToMatch('func {\n\n}')
+        call Expect('g:TestPassed').to_exist()
+        call Expect(g:TestPassed).to_equal(1)
+    End
+End

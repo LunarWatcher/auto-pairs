@@ -141,6 +141,8 @@ fun! autopairs#Variables#InitVariables()
     call s:define("g:AutoPairsBSIn", 1)
 
     call s:define("g:AutoPairsSyncAutoBreakOptions", 0)
+
+    call s:define("g:AutoPairsAvoidSIDMaps", 0)
 endfun
 
 

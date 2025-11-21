@@ -319,6 +319,10 @@ Compat~
 - |g:AutoPairsVersion|
     This is not directly an option, but it defines the current version of
     auto-pairs. Can be used for compatibility checks. DO NOT OVERRIDE!
+- |g:AutoPairsAvoidSIDMaps| (default: 0)
+    Whether or not to avoid <SID> maps in certain keybinds. Set this to 1 for
+    extended compatibility when other plugins remap <CR>, and don't have proper
+    compatibility systems.
 
 Backspace~
 - |g:AutoPairsMapBS| (has a buffer variant) (default: 0)
@@ -1241,6 +1245,42 @@ versions.
 
 3.0.0-beta5~
     Changed representation meaning (backwards compatible)
+
+------------------------------------------------------------------------------
+                                                       *g:AutoPairsAvoidSIDMaps*
+                                                                           int
+Default: 0
+
+Whether or not to avoid SID maps in <CR>. The default behaviour is 0, where
+|<SID>| maps are used.
+By default, auto-pairs maps <CR> compatibly[^1], meaning that if `<CR>` is
+mapped when auto-pairs starts, it'll include the previous map before it adds
+itself. However, order is not guaranteed, and in many cases, other plugins can
+be responsible for the remapping step. If this happens, it's the other
+plugin's job to map compatibly, which isn't always the case.
+
+If you use another plugin that maps <CR>, and it loads after auto-pairs, you
+may run into problems where `<SNR>86_AutoPairs` (likely with other numbers) is
+inserted literally into the document. To verify that this is caused by another
+plugin, verify that this shows another plugin is involved: >
+    verbose imap <CR>
+<
+
+If these conditions are met, you can use >
+    let g:AutoPairsAvoidSIDMaps = 1
+<
+
+This makes auto-pairs use non-SID maps, which other plugins seem to be better
+at mapping.
+
+If you do not have any problems, you do not need to use this option.~
+It exists _if_ you have problems.
+
+[^1]: This is not fully guaranteed in Neovim, because neovim broke maparg():
+    https://github.com/neovim/neovim/issues/23666
+        
+    This issue has been standing since I opened it in 2023. If Lua maps are
+    and auto-pairs does the compatibility remapping, remapping will fail.
 
 ------------------------------------------------------------------------------
                                                               *g:AutoPairsCRKey*
