@@ -90,8 +90,9 @@ fun! autopairs#AutoPairsAddPair(pair, ...)
                 call autopairs#AutoPairsAddLanguagePair(a:pair, filetypes)
                 return
             elseif type(filetypes) == v:t_list
+                let saved_pair = copy(a:pair)
                 for ft in filetypes
-                    call autopairs#AutoPairsAddLanguagePair(a:pair, ft)
+                    call autopairs#AutoPairsAddLanguagePair(copy(saved_pair), ft)
                 endfor
                 return
             else
