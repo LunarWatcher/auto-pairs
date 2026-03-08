@@ -1,5 +1,10 @@
 # Auto Pairs
 
+> [!warning]
+>
+> As of 2026-03-08, this plugin is no longer maintained. Due to [AI slop in vim](https://hachyderm.io/@AndrewRadev/116175986749599825), I have moved to emacs with evil mode.
+
+
 [![Tests](https://github.com/LunarWatcher/auto-pairs/actions/workflows/tests.yml/badge.svg)](https://github.com/LunarWatcher/auto-pairs/actions/workflows/tests.yml)
 [![Minimum Vim version 8.1 patch 1114](https://img.shields.io/badge/Vim-8.1%201--1114%20or%20newer-%23FFC0CB?logo=vim&labelColor=019833)](//github.com/vim/vim)
 

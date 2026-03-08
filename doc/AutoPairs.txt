@@ -3,6 +3,14 @@
 
 Insert or delete brackets, parens, and quotes in pair (a fork by LunarWatcher)
 
+*autopairs-deprecated*
+
+As of 2026-03-08, this plugin is no longer maintained. Due to
+[AI slop in vim](https://hachyderm.io/@AndrewRadev/116175986749599825), I have
+moved to emacs with evil mode. The plugin will remain usable, but bugs will not
+be fixed, help requests will go unanswered, etc. I advice switching plugins as
+soon as possible.
+
 Original author:  jiangmiao
 Maintainer: LunarWatcher (Olivia)
 License: MIT
